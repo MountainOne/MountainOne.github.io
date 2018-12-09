@@ -2,14 +2,14 @@
 <html>
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>MountainOne&#39;s technology space</title>
+<title>Tag: Kaggle - MountainOne&#39;s technology space</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="MountainOne&#39;s technology space">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:url" content="http://yoursite.com/tags/Kaggle/index.html">
 <meta property="og:site_name" content="MountainOne&#39;s technology space">
 <meta property="og:locale" content="default">
 <meta name="twitter:card" content="summary">
@@ -87,7 +87,7 @@
             
             <div class="navbar-start">
                 
-                <a class="navbar-item is-active" href="/">Home</a>
+                <a class="navbar-item" href="/">Home</a>
                 
                 <a class="navbar-item" href="/archives">Archives</a>
                 
@@ -124,7 +124,17 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    <div class="card-content">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/tags">Tags</a></li>
+            <li class="is-active"><a href="#" aria-current="page">Kaggle</a></li>
+        </ul>
+        </nav>
+    </div>
+</div>
+
     <div class="card">
     
     <div class="card-content article ">
@@ -389,113 +399,6 @@
 <figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ensemble = stacked_pred*<span class="hljs-number">0.70</span> + xgb_pred*<span class="hljs-number">0.15</span> + lgb_pred*<span class="hljs-number">0.15</span></span><br></pre></td></tr></table></figure>
 <p><strong>提交：</strong></p>
 <figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sub = pd.DataFrame()</span><br><span class="line">sub[<span class="hljs-string">'Id'</span>] = test_ID</span><br><span class="line">sub[<span class="hljs-string">'SalePrice'</span>] = ensemble</span><br><span class="line">sub.to_csv(<span class="hljs-string">'submission.csv'</span>,index=<span class="hljs-keyword">False</span>)</span><br></pre></td></tr></table></figure>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-12-05T14:30:00.000Z">2018-12-05</time>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    7 minutes read (About 997 words)
-                </span>
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/12/05/从源码编译和安装Linux内核/">从源码编译和安装Linux内核</a>
-            
-        </h1>
-        <div class="content">
-            <h2 id="如何编译和安装Linux内核"><a href="#如何编译和安装Linux内核" class="headerlink" title="如何编译和安装Linux内核"></a>如何编译和安装Linux内核</h2><p>可以按如下的步骤编译和安装Linux内核</p>
-<p>1.从 kernel.org 抓取最新版本的内核</p>
-<p>2.验证内核</p>
-<p>3.解压内核压缩文件</p>
-<p>4.复制已存的 Linux 内核配置文件</p>
-<p>5.编译和构建内核</p>
-<p>6.安装内核和模块</p>
-<p>7.更新 Grub 配置</p>
-<p>8.重启系统</p>
-<h2 id="1-获取最新版本的源代码"><a href="#1-获取最新版本的源代码" class="headerlink" title="1.获取最新版本的源代码"></a>1.获取最新版本的源代码</h2><p>访问<a href="https://www.kernel.org/" target="_blank" rel="noopener">Linux官方网站</a>下载最新的源代码。点击标有“Latest Stable Kernel”的黄色大按钮。</p>
-<p>也可以使用 wget 命令下载 Linux 内核源代码：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.1.tar.xz</span><br></pre></td></tr></table></figure>
-<h2 id="2-获取-tar-xz-文件"><a href="#2-获取-tar-xz-文件" class="headerlink" title="2.获取 tar.xz 文件"></a>2.获取 tar.xz 文件</h2><p>使用 unzx 命令和 xz 命令解压压缩文件获取源代码：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzx -v linux-4.19.1.tar.xz</span><br></pre></td></tr></table></figure>
-<p>或者</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xz -d -v linux-4.19.1.tar.xz</span><br></pre></td></tr></table></figure>
-<h3 id="使用pgp验证-linux-内核-tarball"><a href="#使用pgp验证-linux-内核-tarball" class="headerlink" title="使用pgp验证 linux 内核 tarball"></a>使用pgp验证 linux 内核 tarball</h3><p>首先获取linux-4.19.1.tar 的 PGP 签名：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.1.tar.sign</span><br></pre></td></tr></table></figure>
-<p> 尝试进行验证：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --verify linux-4.19.1.tar.sign</span><br></pre></td></tr></table></figure>
-<p>示例输出：</p>
-<p><img src="/Users/yifengpeng/Desktop/屏幕快照 2018-11-29 08.38.41.png" alt=""></p>
-<p>从 PGP 密钥服务器获取公钥来验证签名。例如：RSA key ID 79BE3E4300411886（从上面的输出结果中得到）</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --recv-keys 79BE3E4300411886</span><br></pre></td></tr></table></figure>
-<p>示例输出：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gpg: key 79BE3E4300411886: 7 duplicate signatures removed</span><br><span class="line">gpg: key 79BE3E4300411886: 172 signatures not checked due to missing keys</span><br><span class="line">gpg: /home/vivek/.gnupg/trustdb.gpg: trustdb created</span><br><span class="line">gpg: key 79BE3E4300411886: public key &quot;Linus Torvalds &lt;torvalds@kernel.org&gt;&quot; imported</span><br><span class="line">gpg: no ultimately trusted keys found</span><br><span class="line">gpg: Total number processed: 1</span><br><span class="line">gpg:               imported: 1</span><br></pre></td></tr></table></figure>
-<p>现在再一次使用 gpg 命令进行验证：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --verify linux-4.19.1.tar.sign</span><br></pre></td></tr></table></figure>
-<p>示例输出：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">gpg: assuming signed data in &apos;linux-4.19.1.tar&apos;</span><br><span class="line">gpg: Signature made Sun 12 Aug 2018 04:00:28 PM CDT</span><br><span class="line">gpg:                using RSA key 79BE3E4300411886</span><br><span class="line">gpg: Good signature from &quot;Linus Torvalds &lt;torvalds@kernel.org&gt;&quot; [unknown]</span><br><span class="line">gpg:                 aka &quot;Linus Torvalds &lt;torvalds@linux-foundation.org&gt;&quot; [unknown]</span><br><span class="line">gpg: WARNING: This key is not certified with a trusted signature!</span><br><span class="line">gpg:          There is no indication that the signature belongs to the owner.</span><br><span class="line">Primary key fingerprint: ABAF 11C6 5A29 70B1 30AB  E3C4 79BE 3E43 0041 1886</span><br></pre></td></tr></table></figure>
-<p>如果通过了验证，那么就使用 tar 进行解压：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xvf linux-4.19.1.tar</span><br></pre></td></tr></table></figure>
-<h2 id="3-配置-Linux-内核特征和模型"><a href="#3-配置-Linux-内核特征和模型" class="headerlink" title="3.配置 Linux 内核特征和模型"></a>3.配置 Linux 内核特征和模型</h2><p>在开始构建内核之前，你必须配置内核特征。你也必须明确你的系统所需要的内核模块（驱动）。这个对于新手来说是很有压力的。我建议你使用 cp 命令复制已有的配置文件：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd linux-4.19.1</span><br><span class="line">cp -v /boot/config-$(uname -r) .config</span><br></pre></td></tr></table></figure>
-<p>示例输出：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;/boot/config-4.15.0-30-generic&apos; -&gt; &apos;.config&apos;</span><br></pre></td></tr></table></figure>
-<h2 id="4-安装编译器和其他必须的工具"><a href="#4-安装编译器和其他必须的工具" class="headerlink" title="4.安装编译器和其他必须的工具"></a>4.安装编译器和其他必须的工具</h2><p>你必须安装有类似 GCC 或者相关联的工具来编译 Linux 内核。</p>
-<p>使用下列的 apt 命令或 apt-get 命令来安装：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential libncurses-dev bison flex libssl-dev libelf-dev</span><br></pre></td></tr></table></figure>
-<p>尝试 yum 命令：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum group install &quot;Development Tools&quot;</span><br></pre></td></tr></table></figure>
-<p>或</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum groupinstall &quot;Development Tools&quot;</span><br></pre></td></tr></table></figure>
-<p>额外的包：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install ncurses-devel bison flex elfutils-libelf-devel openssl-devel</span><br></pre></td></tr></table></figure>
-<h3 id="如何在-Fedora-Linux-上安装GCC-和其它开发工具"><a href="#如何在-Fedora-Linux-上安装GCC-和其它开发工具" class="headerlink" title="如何在 Fedora Linux 上安装GCC 和其它开发工具"></a>如何在 Fedora Linux 上安装GCC 和其它开发工具</h3><p>运行下列 dnf 命令：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf group install &quot;Development Tools&quot;</span><br><span class="line">sudo dnf ncurses-devel bison flex elfutils-libelf-devel openssl-devel</span><br></pre></td></tr></table></figure>
-<h2 id="5-编译内核"><a href="#5-编译内核" class="headerlink" title="5.编译内核"></a>5.编译内核</h2><p>开始编译并创建一个压缩好的内核镜像，输入：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
-<p>为了加速编译时间，传递 -j 参数：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">## use 4 core/thread ##</span><br><span class="line">$ make -j 4</span><br><span class="line">## get thread or cpu core count using nproc command ##</span><br><span class="line">$ make -j $(nproc)</span><br></pre></td></tr></table></figure>
-<p><img src="/Users/yifengpeng/Desktop/屏幕快照 2018-11-29 09.09.11.png" alt=""></p>
-<p>编译和构建 linux 内核将会话费大量时间，这取决于你的系统资源（例如：CPU）。</p>
-<h3 id="安装-Linux-内核模块"><a href="#安装-Linux-内核模块" class="headerlink" title="安装 Linux 内核模块"></a>安装 Linux 内核模块</h3><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make modules_install</span><br></pre></td></tr></table></figure>
-<p><img src="/Users/yifengpeng/Desktop/屏幕快照 2018-11-29 09.13.03.png" alt=""></p>
-<h3 id="安装-Linux-内核"><a href="#安装-Linux-内核" class="headerlink" title="安装 Linux 内核"></a>安装 Linux 内核</h3><p>到目前为止我们已经编译了 Linux 内核并且安装了内核模块。是时候安装内核本身了：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
-<p><img src="/Users/yifengpeng/Desktop/屏幕快照 2018-11-29 09.15.12.png" alt=""></p>
-<p>这将安装三个文件在 /boot 目录并修改你的内核 grub 配置文件：</p>
-<ul>
-<li>initramfs-4.19.1.img</li>
-<li>System.map-4.19.1</li>
-<li>vmlinuz-4.19.1</li>
-</ul>
-<h3 id="更新-grub-配置"><a href="#更新-grub-配置" class="headerlink" title="更新 grub 配置"></a>更新 grub 配置</h3><p>你需要修改 Grub 2 bootloader 配置。 输入下列 shell 命令</p>
-<h4 id="CentOS-RHEL-Oracle-Scientific-and-Fedora-Linux"><a href="#CentOS-RHEL-Oracle-Scientific-and-Fedora-Linux" class="headerlink" title="CentOS/RHEL/Oracle/Scientific and Fedora Linux"></a>CentOS/RHEL/Oracle/Scientific and Fedora Linux</h4><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo grub2-mkconfig -o /boot/grub2/grub.cfg</span><br><span class="line">sudo grubby --set-default /boot/vmlinuz-4.19.1</span><br></pre></td></tr></table></figure>
-<h4 id="Debian-Ubuntu-Linux"><a href="#Debian-Ubuntu-Linux" class="headerlink" title="Debian/Ubuntu Linux"></a>Debian/Ubuntu Linux</h4><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo update-initramfs -c -k 4.19.1</span><br><span class="line">sudo update-grub</span><br></pre></td></tr></table></figure>
-<p>重启系统：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
-<p>在重启后验证 Linux 内核是否为最新版本</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -mrs</span><br></pre></td></tr></table></figure>
 
         </div>
         
