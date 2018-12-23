@@ -7,13 +7,13 @@
 
 
 
-    <meta name="description" content="Kaggle入门赛之房价预测 前言：最近实验室有一个数据挖掘的任务需要完成，是一个和国家电网相关的回归任务。因此我在 Kaggle 上找一些回归任务的比赛来练练手，房价预测这个比赛的难度比较适合我这种新手，因此选择了这个题目。本篇博客的大部分内容来自该比赛的一个高分 kernel, 感兴趣的同学可以直接跳转查看原博。  1.比赛介绍这是 Kaggle 上的一个为数据科学初学者准备的比赛，需要参赛者">
+    <meta name="description" content="Kaggle入门赛之房价预测 前言：最近实验室有一个数据挖掘的任务需要完成，是一个和国家电网相关的回归任务。因此我在 Kaggle 上找一些回归任务的比赛来练练手，房价预测这个比赛的难度比较适合我这种新手，因此选择了这个题目。本篇博客的大部分内容来自该比赛的一个高分 kernel, 感兴趣的同学可以直接跳转查看原博。">
 <meta name="keywords" content="Kaggle">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kaggle之房价预测">
 <meta property="og:url" content="http://yoursite.com/2018/12/07/Kaggle之房价预测/index.html">
 <meta property="og:site_name" content="MountainOne&#39;s technology space">
-<meta property="og:description" content="Kaggle入门赛之房价预测 前言：最近实验室有一个数据挖掘的任务需要完成，是一个和国家电网相关的回归任务。因此我在 Kaggle 上找一些回归任务的比赛来练练手，房价预测这个比赛的难度比较适合我这种新手，因此选择了这个题目。本篇博客的大部分内容来自该比赛的一个高分 kernel, 感兴趣的同学可以直接跳转查看原博。  1.比赛介绍这是 Kaggle 上的一个为数据科学初学者准备的比赛，需要参赛者">
+<meta property="og:description" content="Kaggle入门赛之房价预测 前言：最近实验室有一个数据挖掘的任务需要完成，是一个和国家电网相关的回归任务。因此我在 Kaggle 上找一些回归任务的比赛来练练手，房价预测这个比赛的难度比较适合我这种新手，因此选择了这个题目。本篇博客的大部分内容来自该比赛的一个高分 kernel, 感兴趣的同学可以直接跳转查看原博。">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="http://yoursite.com/images/房价预测/6.png">
 <meta property="og:image" content="http://yoursite.com/images/房价预测/3.png">
@@ -26,10 +26,10 @@
 <meta property="og:image" content="http://yoursite.com/images/房价预测/5.png">
 <meta property="og:image" content="http://yoursite.com/images/房价预测/8.png">
 <meta property="og:image" content="http://yoursite.com/images/房价预测/9.png">
-<meta property="og:updated_time" content="2018-12-10T02:31:38.649Z">
+<meta property="og:updated_time" content="2018-12-23T06:31:15.340Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kaggle之房价预测">
-<meta name="twitter:description" content="Kaggle入门赛之房价预测 前言：最近实验室有一个数据挖掘的任务需要完成，是一个和国家电网相关的回归任务。因此我在 Kaggle 上找一些回归任务的比赛来练练手，房价预测这个比赛的难度比较适合我这种新手，因此选择了这个题目。本篇博客的大部分内容来自该比赛的一个高分 kernel, 感兴趣的同学可以直接跳转查看原博。  1.比赛介绍这是 Kaggle 上的一个为数据科学初学者准备的比赛，需要参赛者">
+<meta name="twitter:description" content="Kaggle入门赛之房价预测 前言：最近实验室有一个数据挖掘的任务需要完成，是一个和国家电网相关的回归任务。因此我在 Kaggle 上找一些回归任务的比赛来练练手，房价预测这个比赛的难度比较适合我这种新手，因此选择了这个题目。本篇博客的大部分内容来自该比赛的一个高分 kernel, 感兴趣的同学可以直接跳转查看原博。">
 <meta name="twitter:image" content="http://yoursite.com/images/房价预测/6.png">
 
 
@@ -166,6 +166,7 @@
             <h1 id="Kaggle入门赛之房价预测"><a href="#Kaggle入门赛之房价预测" class="headerlink" title="Kaggle入门赛之房价预测"></a>Kaggle入门赛之房价预测</h1><blockquote>
 <p>前言：最近实验室有一个数据挖掘的任务需要完成，是一个和国家电网相关的回归任务。因此我在 Kaggle 上找一些回归任务的比赛来练练手，房价预测这个比赛的难度比较适合我这种新手，因此选择了这个题目。本篇博客的大部分内容来自该比赛的一个高分 <a href="https://www.kaggle.com/serigne/stacked-regressions-top-4-on-leaderboard" target="_blank" rel="noopener">kernel</a>, 感兴趣的同学可以直接跳转查看原博。</p>
 </blockquote>
+<a id="more"></a>
 <h2 id="1-比赛介绍"><a href="#1-比赛介绍" class="headerlink" title="1.比赛介绍"></a>1.比赛介绍</h2><p>这是 Kaggle 上的一个为数据科学初学者准备的比赛，需要参赛者掌握一定的 R 或 Python 以及机器学习的基础知识。它给出了一个训练集和一个测试集，最终需要对测试集中的结果进行预测并提交。训练集中包含了79个特征以预测房价（SalePrice），包括：房屋的大小、地段、用途、基础设施等等。具体的描述可查看该比赛的<a href="https://www.kaggle.com/c/house-prices-advanced-regression-techniques" target="_blank" rel="noopener">比赛页面</a>,比赛中所用到数据也均可通过比赛页面下载。</p>
 <h2 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="2.准备工作"></a>2.准备工作</h2><p>数据挖掘类的比赛最为重要的工作就是：<strong>特征工程</strong>。本篇博客将会用到的特征工程方法还是非常朴素的，具体如下：</p>
 <ul>
@@ -446,7 +447,7 @@
 
 <div class="card">
     <div class="card-content">
-        <h3 class="title is-5 has-text-weight-normal">Comments</h3>
+        <h3 class="title is-5 has-text-weight-normal">Comentarios</h3>
         <script>(function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
@@ -496,17 +497,17 @@
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Posts
+                        Entradas
                     </p>
                     <p class="title has-text-weight-normal">
-                        5
+                        6
                     </p>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Categories
+                        Categorias
                     </p>
                     <p class="title has-text-weight-normal">
                         2
@@ -516,7 +517,7 @@
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Tags
+                        Etiquetas
                     </p>
                     <p class="title has-text-weight-normal">
                         3
@@ -526,7 +527,7 @@
         </nav>
         <div class="level">
             <a class="level-item button is-link is-rounded" href="https://github.com/MountainOne">
-                Follow</a>
+                SEGUIR</a>
         </div>
         
         
@@ -613,7 +614,7 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Categories
+                Categorias
             </h3>
             <ul class="menu-list">
             <li>
@@ -642,7 +643,7 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Tag Cloud
+            Nube de etiquetas
         </h3>
         <a href="/tags/Kaggle/" style="font-size: 10px;">Kaggle</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/image-segmentation/" style="font-size: 10px;">image segmentation</a>
     </div>
@@ -656,8 +657,21 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Recent
+            Recientes
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time></div>
+                    <a href="/2018/12/19/为Linux添加一个系统调用/" class="has-link-black-ter is-size-6">为Linux添加一个系统调用</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -711,19 +725,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-05T14:30:00.000Z">2018-12-05</time></div>
-                    <a href="/2018/12/05/从源码编译和安装Linux内核/" class="has-link-black-ter is-size-6">从源码编译和安装Linux内核</a>
-                    <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -732,7 +733,7 @@
     <div class="card-content">
         <div class="menu">
         <h3 class="menu-label">
-            Archives
+            Archivos
         </h3>
         <ul class="menu-list">
         
@@ -742,7 +743,7 @@
                     <span class="level-item">December 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -756,7 +757,7 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Tags
+                Etiquetas
             </h3>
             <ul class="menu-list">
                 
@@ -777,7 +778,7 @@
                             <span class="level-item">Linux</span>
                         </span>
                         <span class="level-end">
-                            <span class="level-item tag">3</span>
+                            <span class="level-item tag">4</span>
                         </span>
                     </a>
                 </li>
@@ -813,8 +814,21 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Recent
+            Recientes
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time></div>
+                    <a href="/2018/12/19/为Linux添加一个系统调用/" class="has-link-black-ter is-size-6">为Linux添加一个系统调用</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -868,19 +882,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-05T14:30:00.000Z">2018-12-05</time></div>
-                    <a href="/2018/12/05/从源码编译和安装Linux内核/" class="has-link-black-ter is-size-6">从源码编译和安装Linux内核</a>
-                    <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -889,7 +890,7 @@
     <div class="card-content">
         <div class="menu">
         <h3 class="menu-label">
-            Archives
+            Archivos
         </h3>
         <ul class="menu-list">
         
@@ -899,7 +900,7 @@
                     <span class="level-item">December 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -913,7 +914,7 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Tags
+                Etiquetas
             </h3>
             <ul class="menu-list">
                 
@@ -934,7 +935,7 @@
                             <span class="level-item">Linux</span>
                         </span>
                         <span class="level-end">
-                            <span class="level-item tag">3</span>
+                            <span class="level-item tag">4</span>
                         </span>
                     </a>
                 </li>
@@ -1087,10 +1088,10 @@ document.addEventListener('DOMContentLoaded', function () {
     (function (window) {
         var INSIGHT_CONFIG = {
             TRANSLATION: {
-                POSTS: 'Posts',
+                POSTS: 'Entradas',
                 PAGES: 'Pages',
-                CATEGORIES: 'Categories',
-                TAGS: 'Tags',
+                CATEGORIES: 'Categorias',
+                TAGS: 'Etiquetas',
                 UNTITLED: '(Untitled)',
             },
             CONTENT_URL: '/content.json',

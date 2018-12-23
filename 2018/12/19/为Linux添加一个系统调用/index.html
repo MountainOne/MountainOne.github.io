@@ -2,38 +2,23 @@
 <html>
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>基于深度学习的图像语义分割综述（译） - MountainOne&#39;s technology space</title>
+<title>为Linux添加一个系统调用 - MountainOne&#39;s technology space</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="一、语义分割是什么？语义分割，指在图像上找到具有同一语义的像素，并将其归为一类，是计算机视觉中的关键问题之一，属于高级的视觉任务，是完全场景理解的基础。许多新兴的应用需要精准和高效的语义分割：自动驾驶、室内导航、虚拟现实和增强现实。这些需求随着深度学习方法的崛起一同迸发，衍生了大量计算机视觉相关的应用。具体的应用如下图所示。">
-<meta name="keywords" content="image segmentation">
+    <meta name="description" content="在之前的博客中，我使用 C 和 Python 分别实现了一个简单的 Shell，这是一个很有意思的小程序，可以让你了解你每天都在使用的工具。而在简单的 Shell 之下则是一系列的系统调用，例如：read, fork, exec, wait, write等等。现在让我们继续这段旅程，开始学习这些系统调用是如何在 Linux 中实现的。">
+<meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="基于深度学习的图像语义分割综述（译）">
-<meta property="og:url" content="http://yoursite.com/2018/12/14/基于深度学习的图像语义分割综述（译）/index.html">
+<meta property="og:title" content="为Linux添加一个系统调用">
+<meta property="og:url" content="http://yoursite.com/2018/12/19/为Linux添加一个系统调用/index.html">
 <meta property="og:site_name" content="MountainOne&#39;s technology space">
-<meta property="og:description" content="一、语义分割是什么？语义分割，指在图像上找到具有同一语义的像素，并将其归为一类，是计算机视觉中的关键问题之一，属于高级的视觉任务，是完全场景理解的基础。许多新兴的应用需要精准和高效的语义分割：自动驾驶、室内导航、虚拟现实和增强现实。这些需求随着深度学习方法的崛起一同迸发，衍生了大量计算机视觉相关的应用。具体的应用如下图所示。">
+<meta property="og:description" content="在之前的博客中，我使用 C 和 Python 分别实现了一个简单的 Shell，这是一个很有意思的小程序，可以让你了解你每天都在使用的工具。而在简单的 Shell 之下则是一系列的系统调用，例如：read, fork, exec, wait, write等等。现在让我们继续这段旅程，开始学习这些系统调用是如何在 Linux 中实现的。">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/1.png">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/10.png">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/4.png">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/6.png">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/12.png">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/9.png">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/8.png">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/0.png">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/3.png">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/11.png">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/5.png">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/2.png">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/7.png">
-<meta property="og:image" content="http://yoursite.com/images/语义分割综述/13.png">
-<meta property="og:updated_time" content="2018-12-23T06:30:52.248Z">
+<meta property="og:updated_time" content="2018-12-23T06:29:51.676Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="基于深度学习的图像语义分割综述（译）">
-<meta name="twitter:description" content="一、语义分割是什么？语义分割，指在图像上找到具有同一语义的像素，并将其归为一类，是计算机视觉中的关键问题之一，属于高级的视觉任务，是完全场景理解的基础。许多新兴的应用需要精准和高效的语义分割：自动驾驶、室内导航、虚拟现实和增强现实。这些需求随着深度学习方法的崛起一同迸发，衍生了大量计算机视觉相关的应用。具体的应用如下图所示。">
-<meta name="twitter:image" content="http://yoursite.com/images/语义分割综述/1.png">
+<meta name="twitter:title" content="为Linux添加一个系统调用">
+<meta name="twitter:description" content="在之前的博客中，我使用 C 和 Python 分别实现了一个简单的 Shell，这是一个很有意思的小程序，可以让你了解你每天都在使用的工具。而在简单的 Shell 之下则是一系列的系统调用，例如：read, fork, exec, wait, write等等。现在让我们继续这段旅程，开始学习这些系统调用是如何在 Linux 中实现的。">
 
 
 
@@ -99,7 +84,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/wangye.jpeg" alt="基于深度学习的图像语义分割综述（译）" height="28">
+                <img src="/images/wangye.jpeg" alt="为Linux添加一个系统调用" height="28">
             
             </a>
         </div>
@@ -150,11 +135,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-12-14T10:55:01.000Z">2018-12-14</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Deep-Learning/">Deep Learning</a>
-                </div>
+                <time class="level-item has-text-grey" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time>
                 
                 
             </div>
@@ -162,124 +143,74 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                基于深度学习的图像语义分割综述（译）
+                为Linux添加一个系统调用
             
         </h1>
         <div class="content">
-            <h2 id="一、语义分割是什么？"><a href="#一、语义分割是什么？" class="headerlink" title="一、语义分割是什么？"></a>一、语义分割是什么？</h2><p>语义分割，指在图像上找到具有同一语义的像素，并将其归为一类，是计算机视觉中的关键问题之一，属于高级的视觉任务，是完全场景理解的基础。许多新兴的应用需要精准和高效的语义分割：自动驾驶、室内导航、虚拟现实和增强现实。这些需求随着深度学习方法的崛起一同迸发，衍生了大量计算机视觉相关的应用。具体的应用如下图所示。</p>
+            <p>在之前的博客中，我使用 C 和 Python 分别实现了一个简单的 Shell，这是一个很有意思的小程序，可以让你了解你每天都在使用的工具。而在简单的 Shell 之下则是一系列的系统调用，例如：read, fork, exec, wait, write等等。现在让我们继续这段旅程，开始学习这些系统调用是如何在 Linux 中实现的。</p>
 <a id="more"></a>
-<p><img src="/images/语义分割综述/1.png" alt="left:input image.Right:semantic segmentation"></p>
-<p>除了要识别摩托车和车上的人外，我们还需要描绘出每个物体的边界。所以，不同于分类任务，我们需要从我们的模型中得到密集的像素集的预测结果。</p>
-<p>VOC2012和MSCOCO是语义分割任务中最成功的数据集。</p>
-<p>##二、两种方法的区别</p>
-<p>在深度学习的方法流行之前，人们使用 TextonForest<a href="http://mi.eng.cam.ac.uk/~cipolla/publications/inproceedings/2008-CVPR-semantic-texton-forests.pdf" target="_blank" rel="noopener">^1</a> 和 Random Forest based classifiers<a href="http://www.cse.chalmers.se/edu/year/2011/course/TDA361/Advanced%20Computer%20Graphics/BodyPartRecognition.pdf" target="_blank" rel="noopener">^2</a> 来进行语义分割。说到图片分类，卷积神经网络（CNN）在分割任务上也有大量成功的应用。</p>
-<p>最早将深度学习成功应用于分割任务的方法是 patch classification<a href="http://people.idsia.ch/~juergen/nips2012.pdf" target="_blank" rel="noopener">^3</a>,它将每一个像素根据周围的图片块分别分类。使用图片块的主要原因是分类网络通常有全连接层并且需要固定大小的图片。</p>
-<p>在2014年，伯克利的 Lond 等人提出了 Fully Convolutional Nerworks(FCN)<a href="https://arxiv.org/abs/1411.4038" target="_blank" rel="noopener">^4</a>。推广了基于 CNN 的网络架构，在不使用全连接层的情况下进行密集预测。这使得用任意大小的图片来生成分割图成为可能，并且比块分类的速度更快。后来几乎所有的语义分割领域最优秀的成果都是对 FCN 进行的改进。FCN 可以称作是深度学习在语义分割领域的里程碑。</p>
-<p>除了全连接层外，另一个使用 CNN 进行语义分割时会遇到的问题是池化层。池化层能够增加感知野并且能够在丢弃部分 ‘where’ 信息的同时聚合上下文信息。然而语义分割需要对像素的分类有明确的区分，需要将 ‘where’ 信息保留。有两种不同的网络架构可用来解决这个问题。</p>
-<p>首先是编码-解码架构。编码通常是配合着池化层降低了空间维度，解码则是逐渐恢复对象细节和空间维度。网络中有很多直连编码器与解码器的链接，来复制解码器更好地恢复对象细节。U-Net<a href="https://arxiv.org/abs/1505.04597" target="_blank" rel="noopener">^5</a> 是这一架构的经典实现。</p>
-<p><img src="/images/语义分割综述/10.png" alt=""></p>
-<p>第二种架构是使用 dilated/atrous convolutions<a href="https://arxiv.org/abs/1511.07122" target="_blank" rel="noopener">^6</a>来替代传统的卷积操作。</p>
-<p><img src="/images/语义分割综述/4.png" alt=""></p>
-<p>Conditional Random Field(CRF) postprocessing<a href="https://arxiv.org/abs/1210.5644" target="_blank" rel="noopener">^7</a>通常用来提升语义分割的效果。CRFs 是一种图模型，可以使得语义分割的结果更加平滑，对于强度相似的像素更趋向于把它们标为一类。CRFs 可以提高 1~2% 的分数。</p>
-<p><img src="/images/语义分割综述/6.png" alt=""></p>
-<h2 id="三、论文汇总"><a href="#三、论文汇总" class="headerlink" title="三、论文汇总"></a>三、论文汇总</h2><p>接下来我将介绍一些自 FCN 以来的能代表语义分割领域进展的论文（所有的论文都以 VOC2012 作为基准）</p>
-<ol>
-<li>FCN</li>
-<li>SegNet</li>
-<li>Dilated Convolutions</li>
-<li>DeepLatb(v1 &amp; v2)</li>
-<li>DeepLab v3</li>
-</ol>
-<p>对于每一篇论文，我列出了它们的主要贡献，并对主要工作进行了说明，并在最后列出了它们在 VOC2012 数据集上的得分，这样就能更直观地感受到语义分割领域的发展进程。</p>
-<p><strong>1.FCN</strong><a href="https://arxiv.org/abs/1411.4038" target="_blank" rel="noopener">^4</a></p>
+<h2 id="什么是系统调用"><a href="#什么是系统调用" class="headerlink" title="什么是系统调用"></a>什么是系统调用</h2><p>在我们实现系统调用之前，我们最好弄清楚它们是什么。一个菜鸟程序员——像几年前的我——可能会将系统调用定义为 C 标准库提供的任何函数。但这并不完全准确。即使许多 C 标准库中的函数与系统调用对应的很好（例如 chdir），但大部分都会比简单地使用系统调用做更多的事（例如 fork, fprintf）。或者纯粹通过编程实现不使用系统调用（qsort, strtok）。</p>
+<p>事实上，一个系统调用有着非常明确的定义。它是一种按照你的需求调用操作系统内核资源的方式。对字符串进行分词这样的操作不需要和内核交互，但是任何涉及到设备，文件或者进程的操作需要。</p>
+<p>系统调用在底层的行为也与普通函数不同。不同于简单地让指令指针跳转到你的程序或函数库的代码段，而是让你的程序请求 CPU 切换到内核模式，然后访问预先在内核中定义的地址来执行系统调用。这只能通过几种方式实现，例如：处理器中断或者特定的指令（<code>syscall</code>,<code>sysenter</code>） 。</p>
+<p>难得的是，实现系统调用的最复杂的部分已经在内核中实现了。不管一个系统调用是如何实现的，都得通过系统调用号查表来找到并调用正确的内核函数，这对于实现我们自己的系统调用来说是非常简单的。让我们开始吧。</p>
+<h2 id="设置虚拟机"><a href="#设置虚拟机" class="headerlink" title="设置虚拟机"></a>设置虚拟机</h2><p>实现系统调用并不是通过修改某一个内核模块来实现。而是你必须获得一份 Linux 源码的复制，修改它，编译它，启动它。这些都是可以直接在你的主机中完成的事（如果主机是 Linux系统），但最好在虚拟机上进行这类尝试。例如在 VirtualBox 上。</p>
+<p>虽然你可以手动地配置一台虚拟机，但更节省时间的方式是下载一台已经配置好的。你可以通过<a href="https://www.osboxes.org/arch-linux/" target="_blank" rel="noopener">这个链接</a> 下载一台已经配置好的虚拟机。在这篇文章中，我会使用201608CLI 版本的 VirtualBox 虚拟机。下载并解压它。在 VirtualBox 中创建一台新的虚拟机，选择下载解压好的 vdi 文件作为硬盘文件。创建并允许你的虚拟机，你就能看到你的命令行登录界面了。根用户的密码可以在下载页面查看到（我的是：osboxes.org）。</p>
+<p>注意：如果你有一台多核的机器，编辑你的虚拟机设置让它使用多核将会是一个很好的主意。这将会显著地提升编译效率，只要你再接下来的命令中使用 make -jN 替换 make，其中 N 是你机器的 CPU 核数。</p>
+<p>需要做的第一步是安装 bc，一个没有包含进虚拟机的编译期 Linux 依赖。不幸的是，这需要你首先更新虚拟机。注意我在这篇博客中给出的每一条命令都需要在 root 下运行。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> pacman -Syu</span><br><span class="line"><span class="hljs-meta">$</span> pacman -S bc</span><br><span class="line"><span class="hljs-meta">$</span> reboot</span><br></pre></td></tr></table></figure>
+<p>你需要重启虚拟机，因为内核将被更新。我们必须确保我们运行的内核是更新过的以开始后续的操作。</p>
+<h2 id="获取源码"><a href="#获取源码" class="headerlink" title="获取源码"></a>获取源码</h2><p>在你配置好虚拟机后，下一步是下载内核源码。尽管大部分开发者本能地想到用 Git 来获取他们需要的代码，但这一次可能并不需要。Linux 的 Git 仓库太大了，所以复制它是很不值得的。然而可以你可以下载内核版本相关的源码压缩文件。你可以通过 <code>uname -r</code> 来查看内核版本。然后在 <a href="https://cdn.kernel.org/pub/linux/kernel/v4.x/" target="_blank" rel="noopener">kernel.org</a> 上下载最接近的版本。在你的虚拟机中，使用 <code>curl</code> 命令来下载源码：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#</span> -O -J will set the output filename based on the URL</span><br><span class="line"><span class="hljs-meta">$</span> curl -O -J https://www.kernel.org/pub/linux/kernel/v4.x/linux-VERSION.tar.xz</span><br></pre></td></tr></table></figure>
+<p>之后解压 tarball 文件：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> tar xvf linux-VERSION.tar.xz</span><br><span class="line"><span class="hljs-meta">$</span> cd linux-VERSION</span><br></pre></td></tr></table></figure>
+<h2 id="配置你的内核"><a href="#配置你的内核" class="headerlink" title="配置你的内核"></a>配置你的内核</h2><p>Linux 内核是非常方便配置的。你可以启用或废弃它的大部分功能。如果你要手动地配置每一个选项，你将会做一整天。幸运地使，你可以通过复制你的内核已有的配置文件来跳过这一步，它保存在<code>/proc/config.gz</code> 。通过这条命令来将配置应用在你的新内核中：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> zcat /proc/config.gz &gt; .config</span><br></pre></td></tr></table></figure>
+<p>为了确保配置文件中的所有变量都被赋值，运行 <code>make oldconfig</code>。如果没有问题，命令行将不会询问你任何配置问题。</p>
+<p>你唯一需要修改的配置项是你的内核名，确保它不会和你当前已经安装的发生冲突。在 Arch Linux 中，内核在构建时就带有后缀 <code>-ARCH</code>。你应该改变这个后缀，通过文本编辑器打开<code>.confit</code>，然后直接修改它的行。你将会发现它就在”General setup”头下面，距文件底不远。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CONFIG_LOCALVERSION="-ARCH"</span><br></pre></td></tr></table></figure>
+<h2 id="添加你的系统调用"><a href="#添加你的系统调用" class="headerlink" title="添加你的系统调用"></a>添加你的系统调用</h2><p>现在内核已经配置好了，你可以马上开始编译它了。然而创建一个系统调用需要编辑系统调用表，它记录了每一条系统调用的大致信息。因为编译需要花费很长的时间，你现在编译的话会浪费很多的时间。不如让我们做一些有价值的事情吧：开始写你自己的系统调用！</p>
+<p>Linux 中的一些代码是架构特定的，例如一些初始化处理中断和系统调用的代码。因此系统调用表所在的目录取决于你的处理器架构。我们将在 x86_64 架构的机器上操作。</p>
+<h3 id="系统调用表"><a href="#系统调用表" class="headerlink" title="系统调用表"></a>系统调用表</h3><p>在 x86_64 的机器上包含系统调用表的文件在路径<code>arch/x86/entry/syscalls/syscall_64.tbl</code> 。这张表通过脚本读入并生成一些模板代码，这将使我们的事情变得非常简单。来到文件底部（在4.7.1版本中系统调用号结束于328），添加下面这行：</p>
+<figure class="highlight tcl hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-number">329</span>	common	yifeng	sys_yifeng</span><br></pre></td></tr></table></figure>
+<p>注意每一列之间是一个 tab(不是空格)。第一列是系统调用号。在这张表中我选择了下一个可用的数字——329.在不同版本的系统中这个数字可能不同！第二列表明这个系统调用号是在32位和64位 CPU 中共用的。第三列是系统调用名，第四列是实现函数名。转换系统调用名到实现函数名是简单的，在系统调用名前加上前缀<code>sys_</code> 即可。我使用了 yifeng 作为我的系统调用名，你也可以使用任何你喜欢的。</p>
+<h3 id="系统调用函数"><a href="#系统调用函数" class="headerlink" title="系统调用函数"></a>系统调用函数</h3><p>最后一步是为系统调用实现调用函数。我们其实并不知道系统调用应该做些什么，但我们想让它做一些简单的我们可以察觉的事。比如使用<code>printk()</code> 打印一些内核日志。所以，我们的系统调用将会需要传入一个参数（一个字符串），然后将它写入内核日志。</p>
+<p>你可以在任何地方实现系统调用，但是杂项的系统调用最好写在<code>kernel/sys.c</code> 文件中。</p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">SYSCALL_DEFINE1(yifeng, <span class="hljs-keyword">char</span> *, msg)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="hljs-keyword">char</span> buf[<span class="hljs-number">256</span>];</span><br><span class="line">  <span class="hljs-keyword">long</span> copied = strncpy_from_user(buf, msg, <span class="hljs-keyword">sizeof</span>(buf));</span><br><span class="line">  <span class="hljs-keyword">if</span> (copied &lt; <span class="hljs-number">0</span> || copied == <span class="hljs-keyword">sizeof</span>(buf))</span><br><span class="line">    <span class="hljs-keyword">return</span> -EFAULT;</span><br><span class="line">  printk(KERN_INFO <span class="hljs-string">"yifeng syscall called with \"%s\"\n"</span>, buf);</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>SYSCALL_DEFINEN</code> 是一系列的宏定义族，它使得定义 N 个变量的系统调用变得简单。宏的第一个参数是系统调用的名字（没有 sys_ 前缀）。接下来的参数是系统调用的参数类型和参数名对。因为我们的系统调用只有一个参数，所以我们使用 <code>SYSCALL_DEFINE1</code> ，我们的唯一参数是<code>char *</code> 和参数名<code>msg</code> 。</p>
+<p>我们马上会遇到一个有趣的问题，那就是我们无法直接使用提供给我们的 <code>msg</code> 的指针。有以下几点可能的原因：</p>
+<ul>
+<li>进程可能会尝试愚弄我们来打印内核空间的数据。通过传递一个映射到内核空间的指针，这个系统调用将会打印内核空间的数据。这将不能被允许。</li>
+<li>进程可能会尝试度其他进程的内存，通过传递一个映射到其他内存地址空间的指针。</li>
+<li>我们需要考虑内存的 读/写/执行 的权限。</li>
+</ul>
+<p>为了处理这个问题，我们使用了<code>strncpy_from_user()</code> 函数，它的行为和<code>strncpy</code> 类似，但是会首先检查传入的地址是否是来自用户空间的地址。如果传入的字符串太长或者在复制的时候出现了问题，我们都会返回 <code>EFAULT</code> (即使返回<code>EINVAL</code> 对于字符串太长的情况更合适)。</p>
+<p>最终我们使用<code>printk</code> 来打印。<code>KERN_INFO</code> 会展开成一个文本字符串。编译器将会把它和格式化字符串串联起来，打印的效果和<code>printf</code> 类似。</p>
+<h2 id="编译和启动内核"><a href="#编译和启动内核" class="headerlink" title="编译和启动内核"></a>编译和启动内核</h2><p>注意：这些步骤会有一些复杂。看这部分的时候，你不需要一步一步输入命令，在最后我会给你一个完成这些工作的脚本。</p>
+<p>我们的第一步是编译内核和它的模块。内核的主镜像通过<code>make</code> 编译。你可以在下面的文件中看到编译结果：<code>arch/x86_64/boot/bzImage</code> 。在运行<code>make modules_install</code> 后， 这个版本的内核模块将被编译并复制到 <code>/lib/modules/KERNEL_VERSION</code> 。例如，按照我所给出的配置，这些模块将被编译并放置在<code>/lib/modules/linux-4.7.1-yifeng/</code> 。</p>
+<p>在你已经编译好内核及其模块后，你将需要做一些事情来启动它。首先，你将要复制你已经编译好的内核镜像到你的<code>/boot</code> 目录：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> cp arch/x86_64/boot/bzImage /boot/vmlinuz-linux-yifeng</span><br></pre></td></tr></table></figure>
+<p>接下来需要创建一个“initramfs”。</p>
+<p>通过两步来实现它。首先基于你之前的文件创建一个 preset:</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> sed s/linux/linux-yifeng/g &lt;/etc/mknitcpio.d/linux.preset &gt;/etc/mkinitcpio.d/linux-yifeng.preset</span><br></pre></td></tr></table></figure>
+<p>之后生成一个镜像：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> mkinitcpio -p linux-yifeng</span><br></pre></td></tr></table></figure>
+<p>最后你需要指导你的 bootloader (这里是指我们的虚拟机，GRUB)来启动我们的新内核。因为 GRUB 可以自动找到 <code>/boot</code> 目录下的内核镜像，所有我们需要做的是再生成 GRUB 配置：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
+<p>所以上面的操作可以总在一个脚本中：</p>
+<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#!/usr/bin/bash</span></span><br><span class="line"><span class="hljs-comment"># Compile and "deploy" a new custom kernel from source on Arch Linux</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Change this if you'd like. It has no relation</span></span><br><span class="line"><span class="hljs-comment"># to the suffix set in the kernel config.</span></span><br><span class="line">SUFFIX=<span class="hljs-string">"-yifeng"</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># This causes the script to exit if an error occurs</span></span><br><span class="line"><span class="hljs-built_in">set</span> -e</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Compile the kernel</span></span><br><span class="line">make</span><br><span class="line"><span class="hljs-comment"># Compile and install modules</span></span><br><span class="line">make modules_install</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Install kernel image</span></span><br><span class="line">cp arch/x86_64/boot/bzImage /boot/vmlinuz-linux<span class="hljs-variable">$SUFFIX</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Create preset and build initramfs</span></span><br><span class="line">sed s/linux/linux<span class="hljs-variable">$SUFFIX</span>/g \</span><br><span class="line">    &lt;/etc/mkinitcpio.d/linux.preset \</span><br><span class="line">    &gt;/etc/mkinitcpio.d/linux<span class="hljs-variable">$SUFFIX</span>.preset</span><br><span class="line">mkinitcpio -p linux<span class="hljs-variable">$SUFFIX</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Update bootloader entries with new kernels.</span></span><br><span class="line">grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
+<p>将 <code>deploy.sh</code> 保存在你内核源码的主目录下，执行<code>chmod u+x deploy.sh</code> 来设置执行权限。现在你就可以通过运行这个脚本来构建和部署内核了。编译将会需要一些时间。</p>
+<p>一旦脚本执行完成，执行<code>reboot</code> 。当 GRUB 弹出，选择“Advanced Options for Arch Linux”。这将会显示可用内核的菜单列表，选择你自定义的内核并启动它。</p>
+<p>如果一切顺利，就能看到带有自定义内核版本的登录页面了。</p>
+<h2 id="测试你的系统调用"><a href="#测试你的系统调用" class="headerlink" title="测试你的系统调用"></a>测试你的系统调用</h2><p>至此，我们已经编译并启动了我们自定义并修改的内核了。接下来就是最激动人心的时刻了——运行我们的系统调用。</p>
+<p>C 标准库为我们封装了大部分系统调用，但我们没有考虑过如何触发一个中断。对于无法直接调用的系统调用，GNC C标准库提供了一个 <code>syscall()</code> ，它可以根据系统调用号来调用系统调用。</p>
+<p>下面是一个小程序，使用系统调用号来调用我们自定义的系统调用：</p>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/*</span></span><br><span class="line"><span class="hljs-comment"> * Test the yifeng syscall (#329)</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> _GNU_SOURCE</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;sys/syscall.h&gt;</span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/*</span></span><br><span class="line"><span class="hljs-comment"> * Put your syscall number here.</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SYS_yifeng 329</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (argc &lt;= <span class="hljs-number">1</span>) &#123;</span><br><span class="line">    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Must provide a string to give to system call.\n"</span>);</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">char</span> *arg = argv[<span class="hljs-number">1</span>];</span><br><span class="line">  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Making system call with \"%s\".\n"</span>, arg);</span><br><span class="line">  <span class="hljs-keyword">long</span> res = syscall(SYS_yifeng, arg);</span><br><span class="line">  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"System call returned %ld.\n"</span>, res);</span><br><span class="line">  <span class="hljs-keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将这个文件命名为<code>test.c</code> ,编译它<code>gcc -o test test.c</code> 。接下来就可以试着调用系统调用了，尝试打印“Hello World”。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> ./<span class="hljs-built_in">test</span> <span class="hljs-string">'Hello World!'</span></span></span><br><span class="line"><span class="hljs-meta">#</span><span class="hljs-bash"> use single quotes <span class="hljs-keyword">if</span> you have an exclamation point :)</span></span><br></pre></td></tr></table></figure>
+<p>可以通过<code>dmesg</code> 指令查看生成的日志。因为<code>dmesg</code>会在你的终端弹出超多的信息，所以使用<code>dmesg|tail</code> 来查看日志的最后几行就可以了。你就可与在日志里看到系统调用生成的文本了。</p>
 <blockquote>
-<p>Fully Convolutional Networks for Semantic Segmentation</p>
-<p>Submitted on 14 Nov 2014</p>
+<p>本博客参考了该<a href="https://brennan.io/2016/11/14/kernel-dev-ep3/" target="_blank" rel="noopener">链接</a>  </p>
 </blockquote>
-<p>关键贡献：</p>
-<ul>
-<li>推广了端到端的卷积神经网络在语义分割上的应用</li>
-<li>将 ImageNet 上的预训练模型应用在了语义分割上</li>
-<li>使用反卷积层上采样</li>
-<li>引入了跳转链接来提高上采样时的稀疏性</li>
-</ul>
-<p>概要：</p>
-<p>FCN的主要贡献是提出了利用分类网络中的全连接层来对输入图片的全部区域做卷积。这和传统的分类网络在输入图片块上做的操作是等价的，但是全连接层更加的高效，因为卷积核的共享权重机制。尽管这点贡献并不是这篇 Paper 独家提供的，它仍然将当时 VOC2012 数据集的分割效果做到了最好。</p>
-<p><img src="/images/语义分割综述/12.png" alt=""></p>
-<p>在对 ImageNet 上预训练的模型 VGG 进行全连接层的卷积操作后，特征图仍然需要上采样，因为 CNN 中的池化操作已经对特征图降了维。不同于使用简单的双线性插值，使用反卷积层可以自动学习插值的功能。这一层也被称为上卷积、全卷积、反置卷积等。</p>
-<p>因为在池化过程中部分信息的丢失，反卷积操作只能产生稀疏的分割图。因此，用跳转链接将高分辨率的特征图引入就是非常有必要的了。</p>
-<p>Benchmarks(VOC2012):</p>
-<p><img src="/images/语义分割综述/9.png" alt=""></p>
-<p><strong>2.SegNet<a href="https://arxiv.org/abs/1511.00561" target="_blank" rel="noopener">^8</a></strong></p>
-<blockquote>
-<p>SegNet: A Deep Convolutional Encoder-Decoder Architecture for Image Segmentation Submitted on 2 Nov 2015</p>
-</blockquote>
-<p>关键贡献</p>
-<ul>
-<li>使用Maxpooling indices来增强位置信息。</li>
-</ul>
-<p>概要：</p>
-<p>FCN的upconvolution层+shortcut connections产生的分割图比较粗糙，因此SegNet增加了更多的shortcut connections。不过，SegNet并不是直接将encoder的特征进行直接复制，而是对maxpooling中的indices进行复制，这使得SegNet的效率更高。</p>
-<p><img src="/images/语义分割综述/8.png" alt=""></p>
-<p>Benchmarks(VOC2012):</p>
-<p><img src="/images/语义分割综述/0.png" alt=""></p>
-<p><strong>3.Dilated convolution<a href="https://arxiv.org/abs/1511.07122" target="_blank" rel="noopener">^9</a></strong></p>
-<blockquote>
-<p>Multi-Scale Context Aggregation by Dilated Convolutions Submitted on 23 Nov 2015</p>
-</blockquote>
-<p>关键贡献：</p>
-<ul>
-<li>使用空洞卷积用来进行稠密预测（dense prediction）。</li>
-<li>提出上下文模块（context module），使用空洞卷积（Dilated Convolutions）来进行多尺度信息的的整合。</li>
-</ul>
-<p>概要：</p>
-<p>pooling操作可以增大感受野，对于图像分类任务来说这有很大好处，但由于pooling操作降低了分辨率，这对语义分割来说很不利。因此作者提出一种叫做dilated convolution的操作来解决这个问题。dilated卷积(在deeplab中称为atrous卷积)。可以很好地提升感受野的同时可以保持空间分辨率。</p>
-<p><img src="/images/语义分割综述/3.png" alt=""></p>
-<p>网络架构有两种，一种是前端网络，另外一种是前端网络+上下文模块，分别介绍如下：</p>
-<ul>
-<li>将VGG网络的最后两个pooling层给拿掉了，之后的卷积层被dilated 卷积取代。并且在pool3和pool4之间空洞卷积的空洞率=2，pool4之后的空洞卷积的空洞率=4。作者将这种架构称为前端（front-end）。</li>
-<li>除了前端网络之外，作者还设计了一种叫做上下文模块（context module）的架构，加在前端网络之后。上下文木块中级联了多种不同空洞率的空洞卷积，使得多尺度的上下文信息可以得到整合，从而改善前端网络预测的效果。<strong>需要注意的是前端网络和上下文木块是分开训练的，因为作者在实验中发现，如果是联合在一起进行端对端的训练并不能改善性能。</strong></li>
-</ul>
-<p>Benchmarks(VOC2012):</p>
-<p><img src="/images/语义分割综述/11.png" alt=""></p>
-<p><strong>4.DeepLab(v1,v2)<a href="https://arxiv.org/abs/1412.7062" target="_blank" rel="noopener">^10</a></strong></p>
-<blockquote>
-<p><strong>v1</strong>: Semantic Image Segmentation with Deep Convolutional Nets and Fully Connected CRFs Submitted on 22 Dec 2014 </p>
-<p><strong>v2</strong> : DeepLab: Semantic Image Segmentation with Deep Convolutional Nets, Atrous Convolution, and Fully Connected CRFs Submitted on 2 Jun 2016</p>
-</blockquote>
-<p>关键贡献：</p>
-<ul>
-<li>使用atrous卷积，也就是后来的空洞卷积，扩大感受野，保持分辨率。</li>
-<li>提出了atrous spatial pyramid pooling (ASPP)，整合多尺度信息。</li>
-<li>使用全连接条件随机场（fully connected CRF)进行后处理，改善分割结果。</li>
-</ul>
-<p>概述：</p>
-<ol>
-<li>空洞卷积可以在不增加参数的情况下增加感受野。</li>
-<li>通过两种方式来进行多尺度的处理：A.将原始图像的多种尺度喂给网络进行训练。B.通过平行的不同空洞率的空洞卷积层来获得。</li>
-<li>通过全连接条件随机场来进行后处理，以改善分割结果。</li>
-</ol>
-<p><img src="/images/语义分割综述/5.png" alt=""></p>
-<p>Benchmarks(VOC2012):</p>
-<p><img src="/images/语义分割综述/2.png" alt=""></p>
-<p><strong>5.DeepLab(v3)<a href="https://arxiv.org/abs/1706.05587" target="_blank" rel="noopener">^11</a></strong></p>
-<blockquote>
-<p>Rethinking Atrous Convolution for Semantic Image Segmentation</p>
-<p>Submitted on 17 Jun 2017</p>
-</blockquote>
-<p>关键贡献：</p>
-<ul>
-<li>提升了 atrous 空间金字塔池化（ASPP）</li>
-<li>使用了层叠的 atrous 卷积的模型</li>
-</ul>
-<p>概要：</p>
-<p>使用 dilated/atrous 卷积优化了残差模型。提到了使用串联的图片级的特征来提升 ASPP，这种特征由不同比例的1x1卷积和3x3 atrous 卷积生成。在每一个并行的卷积层后也用到了批正态化。</p>
-<p>层叠模型由多个残差块组成，这些残差块中的卷积层由不同比例的 atrous 卷积层构成。这个模型和 dilated 卷积中的模型很像，但它直接应用了中间的特征图，而不是 belief maps（belief maps 是CNN中最后的等同于数字分类的特征图）。</p>
-<p>这两个提出的模型可以分别被独立验证，将两个模型混合并不能提升整体的效果。两个模型都能在验证集上取得不错的效果，ASPP 更好一些。而 CRF 并没有被应用在其中。</p>
-<p>这两个模型的性能都优于 DeepLabv2。作者提到了性能的提升主要来自于批正态化和更好地对多维度特征图进行编码的方法。</p>
-<p><img src="/images/语义分割综述/7.png" alt=""></p>
-<p>Benchmarks(VOC):</p>
-<p><img src="/images/语义分割综述/13.png" alt=""></p>
 
         </div>
         
@@ -287,7 +218,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/image-segmentation/">image segmentation</a>
+                    <a class="has-link-grey -link" href="/tags/Linux/">Linux</a>
                 </div>
             </div>
         </div>
@@ -305,17 +236,10 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/12/19/自己动手写Shell——Python实现/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">自己动手写Shell(二)——Python实现</span>
-            </a>
-        </div>
-        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/10/自己动手写Shell——C实现/">
-                <span class="level-item">自己动手写Shell(一）——C实现</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/19/自己动手写Shell——Python实现/">
+                <span class="level-item">自己动手写Shell(二)——Python实现</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -335,7 +259,7 @@
     js.src = "//connect.facebook.net/en/sdk.js#xfbml=1&version=v2.8";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
-<div class="fb-comments" data-width="100%" data-href="http://yoursite.com/2018/12/14/基于深度学习的图像语义分割综述（译）/" data-num-posts="5"></div>
+<div class="fb-comments" data-width="100%" data-href="http://yoursite.com/2018/12/19/为Linux添加一个系统调用/" data-num-posts="5"></div>
 
     </div>
 </div>
@@ -848,7 +772,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/wangye.jpeg" alt="基于深度学习的图像语义分割综述（译）" height="28">
+                    <img src="/images/wangye.jpeg" alt="为Linux添加一个系统调用" height="28">
                 
                 </a>
                 <p class="is-size-7">

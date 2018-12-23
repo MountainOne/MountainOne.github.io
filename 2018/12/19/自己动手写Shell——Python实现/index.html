@@ -7,18 +7,18 @@
 
 
 
-    <meta name="description" content="Shell的基本生命周期无论使用什么语言实现，Shell 的生命周期都是一样的，主要做三件事：  初始化：Shell 会在初始化时读入和执行配置文件。这会改变 Shell 接下来各方面的行为。 解释：Shell 在解释阶段（也就是等待用户输入的阶段）读入标准输入的命令并解释执行。 终结：在用户输入 shutdown 命令后，Shell 会释放掉占用的内存并终结自己。  使用Python实现的 Sh">
+    <meta name="description" content="Shell的基本生命周期无论使用什么语言实现，Shell 的生命周期都是一样的，主要做三件事：  初始化：Shell 会在初始化时读入和执行配置文件。这会改变 Shell 接下来各方面的行为。 解释：Shell 在解释阶段（也就是等待用户输入的阶段）读入标准输入的命令并解释执行。 终结：在用户输入 shutdown 命令后，Shell 会释放掉占用的内存并终结自己。">
 <meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="自己动手写Shell(二)——Python实现">
 <meta property="og:url" content="http://yoursite.com/2018/12/19/自己动手写Shell——Python实现/index.html">
 <meta property="og:site_name" content="MountainOne&#39;s technology space">
-<meta property="og:description" content="Shell的基本生命周期无论使用什么语言实现，Shell 的生命周期都是一样的，主要做三件事：  初始化：Shell 会在初始化时读入和执行配置文件。这会改变 Shell 接下来各方面的行为。 解释：Shell 在解释阶段（也就是等待用户输入的阶段）读入标准输入的命令并解释执行。 终结：在用户输入 shutdown 命令后，Shell 会释放掉占用的内存并终结自己。  使用Python实现的 Sh">
+<meta property="og:description" content="Shell的基本生命周期无论使用什么语言实现，Shell 的生命周期都是一样的，主要做三件事：  初始化：Shell 会在初始化时读入和执行配置文件。这会改变 Shell 接下来各方面的行为。 解释：Shell 在解释阶段（也就是等待用户输入的阶段）读入标准输入的命令并解释执行。 终结：在用户输入 shutdown 命令后，Shell 会释放掉占用的内存并终结自己。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-12-19T07:28:20.051Z">
+<meta property="og:updated_time" content="2018-12-23T06:31:09.540Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自己动手写Shell(二)——Python实现">
-<meta name="twitter:description" content="Shell的基本生命周期无论使用什么语言实现，Shell 的生命周期都是一样的，主要做三件事：  初始化：Shell 会在初始化时读入和执行配置文件。这会改变 Shell 接下来各方面的行为。 解释：Shell 在解释阶段（也就是等待用户输入的阶段）读入标准输入的命令并解释执行。 终结：在用户输入 shutdown 命令后，Shell 会释放掉占用的内存并终结自己。  使用Python实现的 Sh">
+<meta name="twitter:description" content="Shell的基本生命周期无论使用什么语言实现，Shell 的生命周期都是一样的，主要做三件事：  初始化：Shell 会在初始化时读入和执行配置文件。这会改变 Shell 接下来各方面的行为。 解释：Shell 在解释阶段（也就是等待用户输入的阶段）读入标准输入的命令并解释执行。 终结：在用户输入 shutdown 命令后，Shell 会释放掉占用的内存并终结自己。">
 
 
 
@@ -153,6 +153,7 @@
 <li>解释：Shell 在解释阶段（也就是等待用户输入的阶段）读入标准输入的命令并解释执行。</li>
 <li>终结：在用户输入 shutdown 命令后，Shell 会释放掉占用的内存并终结自己。</li>
 </ul>
+<a id="more"></a>
 <p>使用Python实现的 Shell 主函数如下：</p>
 <figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>:</span></span><br><span class="line">	<span class="hljs-comment"># 在执行 shell_loop 函数进行循环监听之前，首先进行初始化</span></span><br><span class="line">	<span class="hljs-comment"># 即建立命令与函数映射关系表</span></span><br><span class="line">	init()</span><br><span class="line"></span><br><span class="line">	<span class="hljs-comment"># 预处理命令的主程序</span></span><br><span class="line">	shell_loop()</span><br></pre></td></tr></table></figure>
 <p>和 C 中的主函数相比，多了一个<code>init()</code> 函数，该函数是用来注册函数关系映射表的，在 Shell 正式启动前将一些内置的命令先加载好，各个内置的命令写在主目录下的 func 文件夹下，每一个命令都对应一个.py文件。这个功能在 C 中的 Shell也有实现，只不过是通过字符串数组和函数指针数组实现的，且全部写在 main.c 文件里。在 Python 中这样实现的目的是为了降低代码的耦合度，使得增添命令变得更加灵活。如果想为我们的 Shell 增加或减少一个命令，只需要在 func 文件下增加 或减少一个.py文件即可，不需要频繁改动主函数。</p>
@@ -223,6 +224,13 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/12/19/为Linux添加一个系统调用/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">为Linux添加一个系统调用</span>
+            </a>
+        </div>
+        
         
         <div class="level-end">
             <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/14/基于深度学习的图像语义分割综述（译）/">
@@ -238,7 +246,7 @@
 
 <div class="card">
     <div class="card-content">
-        <h3 class="title is-5 has-text-weight-normal">Comments</h3>
+        <h3 class="title is-5 has-text-weight-normal">Comentarios</h3>
         <script>(function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
@@ -288,17 +296,17 @@
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Posts
+                        Entradas
                     </p>
                     <p class="title has-text-weight-normal">
-                        5
+                        6
                     </p>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Categories
+                        Categorias
                     </p>
                     <p class="title has-text-weight-normal">
                         2
@@ -308,7 +316,7 @@
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Tags
+                        Etiquetas
                     </p>
                     <p class="title has-text-weight-normal">
                         3
@@ -318,7 +326,7 @@
         </nav>
         <div class="level">
             <a class="level-item button is-link is-rounded" href="https://github.com/MountainOne">
-                Follow</a>
+                SEGUIR</a>
         </div>
         
         
@@ -405,7 +413,7 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Categories
+                Categorias
             </h3>
             <ul class="menu-list">
             <li>
@@ -434,7 +442,7 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Tag Cloud
+            Nube de etiquetas
         </h3>
         <a href="/tags/Kaggle/" style="font-size: 10px;">Kaggle</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/image-segmentation/" style="font-size: 10px;">image segmentation</a>
     </div>
@@ -448,8 +456,21 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Recent
+            Recientes
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time></div>
+                    <a href="/2018/12/19/为Linux添加一个系统调用/" class="has-link-black-ter is-size-6">为Linux添加一个系统调用</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -503,19 +524,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-05T14:30:00.000Z">2018-12-05</time></div>
-                    <a href="/2018/12/05/从源码编译和安装Linux内核/" class="has-link-black-ter is-size-6">从源码编译和安装Linux内核</a>
-                    <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -524,7 +532,7 @@
     <div class="card-content">
         <div class="menu">
         <h3 class="menu-label">
-            Archives
+            Archivos
         </h3>
         <ul class="menu-list">
         
@@ -534,7 +542,7 @@
                     <span class="level-item">December 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -548,7 +556,7 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Tags
+                Etiquetas
             </h3>
             <ul class="menu-list">
                 
@@ -569,7 +577,7 @@
                             <span class="level-item">Linux</span>
                         </span>
                         <span class="level-end">
-                            <span class="level-item tag">3</span>
+                            <span class="level-item tag">4</span>
                         </span>
                     </a>
                 </li>
@@ -605,8 +613,21 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Recent
+            Recientes
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time></div>
+                    <a href="/2018/12/19/为Linux添加一个系统调用/" class="has-link-black-ter is-size-6">为Linux添加一个系统调用</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -660,19 +681,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-05T14:30:00.000Z">2018-12-05</time></div>
-                    <a href="/2018/12/05/从源码编译和安装Linux内核/" class="has-link-black-ter is-size-6">从源码编译和安装Linux内核</a>
-                    <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -681,7 +689,7 @@
     <div class="card-content">
         <div class="menu">
         <h3 class="menu-label">
-            Archives
+            Archivos
         </h3>
         <ul class="menu-list">
         
@@ -691,7 +699,7 @@
                     <span class="level-item">December 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -705,7 +713,7 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Tags
+                Etiquetas
             </h3>
             <ul class="menu-list">
                 
@@ -726,7 +734,7 @@
                             <span class="level-item">Linux</span>
                         </span>
                         <span class="level-end">
-                            <span class="level-item tag">3</span>
+                            <span class="level-item tag">4</span>
                         </span>
                     </a>
                 </li>
@@ -879,10 +887,10 @@ document.addEventListener('DOMContentLoaded', function () {
     (function (window) {
         var INSIGHT_CONFIG = {
             TRANSLATION: {
-                POSTS: 'Posts',
+                POSTS: 'Entradas',
                 PAGES: 'Pages',
-                CATEGORIES: 'Categories',
-                TAGS: 'Tags',
+                CATEGORIES: 'Categorias',
+                TAGS: 'Etiquetas',
                 UNTITLED: '(Untitled)',
             },
             CONTENT_URL: '/content.json',

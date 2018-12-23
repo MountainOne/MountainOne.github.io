@@ -131,6 +131,44 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2018/12/19/为Linux添加一个系统调用/">为Linux添加一个系统调用</a>
+            
+        </h1>
+        <div class="content">
+            <p>在之前的博客中，我使用 C 和 Python 分别实现了一个简单的 Shell，这是一个很有意思的小程序，可以让你了解你每天都在使用的工具。而在简单的 Shell 之下则是一系列的系统调用，例如：read, fork, exec, wait, write等等。现在让我们继续这段旅程，开始学习这些系统调用是如何在 Linux 中实现的。</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/12/19/为Linux添加一个系统调用/#more">Read More</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2018-12-19T13:34:53.000Z">2018-12-19</time>
                 
                 
@@ -149,54 +187,16 @@
 <li>解释：Shell 在解释阶段（也就是等待用户输入的阶段）读入标准输入的命令并解释执行。</li>
 <li>终结：在用户输入 shutdown 命令后，Shell 会释放掉占用的内存并终结自己。</li>
 </ul>
-<p>使用Python实现的 Shell 主函数如下：</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>:</span></span><br><span class="line">	<span class="hljs-comment"># 在执行 shell_loop 函数进行循环监听之前，首先进行初始化</span></span><br><span class="line">	<span class="hljs-comment"># 即建立命令与函数映射关系表</span></span><br><span class="line">	init()</span><br><span class="line"></span><br><span class="line">	<span class="hljs-comment"># 预处理命令的主程序</span></span><br><span class="line">	shell_loop()</span><br></pre></td></tr></table></figure>
-<p>和 C 中的主函数相比，多了一个<code>init()</code> 函数，该函数是用来注册函数关系映射表的，在 Shell 正式启动前将一些内置的命令先加载好，各个内置的命令写在主目录下的 func 文件夹下，每一个命令都对应一个.py文件。这个功能在 C 中的 Shell也有实现，只不过是通过字符串数组和函数指针数组实现的，且全部写在 main.c 文件里。在 Python 中这样实现的目的是为了降低代码的耦合度，使得增添命令变得更加灵活。如果想为我们的 Shell 增加或减少一个命令，只需要在 func 文件下增加 或减少一个.py文件即可，不需要频繁改动主函数。</p>
-<p><code>init()</code> 函数的实现如下（暂时只实现了这四个命令）：</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">register_command</span><span class="hljs-params">(name, func)</span>:</span></span><br><span class="line">	<span class="hljs-string">"""</span></span><br><span class="line"><span class="hljs-string">	注册命令，使命令与相应的处理函数建立映射关系</span></span><br><span class="line"><span class="hljs-string">	@Param name:命令名</span></span><br><span class="line"><span class="hljs-string">	@param func:函数名</span></span><br><span class="line"><span class="hljs-string">	"""</span></span><br><span class="line">	built_in_cmds[name] = func</span><br><span class="line">    </span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">init</span><span class="hljs-params">()</span>:</span></span><br><span class="line">	<span class="hljs-string">"""</span></span><br><span class="line"><span class="hljs-string">	注册所有命令</span></span><br><span class="line"><span class="hljs-string">	"""</span></span><br><span class="line">	register_command(<span class="hljs-string">"cd"</span>, cd)</span><br><span class="line">	register_command(<span class="hljs-string">"exit"</span>, exit)</span><br><span class="line">	register_command(<span class="hljs-string">"getenv"</span>, getenv)</span><br><span class="line">	register_command(<span class="hljs-string">"history"</span>, history)</span><br></pre></td></tr></table></figure>
-<h2 id="Shell的基本循环"><a href="#Shell的基本循环" class="headerlink" title="Shell的基本循环"></a>Shell的基本循环</h2><p>Shell 的基本循环也是通用的以下三点：</p>
-<ul>
-<li>读入：从标准输入中读入命令</li>
-<li>解析：将执行的命令和其参数解析出来输入程序执行</li>
-<li>执行：根据命令和参数执行程序</li>
-</ul>
-<p>用 Python 的实现如下：</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">shell_loop</span><span class="hljs-params">()</span>:</span></span><br><span class="line">	status = SHELL_STATUS_RUN</span><br><span class="line">	<span class="hljs-keyword">while</span> status == SHELL_STATUS_RUN:</span><br><span class="line">		<span class="hljs-comment">#打印命令提示符，如'[&lt;user&gt;@&lt;hostname&gt; &lt;base_dir&gt;]$'</span></span><br><span class="line">		display_cmd_prompt()</span><br><span class="line"></span><br><span class="line">		<span class="hljs-comment">#忽略 Ctrl-Z 或Ctrl-C 信号</span></span><br><span class="line">		ignore_signals()</span><br><span class="line"></span><br><span class="line">		<span class="hljs-keyword">try</span>:</span><br><span class="line">			<span class="hljs-comment">#读取命令</span></span><br><span class="line">			cmd = sys.stdin.readline()</span><br><span class="line"></span><br><span class="line">			<span class="hljs-comment">#解析命令</span></span><br><span class="line">			<span class="hljs-comment">#将命令进行拆分，返回一个列表</span></span><br><span class="line">			cmd_tokens = tokenize(cmd)</span><br><span class="line"></span><br><span class="line">			<span class="hljs-comment">#预处理函数</span></span><br><span class="line">			<span class="hljs-comment">#将命令中的环境变量用真实值进行替换</span></span><br><span class="line">			<span class="hljs-comment">#比如讲$HOME这样的变量替换为实际值</span></span><br><span class="line">			cmd_tokens = preprocess(cmd_tokens)</span><br><span class="line"></span><br><span class="line">			<span class="hljs-comment">#执行命令，并返回shell的状态</span></span><br><span class="line">			status = execute(cmd_tokens)</span><br><span class="line">		<span class="hljs-keyword">except</span>:</span><br><span class="line">			<span class="hljs-comment">#sys.exc_info函数返回一个包含三个值的远足（type,value,traceback)</span></span><br><span class="line">			<span class="hljs-comment">#这三个值产生于最近一次被处理的异常</span></span><br><span class="line">			<span class="hljs-comment">#而我们只需要获取中间的值</span></span><br><span class="line">			_, err, _ = sys.exc_info()</span><br><span class="line">			print(err)</span><br></pre></td></tr></table></figure>
-<p>虽然没有 C 中实现的那么简洁清楚，但我增加了更多的功能。比如：打印命令提示符，在 C 中只是打印一个’&gt;’；忽略 Ctrl-z 和 Ctrl-c 终止信号；在循环内加入了异常检测语句。这样的 Shell 比起 C 里的 Shell 看起来就显得高大上多了。</p>
-<p>显示命令提示符的代码如下：</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#展示命令提示符，行如'[&lt;user&gt;@&lt;hostname&gt; &lt;base_dir&gt;]$'</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">display_cmd_prompt</span><span class="hljs-params">()</span>:</span></span><br><span class="line">	<span class="hljs-comment"># getpass.getuser 用于获取当前用户名</span></span><br><span class="line">	user = getpass.getuser()</span><br><span class="line"></span><br><span class="line">	<span class="hljs-comment"># socket.gethostname() 返回当前运行 python 程序的机器的主机名</span></span><br><span class="line">	hostname = socket.gethostname()</span><br><span class="line"></span><br><span class="line">	<span class="hljs-comment"># 获取当前工作路径</span></span><br><span class="line">	cwd = os.getcwd()</span><br><span class="line"></span><br><span class="line">	<span class="hljs-comment"># 获取路径 cwd 的最低一级目录</span></span><br><span class="line">	base_dir = os.path.basename(cwd)</span><br><span class="line"></span><br><span class="line">	<span class="hljs-comment"># 如果用户当前位于用户的根目录之下，使用'~'代替目录名</span></span><br><span class="line">	home_dir = os.path.expanduser(<span class="hljs-string">'~'</span>)</span><br><span class="line">	<span class="hljs-keyword">if</span> cwd == home_dir:</span><br><span class="line">		base_dir = <span class="hljs-string">'~'</span></span><br><span class="line"></span><br><span class="line">	<span class="hljs-comment"># 输出命令提示符</span></span><br><span class="line">	<span class="hljs-keyword">if</span> platform.system() != <span class="hljs-string">"Windows"</span>:</span><br><span class="line">		sys.stdout.write(<span class="hljs-string">"[\033[1;33m%s\033[0;0m@%s \033[1;36m%s\033[0;0m] $"</span>%(user, hostname, base_dir))</span><br><span class="line">	<span class="hljs-keyword">else</span>:</span><br><span class="line">		sys.stdout.write(<span class="hljs-string">"[%s@%s %s]$ "</span> % (user, hostname, base_dir))</span><br><span class="line">	sys.stdout.flush()</span><br></pre></td></tr></table></figure>
-<p>分别通过 Python 标准库中的函数获取了当前用户名、主机名和工作路径。并判断如果是用户目录则用’~’替代。对于非 Windows 系统输出带颜色的代码。</p>
-<p>忽略终止信号的代码如下：</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">ignore_signals</span><span class="hljs-params">()</span>:</span></span><br><span class="line">	<span class="hljs-keyword">if</span> platform.system() != <span class="hljs-string">"Window"</span>:</span><br><span class="line">		<span class="hljs-comment"># 忽略 Ctrl-Z 信号</span></span><br><span class="line">		signal.signal(signal.SIGTSTP, signal.SIG_IGN)</span><br><span class="line">		<span class="hljs-comment">#忽略 Ctrl-C 信号</span></span><br><span class="line">	</span><br><span class="line">	signal.signal(signal.SIGINT, signal.SIG_IGN)</span><br></pre></td></tr></table></figure>
-<p>在读入命令时直接使用了 Python 中的标准读入，所以就没有单独为读入写一个函数了。</p>
-<h2 id="解析一行"><a href="#解析一行" class="headerlink" title="解析一行"></a>解析一行</h2><p>首先将读到的行进行分词，我直接使用了 Python 库 shlex 中的 <code>split()</code> 方法，该方法按 Shell 的语法规则对字符串进行分割。</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tokenize</span><span class="hljs-params">(string)</span>:</span></span><br><span class="line">	<span class="hljs-comment"># 将 string 按 shell 的语法规则进行分割</span></span><br><span class="line">	<span class="hljs-comment"># 返回 string 的分割列表</span></span><br><span class="line">	<span class="hljs-comment"># 其实就是按空格符将命令与参数分开</span></span><br><span class="line">	<span class="hljs-comment"># 比如， 'ls -l /home/yifeng' 划分之后就是</span></span><br><span class="line">	<span class="hljs-comment"># ['ls', '-l', '/home/yifeng']</span></span><br><span class="line">	<span class="hljs-keyword">return</span> shlex.split(string)</span><br></pre></td></tr></table></figure>
-<p>相较于 C 中的 Shell 分词之后还增加了一个预处理函数，将输入的环境变量进行替换，这样就可以输入变量了。</p>
-<p>预处理函数如下：</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">preprocess</span><span class="hljs-params">(tokens)</span>:</span></span><br><span class="line">	<span class="hljs-comment"># 用于存储处理之后的 token</span></span><br><span class="line">	processed_token = []</span><br><span class="line">	<span class="hljs-keyword">for</span> token <span class="hljs-keyword">in</span> tokens:</span><br><span class="line">		<span class="hljs-keyword">if</span> token.startswith(<span class="hljs-string">'$'</span>):</span><br><span class="line">		<span class="hljs-comment"># os.getenv() 用于获取环境变量的值，比如 'HOME'</span></span><br><span class="line">		<span class="hljs-comment"># 变量不存在则返回空</span></span><br><span class="line">			processed_token.append(os.getenv(token[<span class="hljs-number">1</span>:]))</span><br><span class="line">		<span class="hljs-keyword">else</span>:</span><br><span class="line">			processed_token.append(token)</span><br><span class="line"></span><br><span class="line">	<span class="hljs-keyword">return</span> processed_token</span><br></pre></td></tr></table></figure>
-<h2 id="解释执行"><a href="#解释执行" class="headerlink" title="解释执行"></a>解释执行</h2><p>在读取了预处理后的命令行参数后，便可以进行解释执行了，代码如下：</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">execute</span><span class="hljs-params">(cmd_tokens)</span>:</span></span><br><span class="line">	<span class="hljs-comment"># 'a' 模式表示以添加的方式打开指定文件</span></span><br><span class="line">	<span class="hljs-comment"># 这个模式下文件对象的 write 操作不会覆盖文件原有的信息，而是添加到文件原有信息之后</span></span><br><span class="line">	<span class="hljs-keyword">with</span> open(HISTORY_PATH, <span class="hljs-string">'a'</span>) <span class="hljs-keyword">as</span> history_file:</span><br><span class="line">		history_file.write(<span class="hljs-string">' '</span>.join(cmd_tokens) + os.linesep)</span><br><span class="line"></span><br><span class="line">		<span class="hljs-keyword">if</span> cmd_tokens:</span><br><span class="line">			<span class="hljs-comment"># 获取命令</span></span><br><span class="line">			cmd_name = cmd_tokens[<span class="hljs-number">0</span>]</span><br><span class="line">			<span class="hljs-comment"># 获取命令参数</span></span><br><span class="line">			cmd_args = cmd_tokens[<span class="hljs-number">1</span>:]</span><br><span class="line"></span><br><span class="line">			<span class="hljs-comment"># 如果当前命令在命令表中</span></span><br><span class="line">			<span class="hljs-comment"># 则传入参数，调用相应的函数进行执行</span></span><br><span class="line">			<span class="hljs-keyword">if</span> cmd_name <span class="hljs-keyword">in</span> built_in_cmds:</span><br><span class="line">				<span class="hljs-keyword">return</span> built_in_cmds[cmd_name](cmd_args)</span><br><span class="line"></span><br><span class="line">			<span class="hljs-comment"># 监听 Ctrl-C 信号</span></span><br><span class="line">			signal.signal(signal.SIGINT, handler_kill)</span><br><span class="line"></span><br><span class="line">			<span class="hljs-comment"># 如果当前系统不是 Windows</span></span><br><span class="line">			<span class="hljs-comment"># 则创建子进程</span></span><br><span class="line">			<span class="hljs-keyword">if</span> platform.system() != <span class="hljs-string">"Windows"</span>:</span><br><span class="line">				<span class="hljs-comment"># Unix 平台</span></span><br><span class="line">				<span class="hljs-comment"># 调用子进程执行命令</span></span><br><span class="line">				p = subprocess.Popen(cmd_tokens)</span><br><span class="line"></span><br><span class="line">				<span class="hljs-comment">#父进程从子进程读取数据，直到读取到EOF</span></span><br><span class="line">				<span class="hljs-comment"># 这里主要用来等待子进程终止运行</span></span><br><span class="line">				p.communicate()</span><br><span class="line">			<span class="hljs-keyword">else</span>:</span><br><span class="line">				<span class="hljs-comment"># Windows 平台</span></span><br><span class="line">				command = <span class="hljs-string">""</span></span><br><span class="line">				command = <span class="hljs-string">' '</span>.join(cmd_tokens)</span><br><span class="line">				<span class="hljs-comment"># 执行 command</span></span><br><span class="line">				os.system(command)</span><br><span class="line">		<span class="hljs-comment"># 返回状态</span></span><br><span class="line">		<span class="hljs-keyword">return</span> SHELL_STATUS_RUN</span><br></pre></td></tr></table></figure>
-<p>由于实现了 history 命令，所以在每一次执行命令时都会将该命令写入保存历史命令的文件 history_file 中，方便调用 <code>history()</code> 时读取。接下来判断输入的命令是否是内置实现的命令，如果是，则直接调用。不是的话则会判断当前操作系统类型，并根据操作系统类型调用不同的执行命令的函数。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，用 Python 实现的 Shell 就全部介绍完毕了。相较于 C 中的实现，我做了以下几点优化：</p>
-<ol>
-<li>优化了命令提示符功能，看起来更专业</li>
-<li>低耦合的设计，可以动态地添加删除命令</li>
-<li>根据不同的操作系统类型进行了适配（C中的实现仅支持 Linux）</li>
-<li>可以在输入中使用变量</li>
-</ol>
-<p>总之，Shell 就是这么一个读取用户命令，并将其解释执行的程序。通过实现这么一个简单的 Shell 让我对平时编程最常打交道的程序有了更清楚的认识，十分有趣。强烈建议大家自己动手实现一遍。</p>
-<p>最后是各个命令的具体实现代码：</p>
-<p>cd:</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">from</span> .constants <span class="hljs-keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">cd</span><span class="hljs-params">(args)</span>:</span></span><br><span class="line">	<span class="hljs-keyword">if</span> len(args) &gt; <span class="hljs-number">0</span>:</span><br><span class="line">		os.chdir(args[<span class="hljs-number">0</span>])</span><br><span class="line">	<span class="hljs-keyword">else</span>:</span><br><span class="line">		os.chdir(os.getenv(<span class="hljs-string">'HOME'</span>))</span><br><span class="line">	<span class="hljs-keyword">return</span> SHELL_STATUS_RUN</span><br></pre></td></tr></table></figure>
-<p>exit:</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">from</span> .constants <span class="hljs-keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">exit</span><span class="hljs-params">(args)</span>:</span></span><br><span class="line">	<span class="hljs-keyword">return</span> SHELL_STATUS_STOP</span><br></pre></td></tr></table></figure>
-<p>getenv:</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">from</span> .constants <span class="hljs-keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">getenv</span><span class="hljs-params">(args)</span>:</span></span><br><span class="line">	<span class="hljs-keyword">if</span> len(args) &gt; <span class="hljs-number">0</span>:</span><br><span class="line">		print(os.getenv(args[<span class="hljs-number">0</span>]))</span><br><span class="line">	<span class="hljs-keyword">return</span> SHELL_STATUS_RUN</span><br></pre></td></tr></table></figure>
-<p>history:</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> sys</span><br><span class="line"><span class="hljs-keyword">from</span> .constants <span class="hljs-keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">history</span><span class="hljs-params">(args)</span>:</span></span><br><span class="line">	<span class="hljs-keyword">with</span> open(HISTORY_PATH, <span class="hljs-string">'r'</span>) <span class="hljs-keyword">as</span> history_file:</span><br><span class="line">		lines = history_file.readlines()</span><br><span class="line">		limit = len(lines)</span><br><span class="line">		<span class="hljs-keyword">if</span> len(args) &gt; <span class="hljs-number">0</span>:</span><br><span class="line">			limit = int(args[<span class="hljs-number">0</span>])</span><br><span class="line">		start = len(lines) - limit</span><br><span class="line">		<span class="hljs-keyword">for</span> line_num, line <span class="hljs-keyword">in</span> enumerate(lines):</span><br><span class="line">			<span class="hljs-keyword">if</span> line_num &gt;= start:</span><br><span class="line">				sys.stdout.write(<span class="hljs-string">'%d %s'</span> %(line_num + <span class="hljs-number">1</span>, line))</span><br><span class="line"></span><br><span class="line">		sys.stdout.flush()</span><br><span class="line"></span><br><span class="line">	<span class="hljs-keyword">return</span> SHELL_STATUS_RUN</span><br></pre></td></tr></table></figure>
-
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/12/19/自己动手写Shell——Python实现/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -229,121 +229,16 @@
         </h1>
         <div class="content">
             <h2 id="一、语义分割是什么？"><a href="#一、语义分割是什么？" class="headerlink" title="一、语义分割是什么？"></a>一、语义分割是什么？</h2><p>语义分割，指在图像上找到具有同一语义的像素，并将其归为一类，是计算机视觉中的关键问题之一，属于高级的视觉任务，是完全场景理解的基础。许多新兴的应用需要精准和高效的语义分割：自动驾驶、室内导航、虚拟现实和增强现实。这些需求随着深度学习方法的崛起一同迸发，衍生了大量计算机视觉相关的应用。具体的应用如下图所示。</p>
-<p><img src="/images/语义分割综述/1.png" alt="left:input image.Right:semantic segmentation"></p>
-<p>除了要识别摩托车和车上的人外，我们还需要描绘出每个物体的边界。所以，不同于分类任务，我们需要从我们的模型中得到密集的像素集的预测结果。</p>
-<p>VOC2012和MSCOCO是语义分割任务中最成功的数据集。</p>
-<p>##二、两种方法的区别</p>
-<p>在深度学习的方法流行之前，人们使用 TextonForest<a href="http://mi.eng.cam.ac.uk/~cipolla/publications/inproceedings/2008-CVPR-semantic-texton-forests.pdf" target="_blank" rel="noopener">^1</a> 和 Random Forest based classifiers<a href="http://www.cse.chalmers.se/edu/year/2011/course/TDA361/Advanced%20Computer%20Graphics/BodyPartRecognition.pdf" target="_blank" rel="noopener">^2</a> 来进行语义分割。说到图片分类，卷积神经网络（CNN）在分割任务上也有大量成功的应用。</p>
-<p>最早将深度学习成功应用于分割任务的方法是 patch classification<a href="http://people.idsia.ch/~juergen/nips2012.pdf" target="_blank" rel="noopener">^3</a>,它将每一个像素根据周围的图片块分别分类。使用图片块的主要原因是分类网络通常有全连接层并且需要固定大小的图片。</p>
-<p>在2014年，伯克利的 Lond 等人提出了 Fully Convolutional Nerworks(FCN)<a href="https://arxiv.org/abs/1411.4038" target="_blank" rel="noopener">^4</a>。推广了基于 CNN 的网络架构，在不使用全连接层的情况下进行密集预测。这使得用任意大小的图片来生成分割图成为可能，并且比块分类的速度更快。后来几乎所有的语义分割领域最优秀的成果都是对 FCN 进行的改进。FCN 可以称作是深度学习在语义分割领域的里程碑。</p>
-<p>除了全连接层外，另一个使用 CNN 进行语义分割时会遇到的问题是池化层。池化层能够增加感知野并且能够在丢弃部分 ‘where’ 信息的同时聚合上下文信息。然而语义分割需要对像素的分类有明确的区分，需要将 ‘where’ 信息保留。有两种不同的网络架构可用来解决这个问题。</p>
-<p>首先是编码-解码架构。编码通常是配合着池化层降低了空间维度，解码则是逐渐恢复对象细节和空间维度。网络中有很多直连编码器与解码器的链接，来复制解码器更好地恢复对象细节。U-Net<a href="https://arxiv.org/abs/1505.04597" target="_blank" rel="noopener">^5</a> 是这一架构的经典实现。</p>
-<p><img src="/images/语义分割综述/10.png" alt=""></p>
-<p>第二种架构是使用 dilated/atrous convolutions<a href="https://arxiv.org/abs/1511.07122" target="_blank" rel="noopener">^6</a>来替代传统的卷积操作。</p>
-<p><img src="/images/语义分割综述/4.png" alt=""></p>
-<p>Conditional Random Field(CRF) postprocessing<a href="https://arxiv.org/abs/1210.5644" target="_blank" rel="noopener">^7</a>通常用来提升语义分割的效果。CRFs 是一种图模型，可以使得语义分割的结果更加平滑，对于强度相似的像素更趋向于把它们标为一类。CRFs 可以提高 1~2% 的分数。</p>
-<p><img src="/images/语义分割综述/6.png" alt=""></p>
-<h2 id="三、论文汇总"><a href="#三、论文汇总" class="headerlink" title="三、论文汇总"></a>三、论文汇总</h2><p>接下来我将介绍一些自 FCN 以来的能代表语义分割领域进展的论文（所有的论文都以 VOC2012 作为基准）</p>
-<ol>
-<li>FCN</li>
-<li>SegNet</li>
-<li>Dilated Convolutions</li>
-<li>DeepLatb(v1 &amp; v2)</li>
-<li>DeepLab v3</li>
-</ol>
-<p>对于每一篇论文，我列出了它们的主要贡献，并对主要工作进行了说明，并在最后列出了它们在 VOC2012 数据集上的得分，这样就能更直观地感受到语义分割领域的发展进程。</p>
-<p><strong>1.FCN</strong><a href="https://arxiv.org/abs/1411.4038" target="_blank" rel="noopener">^4</a></p>
-<blockquote>
-<p>Fully Convolutional Networks for Semantic Segmentation</p>
-<p>Submitted on 14 Nov 2014</p>
-</blockquote>
-<p>关键贡献：</p>
-<ul>
-<li>推广了端到端的卷积神经网络在语义分割上的应用</li>
-<li>将 ImageNet 上的预训练模型应用在了语义分割上</li>
-<li>使用反卷积层上采样</li>
-<li>引入了跳转链接来提高上采样时的稀疏性</li>
-</ul>
-<p>概要：</p>
-<p>FCN的主要贡献是提出了利用分类网络中的全连接层来对输入图片的全部区域做卷积。这和传统的分类网络在输入图片块上做的操作是等价的，但是全连接层更加的高效，因为卷积核的共享权重机制。尽管这点贡献并不是这篇 Paper 独家提供的，它仍然将当时 VOC2012 数据集的分割效果做到了最好。</p>
-<p><img src="/images/语义分割综述/12.png" alt=""></p>
-<p>在对 ImageNet 上预训练的模型 VGG 进行全连接层的卷积操作后，特征图仍然需要上采样，因为 CNN 中的池化操作已经对特征图降了维。不同于使用简单的双线性插值，使用反卷积层可以自动学习插值的功能。这一层也被称为上卷积、全卷积、反置卷积等。</p>
-<p>因为在池化过程中部分信息的丢失，反卷积操作只能产生稀疏的分割图。因此，用跳转链接将高分辨率的特征图引入就是非常有必要的了。</p>
-<p>Benchmarks(VOC2012):</p>
-<p><img src="/images/语义分割综述/9.png" alt=""></p>
-<p><strong>2.SegNet<a href="https://arxiv.org/abs/1511.00561" target="_blank" rel="noopener">^8</a></strong></p>
-<blockquote>
-<p>SegNet: A Deep Convolutional Encoder-Decoder Architecture for Image Segmentation Submitted on 2 Nov 2015</p>
-</blockquote>
-<p>关键贡献</p>
-<ul>
-<li>使用Maxpooling indices来增强位置信息。</li>
-</ul>
-<p>概要：</p>
-<p>FCN的upconvolution层+shortcut connections产生的分割图比较粗糙，因此SegNet增加了更多的shortcut connections。不过，SegNet并不是直接将encoder的特征进行直接复制，而是对maxpooling中的indices进行复制，这使得SegNet的效率更高。</p>
-<p><img src="/images/语义分割综述/8.png" alt=""></p>
-<p>Benchmarks(VOC2012):</p>
-<p><img src="/images/语义分割综述/0.png" alt=""></p>
-<p><strong>3.Dilated convolution<a href="https://arxiv.org/abs/1511.07122" target="_blank" rel="noopener">^9</a></strong></p>
-<blockquote>
-<p>Multi-Scale Context Aggregation by Dilated Convolutions Submitted on 23 Nov 2015</p>
-</blockquote>
-<p>关键贡献：</p>
-<ul>
-<li>使用空洞卷积用来进行稠密预测（dense prediction）。</li>
-<li>提出上下文模块（context module），使用空洞卷积（Dilated Convolutions）来进行多尺度信息的的整合。</li>
-</ul>
-<p>概要：</p>
-<p>pooling操作可以增大感受野，对于图像分类任务来说这有很大好处，但由于pooling操作降低了分辨率，这对语义分割来说很不利。因此作者提出一种叫做dilated convolution的操作来解决这个问题。dilated卷积(在deeplab中称为atrous卷积)。可以很好地提升感受野的同时可以保持空间分辨率。</p>
-<p><img src="/images/语义分割综述/3.png" alt=""></p>
-<p>网络架构有两种，一种是前端网络，另外一种是前端网络+上下文模块，分别介绍如下：</p>
-<ul>
-<li>将VGG网络的最后两个pooling层给拿掉了，之后的卷积层被dilated 卷积取代。并且在pool3和pool4之间空洞卷积的空洞率=2，pool4之后的空洞卷积的空洞率=4。作者将这种架构称为前端（front-end）。</li>
-<li>除了前端网络之外，作者还设计了一种叫做上下文模块（context module）的架构，加在前端网络之后。上下文木块中级联了多种不同空洞率的空洞卷积，使得多尺度的上下文信息可以得到整合，从而改善前端网络预测的效果。<strong>需要注意的是前端网络和上下文木块是分开训练的，因为作者在实验中发现，如果是联合在一起进行端对端的训练并不能改善性能。</strong></li>
-</ul>
-<p>Benchmarks(VOC2012):</p>
-<p><img src="/images/语义分割综述/11.png" alt=""></p>
-<p><strong>4.DeepLab(v1,v2)<a href="https://arxiv.org/abs/1412.7062" target="_blank" rel="noopener">^10</a></strong></p>
-<blockquote>
-<p><strong>v1</strong>: Semantic Image Segmentation with Deep Convolutional Nets and Fully Connected CRFs Submitted on 22 Dec 2014 </p>
-<p><strong>v2</strong> : DeepLab: Semantic Image Segmentation with Deep Convolutional Nets, Atrous Convolution, and Fully Connected CRFs Submitted on 2 Jun 2016</p>
-</blockquote>
-<p>关键贡献：</p>
-<ul>
-<li>使用atrous卷积，也就是后来的空洞卷积，扩大感受野，保持分辨率。</li>
-<li>提出了atrous spatial pyramid pooling (ASPP)，整合多尺度信息。</li>
-<li>使用全连接条件随机场（fully connected CRF)进行后处理，改善分割结果。</li>
-</ul>
-<p>概述：</p>
-<ol>
-<li>空洞卷积可以在不增加参数的情况下增加感受野。</li>
-<li>通过两种方式来进行多尺度的处理：A.将原始图像的多种尺度喂给网络进行训练。B.通过平行的不同空洞率的空洞卷积层来获得。</li>
-<li>通过全连接条件随机场来进行后处理，以改善分割结果。</li>
-</ol>
-<p><img src="/images/语义分割综述/5.png" alt=""></p>
-<p>Benchmarks(VOC2012):</p>
-<p><img src="/images/语义分割综述/2.png" alt=""></p>
-<p><strong>5.DeepLab(v3)<a href="https://arxiv.org/abs/1706.05587" target="_blank" rel="noopener">^11</a></strong></p>
-<blockquote>
-<p>Rethinking Atrous Convolution for Semantic Image Segmentation</p>
-<p>Submitted on 17 Jun 2017</p>
-</blockquote>
-<p>关键贡献：</p>
-<ul>
-<li>提升了 atrous 空间金字塔池化（ASPP）</li>
-<li>使用了层叠的 atrous 卷积的模型</li>
-</ul>
-<p>概要：</p>
-<p>使用 dilated/atrous 卷积优化了残差模型。提到了使用串联的图片级的特征来提升 ASPP，这种特征由不同比例的1x1卷积和3x3 atrous 卷积生成。在每一个并行的卷积层后也用到了批正态化。</p>
-<p>层叠模型由多个残差块组成，这些残差块中的卷积层由不同比例的 atrous 卷积层构成。这个模型和 dilated 卷积中的模型很像，但它直接应用了中间的特征图，而不是 belief maps（belief maps 是CNN中最后的等同于数字分类的特征图）。</p>
-<p>这两个提出的模型可以分别被独立验证，将两个模型混合并不能提升整体的效果。两个模型都能在验证集上取得不错的效果，ASPP 更好一些。而 CRF 并没有被应用在其中。</p>
-<p>这两个模型的性能都优于 DeepLabv2。作者提到了性能的提升主要来自于批正态化和更好地对多维度特征图进行编码的方法。</p>
-<p><img src="/images/语义分割综述/7.png" alt=""></p>
-<p>Benchmarks(VOC):</p>
-<p><img src="/images/语义分割综述/13.png" alt=""></p>
-
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/12/14/基于深度学习的图像语义分割综述（译）/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -376,103 +271,21 @@
 </blockquote>
 <h2 id="Shell的基本生命周期"><a href="#Shell的基本生命周期" class="headerlink" title="Shell的基本生命周期"></a>Shell的基本生命周期</h2><p>  让我们自顶向下的思考一下 Shell。一个 Shell 在它的生命周期里主要做了三件事。</p>
 <ul>
-<li>初始化：Shell 会在初始化时读入和执行配置文件。这会改变 Shell 接下来各方面的行为。</li>
-<li>解释：Shell 在解释阶段（也就是等待用户输入的阶段）读入标准输入的命令并解释执行。</li>
-<li>终结：在用户输入 shutdown 命令后，Shell 会释放掉占用的内存并终结自己。</li>
-</ul>
-<p>这些步骤是很通用的，它们可以应用在任何程序中，我们将在我们的 Shell 中利用它们作为基础。我们的 Shell会足够简单，以至于没有任何配置文件，也不会有任何 shutdown 命令。因此，我们仅仅调用循环函数然后结束它。但需要注意的是，在程序的生命周期中循环只是一个基础的组成部分，真正的架构往往会复杂的多。</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-comment">// Load config files, if any.</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// Run command loop.</span></span><br><span class="line">  lsh_loop();</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// Perform any shutdown/cleanup.</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> EXIT_SUCCESS;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以在上面的代码中看到，我只使用了一个函数，lsh_loop()。它将会循环执行并解释命令。我们将在接下来的部分看到它的具体实现。</p>
-<h2 id="Shell-的基本循环"><a href="#Shell-的基本循环" class="headerlink" title="Shell 的基本循环"></a>Shell 的基本循环</h2><p>我们已经思考过 Shell 程序是如何启动的。现在，考虑基本的程序逻辑：Shell 在执行循环的时候做了什么？</p>
-<p>答案是以下三点：</p>
-<ul>
-<li>读入：从标准输入中读入命令</li>
-<li>解析：将执行的命令和其参数解析出来输入程序执行</li>
-<li>执行：根据命令和参数执行程序</li>
-</ul>
-<p>将以上三点表述成代码放入 lsh_loop():</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">lsh_loop</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">char</span> *line;</span><br><span class="line">  <span class="hljs-keyword">char</span> **args;</span><br><span class="line">  <span class="hljs-keyword">int</span> status;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">do</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"&gt; "</span>);</span><br><span class="line">    line = lsh_read_line();</span><br><span class="line">    args = lsh_split_line(line);</span><br><span class="line">    status = lsh_execute(args);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-built_in">free</span>(line);</span><br><span class="line">    <span class="hljs-built_in">free</span>(args);</span><br><span class="line">  &#125; <span class="hljs-keyword">while</span> (status);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>让我们看看这段代码。开头是几行声明语句。后面的 do-while 循环在检查变量的状态方面更加地方便，因为在检查之前就已经执行了一次了。在循环里，我们打印了一个提示符，调用了一个函数来读入一行，再调用了一个函数来划分读入行的参数，然后执行这些参数。最后我们释放了 line 和 arguments 变量。注意我们使用了一个状态变量 status （由 lsh_execute()返回）来决定何时终止循环。</p>
-<h2 id="读入一行"><a href="#读入一行" class="headerlink" title="读入一行"></a>读入一行</h2><p>从标准输入中读入一行听起来简单，但用 C 实现起来还是有点麻烦的。难受的事情是，你并不知道在这一段时间里用户会往 shell 中输入多少文本。你不能简单地就分配一个块并期望输入不会溢出。而是要在启动的时候分配一个块，然后在溢出的时候重新分配更多的空间。这在 C 里是一个普遍的策略，我们将会在 lsh_read_line()中实现。</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LSH_RL_BUFSIZE 1024</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">char</span> *<span class="hljs-title">lsh_read_line</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> bufsize = LSH_RL_BUFSIZE;</span><br><span class="line">  <span class="hljs-keyword">int</span> position = <span class="hljs-number">0</span>;</span><br><span class="line">  <span class="hljs-keyword">char</span> *buffer = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">char</span>) * bufsize);</span><br><span class="line">  <span class="hljs-keyword">int</span> c;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (!buffer) &#123;</span><br><span class="line">    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"lsh: allocation error\n"</span>);</span><br><span class="line">    <span class="hljs-built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) &#123;</span><br><span class="line">    <span class="hljs-comment">// Read a character</span></span><br><span class="line">    c = getchar();</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// If we hit EOF, replace it with a null character and return.</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (c == EOF || c == <span class="hljs-string">'\n'</span>) &#123;</span><br><span class="line">      buffer[position] = <span class="hljs-string">'\0'</span>;</span><br><span class="line">      <span class="hljs-keyword">return</span> buffer;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      buffer[position] = c;</span><br><span class="line">    &#125;</span><br><span class="line">    position++;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// If we have exceeded the buffer, reallocate.</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (position &gt;= bufsize) &#123;</span><br><span class="line">      bufsize += LSH_RL_BUFSIZE;</span><br><span class="line">      buffer = <span class="hljs-built_in">realloc</span>(buffer, bufsize);</span><br><span class="line">      <span class="hljs-keyword">if</span> (!buffer) &#123;</span><br><span class="line">        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"lsh: allocation error\n"</span>);</span><br><span class="line">        <span class="hljs-built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第一部分有很多的声明。函数的主要内容在<code>while(1)</code>循环中（显然是无限循环）。在循环中，我们读入一个字符并把它存储为 <code>int</code> 而不是 <code>char</code> ，这很重要！EOF是一个 Integer，而不是一个 Character。如果你想在条件语句中检查它，就得把它声明为 <code>int</code>。这是一个 C 语言初学者普遍会犯的错误。如果读入的是一个新行或者 EOF，我们会终止当前的读入并返回。否则我们将读到的字符添加到缓存字符串中。</p>
-<p>接下来，我们会判断新的字符是否会超过当前的缓存大小。如实是的话，我们在继续读入前重新分配我们的缓存大小（同时检查分配错误）。这些都是值得做的。</p>
-<p>对较新版本 C 函数库比较熟悉的人可能会察觉到在 <code>stdio.h</code> 中的 <code>getline()</code> 可以完成大部分我们实现的功能。但是尝试着自己实现一下 C 标准库的函数也没什么不好。使用 <code>getline</code> 的代码如下：</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">char</span> *<span class="hljs-title">lsh_read_line</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">char</span> *line = <span class="hljs-literal">NULL</span>;</span><br><span class="line">  <span class="hljs-keyword">ssize_t</span> bufsize = <span class="hljs-number">0</span>; <span class="hljs-comment">// have getline allocate a buffer for us</span></span><br><span class="line">  getline(&amp;line, &amp;bufsize, <span class="hljs-built_in">stdin</span>);</span><br><span class="line">  <span class="hljs-keyword">return</span> line;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="解析一行"><a href="#解析一行" class="headerlink" title="解析一行"></a>解析一行</h2><p>现在我们再看最初的循环，我们已经实现了 lsh_read_line()，所以可以获取读入的行了。之后我们需要把读入的行解析为一系列参数。这里我将做一些简化，不允许在命令行参数中出现引号和反斜杠，而是简单地通过空格来分隔每一个参数。因此命令<code>echo &quot;this message&quot;</code> 将不会通过一个参数调用<code>echo</code>，而是通过两个参数<code>&quot;this&quot;</code>和<code>message&quot;</code>调用。</p>
-<p>在这些简化后，我们需要做的就是使用空格作为分隔符来对输入字符串做词法分析。这意味着我们可以调用标准库函数 strtok 来为我们做一些麻烦的事。</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LSH_TOK_BUFSIZE 64</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LSH_TOK_DELIM <span class="hljs-meta-string">" \t\r\n\a"</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">char</span> **<span class="hljs-title">lsh_split_line</span><span class="hljs-params">(<span class="hljs-keyword">char</span> *line)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> bufsize = LSH_TOK_BUFSIZE, position = <span class="hljs-number">0</span>;</span><br><span class="line">  <span class="hljs-keyword">char</span> **tokens = <span class="hljs-built_in">malloc</span>(bufsize * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">char</span>*));</span><br><span class="line">  <span class="hljs-keyword">char</span> *token;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (!tokens) &#123;</span><br><span class="line">    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"lsh: allocation error\n"</span>);</span><br><span class="line">    <span class="hljs-built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  token = strtok(line, LSH_TOK_DELIM);</span><br><span class="line">  <span class="hljs-keyword">while</span> (token != <span class="hljs-literal">NULL</span>) &#123;</span><br><span class="line">    tokens[position] = token;</span><br><span class="line">    position++;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">if</span> (position &gt;= bufsize) &#123;</span><br><span class="line">      bufsize += LSH_TOK_BUFSIZE;</span><br><span class="line">      tokens = <span class="hljs-built_in">realloc</span>(tokens, bufsize * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">char</span>*));</span><br><span class="line">      <span class="hljs-keyword">if</span> (!tokens) &#123;</span><br><span class="line">        <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"lsh: allocation error\n"</span>);</span><br><span class="line">        <span class="hljs-built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    token = strtok(<span class="hljs-literal">NULL</span>, LSH_TOK_DELIM);</span><br><span class="line">  &#125;</span><br><span class="line">  tokens[position] = <span class="hljs-literal">NULL</span>;</span><br><span class="line">  <span class="hljs-keyword">return</span> tokens;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这段代码看起来和之前的 <code>lsh_read_line()</code> 很类似，我们使用了同样的缓存和动态拓展策略。但这一次我们使用了 null 终结的指针数组而不是 null 终结的字符数组。</p>
-<p>在一开始，我们调用了<code>strtok</code>来划分词元。它返回第一个词元的指针。<code>strtok()</code> 事实上做的是返回你给的字符串内部的指针，并将每一个词元的末尾（分割符所在地址）置<code>\0</code> （C语言中表示字符串结束的标志）。我们将每一个字符指针保存在 tokens 中。</p>
-<p>最后，我们在需要的时候重新分配内存。这个过程将会重复进行直到所有的词元都被<code>strtok</code>返回，然后将 null 放在 tokens 末尾。</p>
-<p>现在我们有了一组词元了，可以准备开始执行了。</p>
-<h2 id="Shell-启动进程"><a href="#Shell-启动进程" class="headerlink" title="Shell 启动进程"></a>Shell 启动进程</h2><p>现在我们来到了编写 Shell 的关键。启动线程是 Shell 的主要功能。所以编写一个 shell 意味着你需要明确地知道线程里发生了什么以及它们如何启动。因此在正式开写之前谈一谈 Unix 中的线程是很有必要的。</p>
-<p>在 Unix 中仅有两种启动线程的方式。第一种是 Init 进程。当 unix 电脑启动时，它的内核会被加载。一旦内核被加载并初始化后，内核将会启动唯一的一个进程，Init 进程。Init 进程会在电脑启动后一直运行，并管理加载剩下的你所需要的进程。</p>
-<p>因为大部分程序都不是 Init 进程，那么就只有一种常用的方式来启动进程了：<code>fork()</code> 系统调用。当这个函数被调用后，操作系统会构建一个该进程的副本并启动它。原进程称为父进程，新进程称为子进程。<code>fork()</code> 对子进程返回0，对父进程返回子进程的进程ID数（PID）。这意味着启动新进程的唯一方式是通过一个已存在的进程复制它自己并启动。</p>
-<p>这存在一个问题。就是当你想要运行一个新程序的时候，你并不想要当前进程的复制——你就是想要运行一个不同的程序。这就是 <code>exec()</code> 系统调用做的事情。它用一个全新的程序替代了当前进程。这意味着当你调用<code>exec()</code> 时，操作系统将会终止当前进程，加载新的程序，然后在当前位置启动新的程序。一个程序不会从<code>exec()</code>中获得返回值（除非它报错）。</p>
-<p>有了这两个系统调用，我们就有了在 Unix 系统中启动新进程的砖头。首先，一个已存的进程 fork 它本身得到两个一样的进程。然后子进程执行 <code>exec()</code> 来用新程序替换掉它自己。父进程可以继续做其它事情，或者使用<code>wait()</code> 系统调用来等待子进程执行完。</p>
-<p>通过上述的背景知识的补充，下面的用于启动一个新程序的代码将会变得很好理解：</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">lsh_launch</span><span class="hljs-params">(<span class="hljs-keyword">char</span> **args)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">pid_t</span> pid, wpid;</span><br><span class="line">  <span class="hljs-keyword">int</span> status;</span><br><span class="line"></span><br><span class="line">  pid = fork();</span><br><span class="line">  <span class="hljs-keyword">if</span> (pid == <span class="hljs-number">0</span>) &#123;</span><br><span class="line">    <span class="hljs-comment">// Child process</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (execvp(args[<span class="hljs-number">0</span>], args) == <span class="hljs-number">-1</span>) &#123;</span><br><span class="line">      perror(<span class="hljs-string">"lsh"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pid &lt; <span class="hljs-number">0</span>) &#123;</span><br><span class="line">    <span class="hljs-comment">// Error forking</span></span><br><span class="line">    perror(<span class="hljs-string">"lsh"</span>);</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Parent process</span></span><br><span class="line">    <span class="hljs-keyword">do</span> &#123;</span><br><span class="line">      wpid = waitpid(pid, &amp;status, WUNTRACED);</span><br><span class="line">    &#125; <span class="hljs-keyword">while</span> (!WIFEXITED(status) &amp;&amp; !WIFSIGNALED(status));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个函数将我们之前得到的参数数组作为参数。之后调用<code>fork()</code> ，保存它的返回值。当<code>fork()</code> 返回时，我们实际上有两个正在运行的进程。子进程将会执行第一个 if 条件语句（where pid == 0）。</p>
-<p>在子进程中，我们想要运行用户输入的命令。所以，我们使用了<code>exec()</code>的变种之一<code>execvp()</code>。<code>execvp()</code> 略微有一些不同。它将希望运行的程序名和一个字符串数组（也被成为’vector’,这就是其中’v’的由来）作为参数。其中的’p’表示不需要提供运行程序的完整路径，只需要给出它的名字，操作系统将会在系统路径中自动搜索它。</p>
-<p>如果 <code>exec</code> 命令返回-1，我们就知道产生了一个 error。所以我们使用<code>perror</code>来打印系统的错误信息，和我们的 Shell 名一样，这样我们就知道这个 error 来自哪里了。之后，我们退出函数，使得 Shell 能继续运行。</p>
-<p>第二个条件（pid &lt; 0）检查了是否  <code>fork()</code> 出现了error。如果是，我们打印 error 并继续运行 Shell——这里并没有提示用户出现了 error 并让他们决定是否需要退出。</p>
-<p>第三个条件意味着<code>fork()</code> 成功执行了。父进程将会暂时挂起，等待子进程执行完毕。我们使用<code>waitpid()</code> 来等待进程状态的改变。不幸的是，<code>waitpid()</code> 有很多选项（像<code>exec()</code> ）。进程可以通过很多方式改变状态，并不是所有状态的改变都意味着进程结束。一个进程可以是退出（通常会留下错误码），也可以被信号杀死。我们使用<code>waitpid()</code> 提供的宏来等待进程退出或者被杀死。之后该函数将会返回1，作为调用函数的信号来提示应该再次进行输入了。</p>
-<h2 id="Shell-内置方法"><a href="#Shell-内置方法" class="headerlink" title="Shell 内置方法"></a>Shell 内置方法</h2><p>你也许已经察觉到了<code>lsh_loop()</code> 函数调用的是<code>lsh_execute()</code> 函数，但是在上一部分我们的函数名为<code>lsh_launch()</code> 。这是故意为之！大部分 Shell 执行的命令会启动一个进程，但并不是所有的命令都需要。它们中的一些就内置在 Shell 中。</p>
-<p>比如你想要改变当前目录，你需要使用函数<code>chdir()</code> 。问题在于，目录是当前进程的一项属性。也就是说，如果你写了一个程序调用了<code>cd</code> 改变了目录，它将改变调用程序自己的当前目录。它的父进程的当前目录并没有改变。所以是 Shell 程序自身需要执行<code>chdir()</code> ，来更新它自己的当前目录。这样才能在启动子进程后，子进程们才会继承这个更新后的目录。</p>
-<p>类似的，如果程序名为<code>exit</code> ，它将不会退出调用它的 Shell，而是退出直接调用的子进程。这个命令也需要内置在 Shell 里。大部分 Shell 通过运行配置脚本（~/.bashrc）来配置。这些脚本使用能改变 Shell 本身行为的命令。这些命令都是内置在 Shell 里的。</p>
-<p>所以我们添加一些命令在 Shell 里是很有意义的。我添加在我的 Shell 里的命令是 cd，exit 和 help。它们的实现如下：</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/*</span></span><br><span class="line"><span class="hljs-comment">  Function Declarations for builtin shell commands:</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">lsh_cd</span><span class="hljs-params">(<span class="hljs-keyword">char</span> **args)</span></span>;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">lsh_help</span><span class="hljs-params">(<span class="hljs-keyword">char</span> **args)</span></span>;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">lsh_exit</span><span class="hljs-params">(<span class="hljs-keyword">char</span> **args)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/*</span></span><br><span class="line"><span class="hljs-comment">  List of builtin commands, followed by their corresponding functions.</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-keyword">char</span> *builtin_str[] = &#123;</span><br><span class="line">  <span class="hljs-string">"cd"</span>,</span><br><span class="line">  <span class="hljs-string">"help"</span>,</span><br><span class="line">  <span class="hljs-string">"exit"</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">int</span> (*builtin_func[]) (<span class="hljs-keyword">char</span> **) = &#123;</span><br><span class="line">  &amp;lsh_cd,</span><br><span class="line">  &amp;lsh_help,</span><br><span class="line">  &amp;lsh_exit</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">lsh_num_builtins</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">sizeof</span>(builtin_str) / <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">char</span> *);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/*</span></span><br><span class="line"><span class="hljs-comment">  Builtin function implementations.</span></span><br><span class="line"><span class="hljs-comment">*/</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">lsh_cd</span><span class="hljs-params">(<span class="hljs-keyword">char</span> **args)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (args[<span class="hljs-number">1</span>] == <span class="hljs-literal">NULL</span>) &#123;</span><br><span class="line">    <span class="hljs-built_in">fprintf</span>(<span class="hljs-built_in">stderr</span>, <span class="hljs-string">"lsh: expected argument to \"cd\"\n"</span>);</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (chdir(args[<span class="hljs-number">1</span>]) != <span class="hljs-number">0</span>) &#123;</span><br><span class="line">      perror(<span class="hljs-string">"lsh"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">lsh_help</span><span class="hljs-params">(<span class="hljs-keyword">char</span> **args)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> i;</span><br><span class="line">  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Stephen Brennan's LSH\n"</span>);</span><br><span class="line">  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Type program names and arguments, and hit enter.\n"</span>);</span><br><span class="line">  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"The following are built in:\n"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; lsh_num_builtins(); i++) &#123;</span><br><span class="line">    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"  %s\n"</span>, builtin_str[i]);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Use the man command for information on other programs.\n"</span>);</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">lsh_exit</span><span class="hljs-params">(<span class="hljs-keyword">char</span> **args)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这段代码包含三个部分。第一个部分是内置函数的前向声明。一个前向声明意味着你声明了一个函数（并没有定义），因此你能在定义它之前使用它的函数名。这样做的原因是<code>lsh_help()</code> 使用了内置函数名数组，数组中包含了<code>lsh_help()</code> 。打破这个依赖循环的最清晰的方式就是前向声明。</p>
-<p>下一个部分是一个包含了内建命令名的数组以及一个包含命令名对应函数的数组。也就是说，在将来想要添加内建命令的时候只要修改这些数组就好了，不需要在代码的某处地方编辑一个非常复杂的 switch 语句。如果你对<code>builtin_func</code> 的声明感到困惑，那就对了！这是一个包含函数指针的数组，它将字符串数组作为输入并返回一个整型数。在 C 语言里，任何涉及函数指针的声明都是很复杂的，这样做的好处是，当你想要调用一系列函数时可以直接通过数组名加索引调用，而不是用硬编码的方式直接调用函数本身。</p>
-<h2 id="执行命令"><a href="#执行命令" class="headerlink" title="执行命令"></a>执行命令</h2><p>最后要做的就是实现 <code>lsh_execute()</code> ，这个函数将会启动新线程或者调用内置方法。</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">lsh_execute</span><span class="hljs-params">(<span class="hljs-keyword">char</span> **args)</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> i;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (args[<span class="hljs-number">0</span>] == <span class="hljs-literal">NULL</span>) &#123;</span><br><span class="line">    <span class="hljs-comment">// An empty command was entered.</span></span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; lsh_num_builtins(); i++) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">strcmp</span>(args[<span class="hljs-number">0</span>], builtin_str[i]) == <span class="hljs-number">0</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> (*builtin_func[i])(args);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> lsh_launch(args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这段代码做的就是检查输入命令是否是内置命令，如果是的话就运行它。如果不是则调用<code>lsh_launch()</code> 启动一个新进程。 </p>
-<h2 id="整合代码"><a href="#整合代码" class="headerlink" title="整合代码"></a>整合代码</h2><p>到这里一个简易 Shell 所需要的所有代码就都实现了。将上面所有的代码片段复制到 main.c 文件里。在将下列头文件包含在文件起始位置。</p>
-<ul>
-<li><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/wait.h&gt;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>waitpid()</code> and associated macros</li>
-</ul>
+<li><p>初始化：Shell 会在初始化时读入和执行配置文件。这会改变 Shell 接下来各方面的行为。</p>
 </li>
-<li><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>chdir()</code></li>
-<li><code>fork()</code></li>
-<li><code>exec()</code></li>
-<li><code>pid_t</code></li>
-</ul>
+<li><p>解释：Shell 在解释阶段（也就是等待用户输入的阶段）读入标准输入的命令并解释执行。</p>
 </li>
-<li><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdlib.h&gt;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>malloc()</code></li>
-<li><code>realloc()</code></li>
-<li><code>free()</code></li>
-<li><code>exit()</code></li>
-<li><code>execvp()</code></li>
-<li><code>EXIT_SUCCESS</code>, <code>EXIT_FAILURE</code></li>
-</ul>
-</li>
-<li><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>fprintf()</code></li>
-<li><code>printf()</code></li>
-<li><code>stderr</code></li>
-<li><code>getchar()</code></li>
-<li><code>perror()</code></li>
-</ul>
-</li>
-<li><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;string.h&gt;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>strcmp()</code></li>
-<li><code>strtok()</code></li>
-</ul>
-<p>保存退出后，执行 <code>gcc -o main main.c</code> 进行编译，然后执行<code>./main</code> 运行，lsh就启动了！</p>
-</li>
-</ul>
-
+<li><p>终结：在用户输入 shutdown 命令后，Shell 会释放掉占用的内存并终结自己。</p></li></ul>
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/12/10/自己动手写Shell——C实现/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -507,242 +320,16 @@
             <h1 id="Kaggle入门赛之房价预测"><a href="#Kaggle入门赛之房价预测" class="headerlink" title="Kaggle入门赛之房价预测"></a>Kaggle入门赛之房价预测</h1><blockquote>
 <p>前言：最近实验室有一个数据挖掘的任务需要完成，是一个和国家电网相关的回归任务。因此我在 Kaggle 上找一些回归任务的比赛来练练手，房价预测这个比赛的难度比较适合我这种新手，因此选择了这个题目。本篇博客的大部分内容来自该比赛的一个高分 <a href="https://www.kaggle.com/serigne/stacked-regressions-top-4-on-leaderboard" target="_blank" rel="noopener">kernel</a>, 感兴趣的同学可以直接跳转查看原博。</p>
 </blockquote>
-<h2 id="1-比赛介绍"><a href="#1-比赛介绍" class="headerlink" title="1.比赛介绍"></a>1.比赛介绍</h2><p>这是 Kaggle 上的一个为数据科学初学者准备的比赛，需要参赛者掌握一定的 R 或 Python 以及机器学习的基础知识。它给出了一个训练集和一个测试集，最终需要对测试集中的结果进行预测并提交。训练集中包含了79个特征以预测房价（SalePrice），包括：房屋的大小、地段、用途、基础设施等等。具体的描述可查看该比赛的<a href="https://www.kaggle.com/c/house-prices-advanced-regression-techniques" target="_blank" rel="noopener">比赛页面</a>,比赛中所用到数据也均可通过比赛页面下载。</p>
-<h2 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="2.准备工作"></a>2.准备工作</h2><p>数据挖掘类的比赛最为重要的工作就是：<strong>特征工程</strong>。本篇博客将会用到的特征工程方法还是非常朴素的，具体如下：</p>
-<ul>
-<li>通过已有的数据拟合曲线来<strong>填充缺失值</strong>。</li>
-<li><strong>变换</strong>某些看起来更像分类变量的数值型变量。</li>
-<li><strong>标签编码</strong>一些带有排序信息的分类变量（例如，标签顺序按照出现次数大小排序）。</li>
-<li>对于一些倾斜特征采用 <strong>Box Cox 变换</strong>（替代对数变换）：这会得到一个更好的结果。</li>
-<li>得到分类特征的假值。</li>
-</ul>
-<p>之后我们将会选择一些基本模型（例如基于 sklearn 的 XGBoost），在 stacking/ensembling 之前在数据集上进行交叉验证。它的关键在于让（线性）模型对异常值鲁棒。这将同时提高积分板和交叉验证的分数。</p>
-<p>接下来真正开始工作吧！首先导入相关的包和比赛所需的数据。</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#import some necessary librairies</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np <span class="hljs-comment"># linear algebra</span></span><br><span class="line"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd <span class="hljs-comment"># data processing, CSV file I/O (e.g. pd.read_csv)</span></span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt  <span class="hljs-comment"># Matlab-style plotting</span></span><br><span class="line"><span class="hljs-keyword">import</span> seaborn <span class="hljs-keyword">as</span> sns</span><br><span class="line">color = sns.color_palette()</span><br><span class="line">sns.set_style(<span class="hljs-string">'darkgrid'</span>)</span><br><span class="line"><span class="hljs-keyword">import</span> warnings</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">ignore_warn</span><span class="hljs-params">(*args, **kwargs)</span>:</span></span><br><span class="line">    <span class="hljs-keyword">pass</span></span><br><span class="line">warnings.warn = ignore_warn <span class="hljs-comment">#ignore annoying warning (from sklearn and seaborn)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">from</span> scipy <span class="hljs-keyword">import</span> stats</span><br><span class="line"><span class="hljs-keyword">from</span> scipy.stats <span class="hljs-keyword">import</span> norm, skew <span class="hljs-comment">#for some statistics</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pd.set_option(<span class="hljs-string">'display.float_format'</span>, <span class="hljs-keyword">lambda</span> x: <span class="hljs-string">'&#123;:.3f&#125;'</span>.format(x)) <span class="hljs-comment">#Limiting floats output to 3 decimal points</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">from</span> subprocess <span class="hljs-keyword">import</span> check_output</span><br><span class="line">print(check_output([<span class="hljs-string">"ls"</span>, <span class="hljs-string">"../input"</span>]).decode(<span class="hljs-string">"utf8"</span>)) <span class="hljs-comment">#check the files available in the directory</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>sample_submission.csv</p>
-<p>test.csv</p>
-<p>train.csv</p>
-</blockquote>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#Now let's import and put the train and test datasets in  pandas dataframe</span></span><br><span class="line"></span><br><span class="line">train = pd.read_csv(<span class="hljs-string">'../input/train.csv'</span>)</span><br><span class="line">test = pd.read_csv(<span class="hljs-string">'../input/test.csv'</span>)</span><br><span class="line"><span class="hljs-comment">##display the first five rows of the train dataset.</span></span><br><span class="line">train.head(<span class="hljs-number">5</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="/images/房价预测/6.png" alt=""></p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">##display the first five rows of the test dataset.</span></span><br><span class="line">test.head(<span class="hljs-number">5</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="/images/房价预测/3.png" alt=""></p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#check the numbers of samples and features</span></span><br><span class="line">print(<span class="hljs-string">"The train data size before dropping Id feature is : &#123;&#125; "</span>.format(train.shape))</span><br><span class="line">print(<span class="hljs-string">"The test data size before dropping Id feature is : &#123;&#125; "</span>.format(test.shape))</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">#Save the 'Id' column</span></span><br><span class="line">train_ID = train[<span class="hljs-string">'Id'</span>]</span><br><span class="line">test_ID = test[<span class="hljs-string">'Id'</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">#Now drop the  'Id' colum since it's unnecessary for  the prediction process.</span></span><br><span class="line">train.drop(<span class="hljs-string">"Id"</span>, axis = <span class="hljs-number">1</span>, inplace = <span class="hljs-keyword">True</span>)</span><br><span class="line">test.drop(<span class="hljs-string">"Id"</span>, axis = <span class="hljs-number">1</span>, inplace = <span class="hljs-keyword">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">#check again the data size after dropping the 'Id' variable</span></span><br><span class="line">print(<span class="hljs-string">"\nThe train data size after dropping Id feature is : &#123;&#125; "</span>.format(train.shape)) </span><br><span class="line">print(<span class="hljs-string">"The test data size after dropping Id feature is : &#123;&#125; "</span>.format(test.shape))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;The train data size before dropping Id feature is : (1460, 81) </span><br><span class="line">&gt;The test data size before dropping Id feature is : (1459, 80) </span><br><span class="line">&gt;</span><br><span class="line">&gt;The train data size after dropping Id feature is : (1460, 80) </span><br><span class="line">&gt;The test data size after dropping Id feature is : (1459, 79) </span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h2 id="3-数据处理"><a href="#3-数据处理" class="headerlink" title="3.数据处理"></a>3.数据处理</h2><h3 id="异常值"><a href="#异常值" class="headerlink" title="异常值"></a>异常值</h3><p>首先对数据集中的重要特征的异常值进行处理。</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fig, ax = plt.subplots()</span><br><span class="line">ax.scatter(x = train[<span class="hljs-string">'GrLivArea'</span>], y = train[<span class="hljs-string">'SalePrice'</span>])</span><br><span class="line">plt.ylabel(<span class="hljs-string">'SalePrice'</span>, fontsize=<span class="hljs-number">13</span>)</span><br><span class="line">plt.xlabel(<span class="hljs-string">'GrLivArea'</span>, fontsize=<span class="hljs-number">13</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="/images/房价预测/4.png" alt=""></p>
-<p>可从散点图中看到有两个非常明显的异常值，有着极大的房屋面积房价却很低。这两个值是非常典型的异常值，因此可以安全地删除它们。</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#Deleting outliers</span></span><br><span class="line">train = train.drop(train[(train[<span class="hljs-string">'GrLivArea'</span>]&gt;<span class="hljs-number">4000</span>) &amp; (train[<span class="hljs-string">'SalePrice'</span>]&lt;<span class="hljs-number">300000</span>)].index)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">#Check the graphic again</span></span><br><span class="line">fig, ax = plt.subplots()</span><br><span class="line">ax.scatter(train[<span class="hljs-string">'GrLivArea'</span>], train[<span class="hljs-string">'SalePrice'</span>])</span><br><span class="line">plt.ylabel(<span class="hljs-string">'SalePrice'</span>, fontsize=<span class="hljs-number">13</span>)</span><br><span class="line">plt.xlabel(<span class="hljs-string">'GrLivArea'</span>, fontsize=<span class="hljs-number">13</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p><img src="/images/房价预测/0.png" alt=""></p>
-<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><p>删除异常值并不总是安全的。我们决定删除这两个值是因为它俩太奇怪了（极大的空间有着极低的价格）。</p>
-<p>数据集中仍然可能存在其它的异常值。然而删除所有的异常值可能对模型产生不好的影响，特别是当它们可能出现在测试集的时候。因此在处理异常值得时候最好不要全部删除掉，以提高模型的鲁棒性。</p>
-<h3 id="目标变量"><a href="#目标变量" class="headerlink" title="目标变量"></a>目标变量</h3><p><strong>房价</strong>是我们需要预测的目标变量，因此首先对它进行一些分析。</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df_train[<span class="hljs-string">'SalePrice'</span>].describe()</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt;count      1460.000000</span><br><span class="line">&gt;mean     180921.195890</span><br><span class="line">&gt;std       79442.502883</span><br><span class="line">&gt;min       34900.000000</span><br><span class="line">&gt;25%      129975.000000</span><br><span class="line">&gt;50%      163000.000000</span><br><span class="line">&gt;75%      214000.000000</span><br><span class="line">&gt;max      755000.000000</span><br><span class="line">&gt;Name: SalePrice, dtype: float64</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sns.distplot(train[<span class="hljs-string">'SalePrice'</span>] , fit=norm);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Get the fitted parameters used by the function</span></span><br><span class="line">(mu, sigma) = norm.fit(train[<span class="hljs-string">'SalePrice'</span>])</span><br><span class="line">print( <span class="hljs-string">'\n mu = &#123;:.2f&#125; and sigma = &#123;:.2f&#125;\n'</span>.format(mu, sigma))</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">#Now plot the distribution</span></span><br><span class="line">plt.legend([<span class="hljs-string">'Normal dist. ($\mu=$ &#123;:.2f&#125; and $\sigma=$ &#123;:.2f&#125; )'</span>.format(mu, sigma)],</span><br><span class="line">            loc=<span class="hljs-string">'best'</span>)</span><br><span class="line">plt.ylabel(<span class="hljs-string">'Frequency'</span>)</span><br><span class="line">plt.title(<span class="hljs-string">'SalePrice distribution'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">#Get also the QQ-plot</span></span><br><span class="line">fig = plt.figure()</span><br><span class="line">res = stats.probplot(train[<span class="hljs-string">'SalePrice'</span>], plot=plt)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; mu = 180932.92 and sigma = 79467.79</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><img src="/images/房价预测/10.png" alt=""></p>
-<p>目标变量是接近正态分布的。线性模型在正态分布的数据上拟合效果更好，所以我们可以对数据做一些变换使其更接近正态分布。</p>
-<h4 id="目标变量的对数变换"><a href="#目标变量的对数变换" class="headerlink" title="目标变量的对数变换"></a>目标变量的对数变换</h4><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#We use the numpy fuction log1p which  applies log(1+x) to all elements of the column</span></span><br><span class="line">train[<span class="hljs-string">"SalePrice"</span>] = np.log1p(train[<span class="hljs-string">"SalePrice"</span>])</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">#Check the new distribution </span></span><br><span class="line">sns.distplot(train[<span class="hljs-string">'SalePrice'</span>] , fit=norm);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Get the fitted parameters used by the function</span></span><br><span class="line">(mu, sigma) = norm.fit(train[<span class="hljs-string">'SalePrice'</span>])</span><br><span class="line">print( <span class="hljs-string">'\n mu = &#123;:.2f&#125; and sigma = &#123;:.2f&#125;\n'</span>.format(mu, sigma))</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">#Now plot the distribution</span></span><br><span class="line">plt.legend([<span class="hljs-string">'Normal dist. ($\mu=$ &#123;:.2f&#125; and $\sigma=$ &#123;:.2f&#125; )'</span>.format(mu, sigma)],</span><br><span class="line">            loc=<span class="hljs-string">'best'</span>)</span><br><span class="line">plt.ylabel(<span class="hljs-string">'Frequency'</span>)</span><br><span class="line">plt.title(<span class="hljs-string">'SalePrice distribution'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">#Get also the QQ-plot</span></span><br><span class="line">fig = plt.figure()</span><br><span class="line">res = stats.probplot(train[<span class="hljs-string">'SalePrice'</span>], plot=plt)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; mu = 12.02 and sigma = 0.40</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><img src="/images/房价预测/7.png" alt=""></p>
-<p>在经过对数变换后，房价数据接近于正态分布。</p>
-<h2 id="4-特征工程"><a href="#4-特征工程" class="headerlink" title="4.特征工程"></a>4.特征工程</h2><p>首先将训练数据和测试数据合并到一个数据帧。</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ntrain = train.shape[<span class="hljs-number">0</span>]</span><br><span class="line">ntest = test.shape[<span class="hljs-number">0</span>]</span><br><span class="line">y_train = train.SalePrice.values</span><br><span class="line">all_data = pd.concat((train, test)).reset_index(drop=<span class="hljs-keyword">True</span>)</span><br><span class="line">all_data.drop([<span class="hljs-string">'SalePrice'</span>], axis=<span class="hljs-number">1</span>, inplace=<span class="hljs-keyword">True</span>)</span><br><span class="line">print(<span class="hljs-string">"all_data size is : &#123;&#125;"</span>.format(all_data.shape))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;all_data size is : (2917, 79)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h3 id="缺失数据"><a href="#缺失数据" class="headerlink" title="缺失数据"></a>缺失数据</h3><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">all_data_na = (all_data.isnull().sum() / len(all_data)) * <span class="hljs-number">100</span></span><br><span class="line">all_data_na = all_data_na.drop(all_data_na[all_data_na == <span class="hljs-number">0</span>].index).sort_values(ascending=<span class="hljs-keyword">False</span>)[:<span class="hljs-number">30</span>]</span><br><span class="line">missing_data = pd.DataFrame(&#123;<span class="hljs-string">'Missing Ratio'</span> :all_data_na&#125;)</span><br><span class="line">missing_data.head(<span class="hljs-number">20</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="/images/房价预测/1.png" alt=""></p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">f, ax = plt.subplots(figsize=(<span class="hljs-number">15</span>, <span class="hljs-number">12</span>))</span><br><span class="line">plt.xticks(rotation=<span class="hljs-string">'90'</span>)</span><br><span class="line">sns.barplot(x=all_data_na.index, y=all_data_na)</span><br><span class="line">plt.xlabel(<span class="hljs-string">'Features'</span>, fontsize=<span class="hljs-number">15</span>)</span><br><span class="line">plt.ylabel(<span class="hljs-string">'Percent of missing values'</span>, fontsize=<span class="hljs-number">15</span>)</span><br><span class="line">plt.title(<span class="hljs-string">'Percent missing data by feature'</span>, fontsize=<span class="hljs-number">15</span>)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;Text(0.5,1,&apos;Percent missing data by feature&apos;) </span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><img src="/images/房价预测/2.png" alt=""></p>
-<h3 id="数据关联"><a href="#数据关联" class="headerlink" title="数据关联"></a>数据关联</h3><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#Correlation map to see how features are correlated with SalePrice</span></span><br><span class="line">corrmat = train.corr()</span><br><span class="line">plt.subplots(figsize=(<span class="hljs-number">12</span>,<span class="hljs-number">9</span>))</span><br><span class="line">sns.heatmap(corrmat, vmax=<span class="hljs-number">0.9</span>, square=<span class="hljs-keyword">True</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="/images/房价预测/5.png" alt=""></p>
-<h3 id="输入缺失值"><a href="#输入缺失值" class="headerlink" title="输入缺失值"></a>输入缺失值</h3><p>根据不同特征的不同情况对缺失值进行填充。</p>
-<ol>
-<li>对于离散值且数据说明里有 NA 选项，则将缺失值补为None。</li>
-</ol>
-<ul>
-<li>PoolQC : 数据描述说 NA 表示 “没有泳池”。这是有意义的，因为有大量的缺失数据，这表明大多数的房子都没有游泳池。</li>
-</ul>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">all_data[<span class="hljs-string">"PoolQC"</span>] = all_data[<span class="hljs-string">"PoolQC"</span>].fillna(<span class="hljs-string">"None"</span>)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>MiscFeature : 数据描述说 NA 表示“没有杂项特征”。</li>
-</ul>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">all_data[<span class="hljs-string">"MiscFeature"</span>] = all_data[<span class="hljs-string">"MiscFeature"</span>].fillna(<span class="hljs-string">"None"</span>)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Alley : 数据描述说 NA 表示“没有小巷联通”。</li>
-</ul>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">all_data[<span class="hljs-string">"Alley"</span>] = all_data[<span class="hljs-string">"Alley"</span>].fillna(<span class="hljs-string">"None"</span>)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Fence : 数据描述说 NA 表示“没有棚栏”。</li>
-</ul>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">all_data[<span class="hljs-string">"Fence"</span>] = all_data[<span class="hljs-string">"Fence"</span>].fillna(<span class="hljs-string">"None"</span>)</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>对于和其他特征有关联的值，可以先按其它特征分组，然后取中位数 。</li>
-</ol>
-<ul>
-<li>LotFrontage : 因为房子附近的街道到房子的距离和到该房子临近的房子的距离是类似的，因此去临近房子的中位数来填充该距离。</li>
-</ul>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#Group by neighborhood and fill in missing value by the median LotFrontage of all the neighborhood</span></span><br><span class="line">all_data[<span class="hljs-string">"LotFrontage"</span>] = all_data.groupby(<span class="hljs-string">"Neighborhood"</span>)[<span class="hljs-string">"LotFrontage"</span>].transform(</span><br><span class="line">    <span class="hljs-keyword">lambda</span> x: x.fillna(x.median()))</span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>对于连续值，将缺失的值补为0。</li>
-</ol>
-<ul>
-<li><strong>BsmtFinSF1, BsmtFinSF2, BsmtUnfSF, TotalBsmtSF, BsmtFullBath and BsmtHalfBath</strong> :缺失的值为0意味着没有基础设施。</li>
-</ul>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">for</span> col <span class="hljs-keyword">in</span> (<span class="hljs-string">'BsmtFinSF1'</span>, <span class="hljs-string">'BsmtFinSF2'</span>, <span class="hljs-string">'BsmtUnfSF'</span>,<span class="hljs-string">'TotalBsmtSF'</span>, <span class="hljs-string">'BsmtFullBath'</span>, <span class="hljs-string">'BsmtHalfBath'</span>):</span><br><span class="line">    all_data[col] = all_data[col].fillna(<span class="hljs-number">0</span>)</span><br></pre></td></tr></table></figure>
-<ol start="4">
-<li>对于离散值且在数据说明里没有 NA 选项，则将缺失值填充为出现最多的值 。</li>
-</ol>
-<ul>
-<li>MSZoning(大致区域分类)：‘RL’是最常见的值。所以我们使用‘RL’填充缺失值。</li>
-</ul>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">all_data[<span class="hljs-string">'MSZoning'</span>] = all_data[<span class="hljs-string">'MSZoning'</span>].fillna(all_data[<span class="hljs-string">'MSZoning'</span>].mode()[<span class="hljs-number">0</span>])</span><br></pre></td></tr></table></figure>
-<ol start="5">
-<li>对于所有值几乎都一样，参考意义不大的特征，直接删除 。</li>
-</ol>
-<ul>
-<li>Utilities:该特征所有的值几乎都为‘AllPub’,除了一个‘NoSeWa’和2个NA。因为唯一的’NoSewa’出现在训练集，这个特征将不会对预测有帮助，因此可以安全地移除它。</li>
-</ul>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">all_data = all_data.drop([<span class="hljs-string">'Utilities'</span>], axis=<span class="hljs-number">1</span>)</span><br></pre></td></tr></table></figure>
-<p>在缺失值处理完后，可以简单地查看是否还有未处理地缺失值：</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#Check remaining missing values if any </span></span><br><span class="line">all_data_na = (all_data.isnull().sum() / len(all_data)) * <span class="hljs-number">100</span></span><br><span class="line">all_data_na = all_data_na.drop(all_data_na[all_data_na == <span class="hljs-number">0</span>].index).sort_values(ascending=<span class="hljs-keyword">False</span>)</span><br><span class="line">missing_data = pd.DataFrame(&#123;<span class="hljs-string">'Missing Ratio'</span> :all_data_na&#125;)</span><br><span class="line">missing_data.head()</span><br></pre></td></tr></table></figure>
-<h3 id="更多特征工程"><a href="#更多特征工程" class="headerlink" title="更多特征工程"></a>更多特征工程</h3><h4 id="将某些看起来是连续值的特征转换为离散值"><a href="#将某些看起来是连续值的特征转换为离散值" class="headerlink" title="将某些看起来是连续值的特征转换为离散值"></a>将某些看起来是连续值的特征转换为离散值</h4><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#MSSubClass=The building class</span></span><br><span class="line">all_data[<span class="hljs-string">'MSSubClass'</span>] = all_data[<span class="hljs-string">'MSSubClass'</span>].apply(str)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">#Changing OverallCond into a categorical variable</span></span><br><span class="line">all_data[<span class="hljs-string">'OverallCond'</span>] = all_data[<span class="hljs-string">'OverallCond'</span>].astype(str)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">#Year and month sold are transformed into categorical features.</span></span><br><span class="line">all_data[<span class="hljs-string">'YrSold'</span>] = all_data[<span class="hljs-string">'YrSold'</span>].astype(str)</span><br><span class="line">all_data[<span class="hljs-string">'MoSold'</span>] = all_data[<span class="hljs-string">'MoSold'</span>].astype(str)</span><br></pre></td></tr></table></figure>
-<h4 id="标签编码一些带有排序信息的分类变量（例如，标签顺序按照出现次数大小排序）。"><a href="#标签编码一些带有排序信息的分类变量（例如，标签顺序按照出现次数大小排序）。" class="headerlink" title="标签编码一些带有排序信息的分类变量（例如，标签顺序按照出现次数大小排序）。"></a><strong>标签编码</strong>一些带有排序信息的分类变量（例如，标签顺序按照出现次数大小排序）。</h4><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">from</span> sklearn.preprocessing <span class="hljs-keyword">import</span> LabelEncoder</span><br><span class="line">cols = (<span class="hljs-string">'FireplaceQu'</span>, <span class="hljs-string">'BsmtQual'</span>, <span class="hljs-string">'BsmtCond'</span>, <span class="hljs-string">'GarageQual'</span>, <span class="hljs-string">'GarageCond'</span>, </span><br><span class="line">        <span class="hljs-string">'ExterQual'</span>, <span class="hljs-string">'ExterCond'</span>,<span class="hljs-string">'HeatingQC'</span>, <span class="hljs-string">'PoolQC'</span>, <span class="hljs-string">'KitchenQual'</span>, <span class="hljs-string">'BsmtFinType1'</span>, </span><br><span class="line">        <span class="hljs-string">'BsmtFinType2'</span>, <span class="hljs-string">'Functional'</span>, <span class="hljs-string">'Fence'</span>, <span class="hljs-string">'BsmtExposure'</span>, <span class="hljs-string">'GarageFinish'</span>, <span class="hljs-string">'LandSlope'</span>,</span><br><span class="line">        <span class="hljs-string">'LotShape'</span>, <span class="hljs-string">'PavedDrive'</span>, <span class="hljs-string">'Street'</span>, <span class="hljs-string">'Alley'</span>, <span class="hljs-string">'CentralAir'</span>, <span class="hljs-string">'MSSubClass'</span>, <span class="hljs-string">'OverallCond'</span>, </span><br><span class="line">        <span class="hljs-string">'YrSold'</span>, <span class="hljs-string">'MoSold'</span>)</span><br><span class="line"><span class="hljs-comment"># process columns, apply LabelEncoder to categorical features</span></span><br><span class="line"><span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> cols:</span><br><span class="line">    lbl = LabelEncoder() </span><br><span class="line">    lbl.fit(list(all_data[c].values)) </span><br><span class="line">    all_data[c] = lbl.transform(list(all_data[c].values))</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># shape        </span></span><br><span class="line">print(<span class="hljs-string">'Shape all_data: &#123;&#125;'</span>.format(all_data.shape))</span><br></pre></td></tr></table></figure>
-<h4 id="增加一个更为重要的特征"><a href="#增加一个更为重要的特征" class="headerlink" title="增加一个更为重要的特征"></a>增加一个更为重要的特征</h4><p>因为面积相关的特征对房价的影响是非常大的。所以我们增加了一个特征来描述基础设施的总面积，第一层和第二层的面积。</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># Adding total sqfootage feature </span></span><br><span class="line">all_data[<span class="hljs-string">'TotalSF'</span>] = all_data[<span class="hljs-string">'TotalBsmtSF'</span>] + all_data[<span class="hljs-string">'1stFlrSF'</span>] + all_data[<span class="hljs-string">'2ndFlrSF'</span>]</span><br></pre></td></tr></table></figure>
-<h4 id="斜率特征"><a href="#斜率特征" class="headerlink" title="斜率特征"></a>斜率特征</h4><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">numeric_feats = all_data.dtypes[all_data.dtypes != <span class="hljs-string">"object"</span>].index</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Check the skew of all numerical features</span></span><br><span class="line">skewed_feats = all_data[numeric_feats].apply(<span class="hljs-keyword">lambda</span> x: skew(x.dropna())).sort_values(ascending=<span class="hljs-keyword">False</span>)</span><br><span class="line">print(<span class="hljs-string">"\nSkew in numerical features: \n"</span>)</span><br><span class="line">skewness = pd.DataFrame(&#123;<span class="hljs-string">'Skew'</span> :skewed_feats&#125;)</span><br><span class="line">skewness.head(<span class="hljs-number">10</span>)</span><br></pre></td></tr></table></figure>
-<p><img src="/images/房价预测/8.png" alt=""></p>
-<h4 id="Box-Cox变换高斜率特征"><a href="#Box-Cox变换高斜率特征" class="headerlink" title="Box Cox变换高斜率特征"></a>Box Cox变换高斜率特征</h4><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">skewness = skewness[abs(skewness) &gt; <span class="hljs-number">0.75</span>]</span><br><span class="line">print(<span class="hljs-string">"There are &#123;&#125; skewed numerical features to Box Cox transform"</span>.format(skewness.shape[<span class="hljs-number">0</span>]))</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">from</span> scipy.special <span class="hljs-keyword">import</span> boxcox1p</span><br><span class="line">skewed_features = skewness.index</span><br><span class="line">lam = <span class="hljs-number">0.15</span></span><br><span class="line"><span class="hljs-keyword">for</span> feat <span class="hljs-keyword">in</span> skewed_features:</span><br><span class="line">    <span class="hljs-comment">#all_data[feat] += 1</span></span><br><span class="line">    all_data[feat] = boxcox1p(all_data[feat], lam)</span><br><span class="line">    </span><br><span class="line"><span class="hljs-comment">#all_data[skewed_features] = np.log1p(all_data[skewed_features])</span></span><br></pre></td></tr></table></figure>
-<h4 id="获取分类特征的假值"><a href="#获取分类特征的假值" class="headerlink" title="获取分类特征的假值"></a>获取分类特征的假值</h4><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">all_data = pd.get_dummies(all_data)</span><br><span class="line">print(all_data.shape)</span><br></pre></td></tr></table></figure>
-<p>获取新的训练集和测试集</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">train = all_data[:ntrain]</span><br><span class="line">test = all_data[ntrain:]</span><br></pre></td></tr></table></figure>
-<h2 id="5-模型"><a href="#5-模型" class="headerlink" title="5.模型"></a>5.模型</h2><p>导入相关库</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">from</span> sklearn.linear_model <span class="hljs-keyword">import</span> ElasticNet, Lasso,  BayesianRidge, LassoLarsIC</span><br><span class="line"><span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> RandomForestRegressor,  GradientBoostingRegressor</span><br><span class="line"><span class="hljs-keyword">from</span> sklearn.kernel_ridge <span class="hljs-keyword">import</span> KernelRidge</span><br><span class="line"><span class="hljs-keyword">from</span> sklearn.pipeline <span class="hljs-keyword">import</span> make_pipeline</span><br><span class="line"><span class="hljs-keyword">from</span> sklearn.preprocessing <span class="hljs-keyword">import</span> RobustScaler</span><br><span class="line"><span class="hljs-keyword">from</span> sklearn.base <span class="hljs-keyword">import</span> BaseEstimator, TransformerMixin, RegressorMixin, clone</span><br><span class="line"><span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> KFold, cross_val_score, train_test_split</span><br><span class="line"><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> mean_squared_error</span><br><span class="line"><span class="hljs-keyword">import</span> xgboost <span class="hljs-keyword">as</span> xgb</span><br><span class="line"><span class="hljs-keyword">import</span> lightgbm <span class="hljs-keyword">as</span> lgb</span><br></pre></td></tr></table></figure>
-<h3 id="定义交叉策略"><a href="#定义交叉策略" class="headerlink" title="定义交叉策略"></a>定义交叉策略</h3><p>我们使用 Sklearn 中的 cross_cal_score 函数。然而这个函数没有扰乱属性，我们添加了一行代码，使得在交叉验证前对数据集进行扰乱。</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">#Validation function</span></span><br><span class="line">n_folds = <span class="hljs-number">5</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">rmsle_cv</span><span class="hljs-params">(model)</span>:</span></span><br><span class="line">    kf = KFold(n_folds, shuffle=<span class="hljs-keyword">True</span>, random_state=<span class="hljs-number">42</span>).get_n_splits(train.values)</span><br><span class="line">    rmse= np.sqrt(-cross_val_score(model, train.values, y_train, scoring=<span class="hljs-string">"neg_mean_squared_error"</span>, cv = kf))</span><br><span class="line">    <span class="hljs-keyword">return</span>(rmse)</span><br></pre></td></tr></table></figure>
-<h3 id="基础模型"><a href="#基础模型" class="headerlink" title="基础模型"></a>基础模型</h3><ul>
-<li>LASSO 回归：</li>
-</ul>
-<p>这个模型会对异常值特别敏感。所以我们需要让它变得更加鲁棒。在 pipeline 中使用 sklearn 中的 Robustscaler() 方法。</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lasso = make_pipeline(RobustScaler(), Lasso(alpha =<span class="hljs-number">0.0005</span>, random_state=<span class="hljs-number">1</span>))</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Elastic Net 回归：</li>
-</ul>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ENet = make_pipeline(RobustScaler(), ElasticNet(alpha=<span class="hljs-number">0.0005</span>, l1_ratio=<span class="hljs-number">.9</span>, random_state=<span class="hljs-number">3</span>))</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Kernel Ridge 回归：</li>
-</ul>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KRR = KernelRidge(alpha=0.6, kernel=&apos;polynomial&apos;, degree=2, coef0=2.5)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Gradient Boosting 回归：</li>
-</ul>
-<p>使用 huber loss 使其对异常值鲁棒</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GBoost = GradientBoostingRegressor(n_estimators=<span class="hljs-number">3000</span>, learning_rate=<span class="hljs-number">0.05</span>,</span><br><span class="line">                                   max_depth=<span class="hljs-number">4</span>, max_features=<span class="hljs-string">'sqrt'</span>,</span><br><span class="line">                                   min_samples_leaf=<span class="hljs-number">15</span>, min_samples_split=<span class="hljs-number">10</span>, </span><br><span class="line">                                   loss=<span class="hljs-string">'huber'</span>, random_state =<span class="hljs-number">5</span>)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>XGBoost:</li>
-</ul>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">model_xgb = xgb.XGBRegressor(colsample_bytree=<span class="hljs-number">0.4603</span>, gamma=<span class="hljs-number">0.0468</span>, </span><br><span class="line">                             learning_rate=<span class="hljs-number">0.05</span>, max_depth=<span class="hljs-number">3</span>, </span><br><span class="line">                             min_child_weight=<span class="hljs-number">1.7817</span>, n_estimators=<span class="hljs-number">2200</span>,</span><br><span class="line">                             reg_alpha=<span class="hljs-number">0.4640</span>, reg_lambda=<span class="hljs-number">0.8571</span>,</span><br><span class="line">                             subsample=<span class="hljs-number">0.5213</span>, silent=<span class="hljs-number">1</span>,</span><br><span class="line">                             random_state =<span class="hljs-number">7</span>, nthread = <span class="hljs-number">-1</span>)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>LightGBM:</li>
-</ul>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">model_lgb = lgb.LGBMRegressor(objective=<span class="hljs-string">'regression'</span>,num_leaves=<span class="hljs-number">5</span>,</span><br><span class="line">                              learning_rate=<span class="hljs-number">0.05</span>, n_estimators=<span class="hljs-number">720</span>,</span><br><span class="line">                              max_bin = <span class="hljs-number">55</span>, bagging_fraction = <span class="hljs-number">0.8</span>,</span><br><span class="line">                              bagging_freq = <span class="hljs-number">5</span>, feature_fraction = <span class="hljs-number">0.2319</span>,</span><br><span class="line">                              feature_fraction_seed=<span class="hljs-number">9</span>, bagging_seed=<span class="hljs-number">9</span>,</span><br><span class="line">                              min_data_in_leaf =<span class="hljs-number">6</span>, min_sum_hessian_in_leaf = <span class="hljs-number">11</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="基本模型分数"><a href="#基本模型分数" class="headerlink" title="基本模型分数"></a>基本模型分数</h3><p>模型初始化好之后就开始测试一下交叉验证的损失分数吧。</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">score = rmsle_cv(lasso)</span><br><span class="line">print(<span class="hljs-string">"\nLasso score: &#123;:.4f&#125; (&#123;:.4f&#125;)\n"</span>.format(score.mean(), score.std()))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;Lasso score: 0.1115 (0.0074)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">score = rmsle_cv(ENet)</span><br><span class="line">print(<span class="hljs-string">"ElasticNet score: &#123;:.4f&#125; (&#123;:.4f&#125;)\n"</span>.format(score.mean(), score.std()))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;ElasticNet score: 0.1116 (0.0074)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">score = rmsle_cv(KRR)</span><br><span class="line">print(<span class="hljs-string">"Kernel Ridge score: &#123;:.4f&#125; (&#123;:.4f&#125;)\n"</span>.format(score.mean(), score.std()))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;Kernel Ridge score: 0.1153 (0.0075)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">score = rmsle_cv(GBoost)</span><br><span class="line">print(<span class="hljs-string">"Gradient Boosting score: &#123;:.4f&#125; (&#123;:.4f&#125;)\n"</span>.format(score.mean(), score.std()))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;Gradient Boosting score: 0.1177 (0.0080)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">score = rmsle_cv(model_xgb)</span><br><span class="line">print(<span class="hljs-string">"Xgboost score: &#123;:.4f&#125; (&#123;:.4f&#125;)\n"</span>.format(score.mean(), score.std()))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;Xgboost score: 0.1161 (0.0079)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">score = rmsle_cv(model_lgb)</span><br><span class="line">print(<span class="hljs-string">"LGBM score: &#123;:.4f&#125; (&#123;:.4f&#125;)\n"</span> .format(score.mean(), score.std()))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;LGBM score: 0.1157 (0.0067)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h3 id="堆叠模型（stacking-model"><a href="#堆叠模型（stacking-model" class="headerlink" title="堆叠模型（stacking model)"></a>堆叠模型（stacking model)</h3><h4 id="最简单的堆叠方法：平均化基础模型"><a href="#最简单的堆叠方法：平均化基础模型" class="headerlink" title="最简单的堆叠方法：平均化基础模型"></a>最简单的堆叠方法：平均化基础模型</h4><p>我们首先用最简单的方法实验，构建一个新类来拓展 scikit-learn 中 model类，作为我们自己的堆叠模型。</p>
-<h5 id="平均化的基础模型类"><a href="#平均化的基础模型类" class="headerlink" title="平均化的基础模型类"></a>平均化的基础模型类</h5><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AveragingModels</span><span class="hljs-params">(BaseEstimator, RegressorMixin, TransformerMixin)</span>:</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, models)</span>:</span></span><br><span class="line">        self.models = models</span><br><span class="line">        </span><br><span class="line">    <span class="hljs-comment"># we define clones of the original models to fit the data in</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fit</span><span class="hljs-params">(self, X, y)</span>:</span></span><br><span class="line">        self.models_ = [clone(x) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> self.models]</span><br><span class="line">        </span><br><span class="line">        <span class="hljs-comment"># Train cloned base models</span></span><br><span class="line">        <span class="hljs-keyword">for</span> model <span class="hljs-keyword">in</span> self.models_:</span><br><span class="line">            model.fit(X, y)</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">return</span> self</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment">#Now we do the predictions for cloned models and average them</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">predict</span><span class="hljs-params">(self, X)</span>:</span></span><br><span class="line">        predictions = np.column_stack([</span><br><span class="line">            model.predict(X) <span class="hljs-keyword">for</span> model <span class="hljs-keyword">in</span> self.models_</span><br><span class="line">        ])</span><br><span class="line">        <span class="hljs-keyword">return</span> np.mean(predictions, axis=<span class="hljs-number">1</span>)</span><br></pre></td></tr></table></figure>
-<h5 id="平均化的基础模型分数"><a href="#平均化的基础模型分数" class="headerlink" title="平均化的基础模型分数"></a>平均化的基础模型分数</h5><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">averaged_models = AveragingModels(models = (ENet, GBoost, KRR, lasso))</span><br><span class="line"></span><br><span class="line">score = rmsle_cv(averaged_models)</span><br><span class="line">print(<span class="hljs-string">" Averaged base models score: &#123;:.4f&#125; (&#123;:.4f&#125;)\n"</span>.format(score.mean(), score.std()))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; Averaged base models score: 0.1091 (0.0075)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>从结果看来，简单的堆叠模型确实提高了分数。这将激励我们探索更为高效的堆叠模型。</p>
-<h4 id="不那么简单的堆叠模型：增加一个元模型"><a href="#不那么简单的堆叠模型：增加一个元模型" class="headerlink" title="不那么简单的堆叠模型：增加一个元模型"></a>不那么简单的堆叠模型：增加一个元模型</h4><p>在这个方法中，我们将会在简单堆叠模型的基础上增加一个元模型并使用基本模型的预测结果来训练元模型。</p>
-<p>元模型的训练过程如下：</p>
-<ol>
-<li>划分数据集为两个分离的部分（train 和 holdout）</li>
-<li>使用第一部分训练几个基本的模型（train）</li>
-<li>在这些训练过的模型上使用第二部分进行测试（holdout）</li>
-<li>使用3）中的预测结果作为输入，正确地响应作为输出来训练元模型</li>
-</ol>
-<p>前三步是可以迭代完成的。举例来说，我们有一个包含5个基本模型的堆叠模型，我们首先会把训练数据分为5份</p>
-<p>。之后我们会做五次迭代。在每一次迭代中，我们在4份数据上训练基本模型然后在剩下的那份数据上预测。</p>
-<p>可以确信的是，在五次迭代后，我们可以得到完整的5份由基本模型预测得到的训练数据，这在之后将会作为训练数据来训练我们的原模型。</p>
-<p>在预测部分，我们会平均所有基础模型在测试数据上的预测结果，并将它们作为元特征，最终的预测结果将由元模型得出。</p>
-<p><img src="/images/房价预测/9.png" alt=""></p>
-<p>#####改进的堆叠模型类</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StackingAveragedModels</span><span class="hljs-params">(BaseEstimator, RegressorMixin, TransformerMixin)</span>:</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, base_models, meta_model, n_folds=<span class="hljs-number">5</span>)</span>:</span></span><br><span class="line">        self.base_models = base_models</span><br><span class="line">        self.meta_model = meta_model</span><br><span class="line">        self.n_folds = n_folds</span><br><span class="line">   </span><br><span class="line">    <span class="hljs-comment"># We again fit the data on clones of the original models</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fit</span><span class="hljs-params">(self, X, y)</span>:</span></span><br><span class="line">        self.base_models_ = [list() <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> self.base_models]</span><br><span class="line">        self.meta_model_ = clone(self.meta_model)</span><br><span class="line">        kfold = KFold(n_splits=self.n_folds, shuffle=<span class="hljs-keyword">True</span>, random_state=<span class="hljs-number">156</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="hljs-comment"># Train cloned base models then create out-of-fold predictions</span></span><br><span class="line">        <span class="hljs-comment"># that are needed to train the cloned meta-model</span></span><br><span class="line">        out_of_fold_predictions = np.zeros((X.shape[<span class="hljs-number">0</span>], len(self.base_models)))</span><br><span class="line">        <span class="hljs-keyword">for</span> i, model <span class="hljs-keyword">in</span> enumerate(self.base_models):</span><br><span class="line">            <span class="hljs-keyword">for</span> train_index, holdout_index <span class="hljs-keyword">in</span> kfold.split(X, y):</span><br><span class="line">                instance = clone(model)</span><br><span class="line">                self.base_models_[i].append(instance)</span><br><span class="line">                instance.fit(X[train_index], y[train_index])</span><br><span class="line">                y_pred = instance.predict(X[holdout_index])</span><br><span class="line">                out_of_fold_predictions[holdout_index, i] = y_pred</span><br><span class="line">                </span><br><span class="line">        <span class="hljs-comment"># Now train the cloned  meta-model using the out-of-fold predictions as new feature</span></span><br><span class="line">        self.meta_model_.fit(out_of_fold_predictions, y)</span><br><span class="line">        <span class="hljs-keyword">return</span> self</span><br><span class="line">   </span><br><span class="line">    <span class="hljs-comment">#Do the predictions of all base models on the test data and use the averaged predictions as </span></span><br><span class="line">    <span class="hljs-comment">#meta-features for the final prediction which is done by the meta-model</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">predict</span><span class="hljs-params">(self, X)</span>:</span></span><br><span class="line">        meta_features = np.column_stack([</span><br><span class="line">            np.column_stack([model.predict(X) <span class="hljs-keyword">for</span> model <span class="hljs-keyword">in</span> base_models]).mean(axis=<span class="hljs-number">1</span>)</span><br><span class="line">            <span class="hljs-keyword">for</span> base_models <span class="hljs-keyword">in</span> self.base_models_ ])</span><br><span class="line">        <span class="hljs-keyword">return</span> self.meta_model_.predict(meta_features)</span><br></pre></td></tr></table></figure>
-<h5 id="改进的堆叠模型的分数"><a href="#改进的堆叠模型的分数" class="headerlink" title="改进的堆叠模型的分数"></a>改进的堆叠模型的分数</h5><p>为了使得两种方法有可比性（使用了同样数量的基础模型），我们使用了 Enet、KRR、Gboost作为基础模型，使用 lasso 作为元模型。</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">stacked_averaged_models = StackingAveragedModels(base_models = (ENet, GBoost, KRR),</span><br><span class="line">                                                 meta_model = lasso)</span><br><span class="line"></span><br><span class="line">score = rmsle_cv(stacked_averaged_models)</span><br><span class="line">print(<span class="hljs-string">"Stacking Averaged models score: &#123;:.4f&#125; (&#123;:.4f&#125;)"</span>.format(score.mean(), score.std()))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;Stacking Averaged models score: 0.1085 (0.0074)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>通过加入元模型确实得到了更好的结果。</p>
-<h3 id="融合模型"><a href="#融合模型" class="headerlink" title="融合模型"></a>融合模型</h3><p>我们增加了 XGBoost、LightGBM 到之前定义的堆叠模型中。</p>
-<p>我们首先定义一个评估函数 rmsle</p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">rmsle</span><span class="hljs-params">(y, y_pred)</span>:</span></span><br><span class="line">    <span class="hljs-keyword">return</span> np.sqrt(mean_squared_error(y, y_pred))</span><br></pre></td></tr></table></figure>
-<h4 id="最终的训练和预测"><a href="#最终的训练和预测" class="headerlink" title="最终的训练和预测"></a>最终的训练和预测</h4><p><strong>StackRegressor:</strong></p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">stacked_averaged_models.fit(train.values, y_train)</span><br><span class="line">stacked_train_pred = stacked_averaged_models.predict(train.values)</span><br><span class="line">stacked_pred = np.expm1(stacked_averaged_models.predict(test.values))</span><br><span class="line">print(rmsle(y_train, stacked_train_pred))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;0.0781571937916</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><strong>XGBoost:</strong></p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">model_xgb.fit(train, y_train)</span><br><span class="line">xgb_train_pred = model_xgb.predict(train)</span><br><span class="line">xgb_pred = np.expm1(model_xgb.predict(test))</span><br><span class="line">print(rmsle(y_train, xgb_train_pred))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;0.0785165142425</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><strong>LightGBM:</strong></p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">model_lgb.fit(train, y_train)</span><br><span class="line">lgb_train_pred = model_lgb.predict(train)</span><br><span class="line">lgb_pred = np.expm1(model_lgb.predict(test.values))</span><br><span class="line">print(rmsle(y_train, lgb_train_pred))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;0.0716757468834</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-string">'''RMSE on the entire Train data when averaging'''</span></span><br><span class="line"></span><br><span class="line">print(<span class="hljs-string">'RMSLE score on train data:'</span>)</span><br><span class="line">print(rmsle(y_train,stacked_train_pred*<span class="hljs-number">0.70</span> +</span><br><span class="line">               xgb_train_pred*<span class="hljs-number">0.15</span> + lgb_train_pred*<span class="hljs-number">0.15</span> ))</span><br></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;RMSLE score on train data:</span><br><span class="line">&gt;0.0752190464543</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><strong>融合预测：</strong></p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ensemble = stacked_pred*<span class="hljs-number">0.70</span> + xgb_pred*<span class="hljs-number">0.15</span> + lgb_pred*<span class="hljs-number">0.15</span></span><br></pre></td></tr></table></figure>
-<p><strong>提交：</strong></p>
-<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sub = pd.DataFrame()</span><br><span class="line">sub[<span class="hljs-string">'Id'</span>] = test_ID</span><br><span class="line">sub[<span class="hljs-string">'SalePrice'</span>] = ensemble</span><br><span class="line">sub.to_csv(<span class="hljs-string">'submission.csv'</span>,index=<span class="hljs-keyword">False</span>)</span><br></pre></td></tr></table></figure>
-
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/12/07/Kaggle之房价预测/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -779,71 +366,16 @@
 <p>6.安装内核和模块</p>
 <p>7.更新 Grub 配置</p>
 <p>8.重启系统</p>
-<h2 id="1-获取最新版本的源代码"><a href="#1-获取最新版本的源代码" class="headerlink" title="1.获取最新版本的源代码"></a>1.获取最新版本的源代码</h2><p>访问<a href="https://www.kernel.org/" target="_blank" rel="noopener">Linux官方网站</a>下载最新的源代码。点击标有“Latest Stable Kernel”的黄色大按钮。</p>
-<p>也可以使用 wget 命令下载 Linux 内核源代码：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.1.tar.xz</span><br></pre></td></tr></table></figure>
-<h2 id="2-获取-tar-xz-文件"><a href="#2-获取-tar-xz-文件" class="headerlink" title="2.获取 tar.xz 文件"></a>2.获取 tar.xz 文件</h2><p>使用 unzx 命令和 xz 命令解压压缩文件获取源代码：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzx -v linux-4.19.1.tar.xz</span><br></pre></td></tr></table></figure>
-<p>或者</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xz -d -v linux-4.19.1.tar.xz</span><br></pre></td></tr></table></figure>
-<h3 id="使用pgp验证-linux-内核-tarball"><a href="#使用pgp验证-linux-内核-tarball" class="headerlink" title="使用pgp验证 linux 内核 tarball"></a>使用pgp验证 linux 内核 tarball</h3><p>首先获取linux-4.19.1.tar 的 PGP 签名：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.1.tar.sign</span><br></pre></td></tr></table></figure>
-<p> 尝试进行验证：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --verify linux-4.19.1.tar.sign</span><br></pre></td></tr></table></figure>
-<p>示例输出：</p>
-<p><img src="/Users/yifengpeng/Desktop/屏幕快照 2018-11-29 08.38.41.png" alt=""></p>
-<p>从 PGP 密钥服务器获取公钥来验证签名。例如：RSA key ID 79BE3E4300411886（从上面的输出结果中得到）</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --recv-keys 79BE3E4300411886</span><br></pre></td></tr></table></figure>
-<p>示例输出：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gpg: key 79BE3E4300411886: 7 duplicate signatures removed</span><br><span class="line">gpg: key 79BE3E4300411886: 172 signatures not checked due to missing keys</span><br><span class="line">gpg: /home/vivek/.gnupg/trustdb.gpg: trustdb created</span><br><span class="line">gpg: key 79BE3E4300411886: public key &quot;Linus Torvalds &lt;torvalds@kernel.org&gt;&quot; imported</span><br><span class="line">gpg: no ultimately trusted keys found</span><br><span class="line">gpg: Total number processed: 1</span><br><span class="line">gpg:               imported: 1</span><br></pre></td></tr></table></figure>
-<p>现在再一次使用 gpg 命令进行验证：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg --verify linux-4.19.1.tar.sign</span><br></pre></td></tr></table></figure>
-<p>示例输出：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">gpg: assuming signed data in &apos;linux-4.19.1.tar&apos;</span><br><span class="line">gpg: Signature made Sun 12 Aug 2018 04:00:28 PM CDT</span><br><span class="line">gpg:                using RSA key 79BE3E4300411886</span><br><span class="line">gpg: Good signature from &quot;Linus Torvalds &lt;torvalds@kernel.org&gt;&quot; [unknown]</span><br><span class="line">gpg:                 aka &quot;Linus Torvalds &lt;torvalds@linux-foundation.org&gt;&quot; [unknown]</span><br><span class="line">gpg: WARNING: This key is not certified with a trusted signature!</span><br><span class="line">gpg:          There is no indication that the signature belongs to the owner.</span><br><span class="line">Primary key fingerprint: ABAF 11C6 5A29 70B1 30AB  E3C4 79BE 3E43 0041 1886</span><br></pre></td></tr></table></figure>
-<p>如果通过了验证，那么就使用 tar 进行解压：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar xvf linux-4.19.1.tar</span><br></pre></td></tr></table></figure>
-<h2 id="3-配置-Linux-内核特征和模型"><a href="#3-配置-Linux-内核特征和模型" class="headerlink" title="3.配置 Linux 内核特征和模型"></a>3.配置 Linux 内核特征和模型</h2><p>在开始构建内核之前，你必须配置内核特征。你也必须明确你的系统所需要的内核模块（驱动）。这个对于新手来说是很有压力的。我建议你使用 cp 命令复制已有的配置文件：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd linux-4.19.1</span><br><span class="line">cp -v /boot/config-$(uname -r) .config</span><br></pre></td></tr></table></figure>
-<p>示例输出：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;/boot/config-4.15.0-30-generic&apos; -&gt; &apos;.config&apos;</span><br></pre></td></tr></table></figure>
-<h2 id="4-安装编译器和其他必须的工具"><a href="#4-安装编译器和其他必须的工具" class="headerlink" title="4.安装编译器和其他必须的工具"></a>4.安装编译器和其他必须的工具</h2><p>你必须安装有类似 GCC 或者相关联的工具来编译 Linux 内核。</p>
-<p>使用下列的 apt 命令或 apt-get 命令来安装：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential libncurses-dev bison flex libssl-dev libelf-dev</span><br></pre></td></tr></table></figure>
-<p>尝试 yum 命令：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum group install &quot;Development Tools&quot;</span><br></pre></td></tr></table></figure>
-<p>或</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum groupinstall &quot;Development Tools&quot;</span><br></pre></td></tr></table></figure>
-<p>额外的包：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install ncurses-devel bison flex elfutils-libelf-devel openssl-devel</span><br></pre></td></tr></table></figure>
-<h3 id="如何在-Fedora-Linux-上安装GCC-和其它开发工具"><a href="#如何在-Fedora-Linux-上安装GCC-和其它开发工具" class="headerlink" title="如何在 Fedora Linux 上安装GCC 和其它开发工具"></a>如何在 Fedora Linux 上安装GCC 和其它开发工具</h3><p>运行下列 dnf 命令：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf group install &quot;Development Tools&quot;</span><br><span class="line">sudo dnf ncurses-devel bison flex elfutils-libelf-devel openssl-devel</span><br></pre></td></tr></table></figure>
-<h2 id="5-编译内核"><a href="#5-编译内核" class="headerlink" title="5.编译内核"></a>5.编译内核</h2><p>开始编译并创建一个压缩好的内核镜像，输入：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
-<p>为了加速编译时间，传递 -j 参数：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">## use 4 core/thread ##</span><br><span class="line">$ make -j 4</span><br><span class="line">## get thread or cpu core count using nproc command ##</span><br><span class="line">$ make -j $(nproc)</span><br></pre></td></tr></table></figure>
-<p><img src="/Users/yifengpeng/Desktop/屏幕快照 2018-11-29 09.09.11.png" alt=""></p>
-<p>编译和构建 linux 内核将会话费大量时间，这取决于你的系统资源（例如：CPU）。</p>
-<h3 id="安装-Linux-内核模块"><a href="#安装-Linux-内核模块" class="headerlink" title="安装 Linux 内核模块"></a>安装 Linux 内核模块</h3><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make modules_install</span><br></pre></td></tr></table></figure>
-<p><img src="/Users/yifengpeng/Desktop/屏幕快照 2018-11-29 09.13.03.png" alt=""></p>
-<h3 id="安装-Linux-内核"><a href="#安装-Linux-内核" class="headerlink" title="安装 Linux 内核"></a>安装 Linux 内核</h3><p>到目前为止我们已经编译了 Linux 内核并且安装了内核模块。是时候安装内核本身了：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
-<p><img src="/Users/yifengpeng/Desktop/屏幕快照 2018-11-29 09.15.12.png" alt=""></p>
-<p>这将安装三个文件在 /boot 目录并修改你的内核 grub 配置文件：</p>
-<ul>
-<li>initramfs-4.19.1.img</li>
-<li>System.map-4.19.1</li>
-<li>vmlinuz-4.19.1</li>
-</ul>
-<h3 id="更新-grub-配置"><a href="#更新-grub-配置" class="headerlink" title="更新 grub 配置"></a>更新 grub 配置</h3><p>你需要修改 Grub 2 bootloader 配置。 输入下列 shell 命令</p>
-<h4 id="CentOS-RHEL-Oracle-Scientific-and-Fedora-Linux"><a href="#CentOS-RHEL-Oracle-Scientific-and-Fedora-Linux" class="headerlink" title="CentOS/RHEL/Oracle/Scientific and Fedora Linux"></a>CentOS/RHEL/Oracle/Scientific and Fedora Linux</h4><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo grub2-mkconfig -o /boot/grub2/grub.cfg</span><br><span class="line">sudo grubby --set-default /boot/vmlinuz-4.19.1</span><br></pre></td></tr></table></figure>
-<h4 id="Debian-Ubuntu-Linux"><a href="#Debian-Ubuntu-Linux" class="headerlink" title="Debian/Ubuntu Linux"></a>Debian/Ubuntu Linux</h4><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo update-initramfs -c -k 4.19.1</span><br><span class="line">sudo update-grub</span><br></pre></td></tr></table></figure>
-<p>重启系统：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
-<p>在重启后验证 Linux 内核是否为最新版本</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uname -mrs</span><br></pre></td></tr></table></figure>
-
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2018/12/05/从源码编译和安装Linux内核/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
@@ -891,17 +423,17 @@
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Posts
+                        Entradas
                     </p>
                     <p class="title has-text-weight-normal">
-                        5
+                        6
                     </p>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Categories
+                        Categorias
                     </p>
                     <p class="title has-text-weight-normal">
                         2
@@ -911,7 +443,7 @@
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Tags
+                        Etiquetas
                     </p>
                     <p class="title has-text-weight-normal">
                         3
@@ -921,7 +453,7 @@
         </nav>
         <div class="level">
             <a class="level-item button is-link is-rounded" href="https://github.com/MountainOne">
-                Follow</a>
+                SEGUIR</a>
         </div>
         
         
@@ -1008,7 +540,7 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Categories
+                Categorias
             </h3>
             <ul class="menu-list">
             <li>
@@ -1037,7 +569,7 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Tag Cloud
+            Nube de etiquetas
         </h3>
         <a href="/tags/Kaggle/" style="font-size: 10px;">Kaggle</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/image-segmentation/" style="font-size: 10px;">image segmentation</a>
     </div>
@@ -1051,8 +583,21 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Recent
+            Recientes
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time></div>
+                    <a href="/2018/12/19/为Linux添加一个系统调用/" class="has-link-black-ter is-size-6">为Linux添加一个系统调用</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -1106,19 +651,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-05T14:30:00.000Z">2018-12-05</time></div>
-                    <a href="/2018/12/05/从源码编译和安装Linux内核/" class="has-link-black-ter is-size-6">从源码编译和安装Linux内核</a>
-                    <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1127,7 +659,7 @@
     <div class="card-content">
         <div class="menu">
         <h3 class="menu-label">
-            Archives
+            Archivos
         </h3>
         <ul class="menu-list">
         
@@ -1137,7 +669,7 @@
                     <span class="level-item">December 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -1151,7 +683,7 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Tags
+                Etiquetas
             </h3>
             <ul class="menu-list">
                 
@@ -1172,7 +704,7 @@
                             <span class="level-item">Linux</span>
                         </span>
                         <span class="level-end">
-                            <span class="level-item tag">3</span>
+                            <span class="level-item tag">4</span>
                         </span>
                     </a>
                 </li>
@@ -1208,8 +740,21 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Recent
+            Recientes
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time></div>
+                    <a href="/2018/12/19/为Linux添加一个系统调用/" class="has-link-black-ter is-size-6">为Linux添加一个系统调用</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -1263,19 +808,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-05T14:30:00.000Z">2018-12-05</time></div>
-                    <a href="/2018/12/05/从源码编译和安装Linux内核/" class="has-link-black-ter is-size-6">从源码编译和安装Linux内核</a>
-                    <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1284,7 +816,7 @@
     <div class="card-content">
         <div class="menu">
         <h3 class="menu-label">
-            Archives
+            Archivos
         </h3>
         <ul class="menu-list">
         
@@ -1294,7 +826,7 @@
                     <span class="level-item">December 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -1308,7 +840,7 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Tags
+                Etiquetas
             </h3>
             <ul class="menu-list">
                 
@@ -1329,7 +861,7 @@
                             <span class="level-item">Linux</span>
                         </span>
                         <span class="level-end">
-                            <span class="level-item tag">3</span>
+                            <span class="level-item tag">4</span>
                         </span>
                     </a>
                 </li>
@@ -1482,10 +1014,10 @@ document.addEventListener('DOMContentLoaded', function () {
     (function (window) {
         var INSIGHT_CONFIG = {
             TRANSLATION: {
-                POSTS: 'Posts',
+                POSTS: 'Entradas',
                 PAGES: 'Pages',
-                CATEGORIES: 'Categories',
-                TAGS: 'Tags',
+                CATEGORIES: 'Categorias',
+                TAGS: 'Etiquetas',
                 UNTITLED: '(Untitled)',
             },
             CONTENT_URL: '/content.json',
