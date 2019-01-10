@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>wargame--Bandit - MountainOne&#39;s technology space</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="Bandit 是wargame 系列挑战中的第一个系列，也是最基础的一个，可以用来巩固一些命令行基础知识，所有的挑战都通过终端直接 ssh 连接远程主机即可。我在两周前打完了 Bandit,所以写下这篇博客来做一个总结。  Level 0目标使用 ssh 连接到目标主机  bandit.labs.overthewire.org 。用户名为bandit0，密码为bandit0。 可能会用到的命令s">
+<meta name="keywords" content="shell wargames">
+<meta property="og:type" content="article">
+<meta property="og:title" content="wargame--Bandit">
+<meta property="og:url" content="http://yoursite.com/2019/01/08/wargame-Bandit/index.html">
+<meta property="og:site_name" content="MountainOne&#39;s technology space">
+<meta property="og:description" content="Bandit 是wargame 系列挑战中的第一个系列，也是最基础的一个，可以用来巩固一些命令行基础知识，所有的挑战都通过终端直接 ssh 连接远程主机即可。我在两周前打完了 Bandit,所以写下这篇博客来做一个总结。  Level 0目标使用 ssh 连接到目标主机  bandit.labs.overthewire.org 。用户名为bandit0，密码为bandit0。 可能会用到的命令s">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-01-07T13:52:11.425Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="wargame--Bandit">
+<meta name="twitter:description" content="Bandit 是wargame 系列挑战中的第一个系列，也是最基础的一个，可以用来巩固一些命令行基础知识，所有的挑战都通过终端直接 ssh 连接远程主机即可。我在两周前打完了 Bandit,所以写下这篇博客来做一个总结。  Level 0目标使用 ssh 连接到目标主机  bandit.labs.overthewire.org 。用户名为bandit0，密码为bandit0。 可能会用到的命令s">
+
+
+
+
+
+<link rel="icon" href="/images/wangye.jpeg">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/wangye.jpeg" alt="wargame--Bandit" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/MountainOne">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="Search" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-01-07T16:27:46.000Z">2019-01-07</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                wargame--Bandit
+            
+        </h1>
+        <div class="content">
+            <blockquote>
+<p>Bandit 是<a href="http://overthewire.org/wargames/" target="_blank" rel="noopener">wargame</a> 系列挑战中的第一个系列，也是最基础的一个，可以用来巩固一些命令行基础知识，所有的挑战都通过终端直接 ssh 连接远程主机即可。我在两周前打完了 Bandit,所以写下这篇博客来做一个总结。</p>
+</blockquote>
+<h2 id="Level-0"><a href="#Level-0" class="headerlink" title="Level 0"></a>Level 0</h2><h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>使用 ssh 连接到目标主机  <strong>bandit.labs.overthewire.org</strong> 。用户名为<strong>bandit0</strong>，密码为<strong>bandit0</strong>。</p>
+<h3 id="可能会用到的命令"><a href="#可能会用到的命令" class="headerlink" title="可能会用到的命令"></a>可能会用到的命令</h3><p>ssh</p>
+<hr>
+<p>非常简单，直接连进去可以得到下一关的密码。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sshpass -p `natas0` ssh natas0@bandit.labs.overthewire.org -p 2220</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这里用到了 sshpass 命令，这个命令允许你进行 ssh 连接时直接输入密码，而不需要再标准输入中输入，非常方便，之后的连接我都是使用的这个命令。可以通过该<a href="https://gist.github.com/arunoda/7790979" target="_blank" rel="noopener">页面</a> 查看安装如何安装</p>
+</blockquote>
+<h2 id="Level-0-rarr-1"><a href="#Level-0-rarr-1" class="headerlink" title="Level 0 &rarr; 1"></a>Level 0 &rarr; 1</h2><h3 id="目标-1"><a href="#目标-1" class="headerlink" title="目标"></a>目标</h3><p>下一关的密码保存在用户目录下的 <strong>readme</strong>文件中。无论什么时候得到了下一关的密码，使用 <strong>ssh</strong> 登入下一关并继续挑战。</p>
+<h3 id="可能会用到的命令-1"><a href="#可能会用到的命令-1" class="headerlink" title="可能会用到的命令"></a>可能会用到的命令</h3><p>ls, cd, cat, file, du, find</p>
+<hr>
+<p>使用<strong>ls</strong> 查看用户目录并用<strong>cat</strong>查看文件内容。</p>
+<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat readme</span><br><span class="line">boJ9jbbUNNfktd78OOpsqOltutMc3MY1</span><br></pre></td></tr></table></figure>
+<h2 id="Level-1-rarr-2"><a href="#Level-1-rarr-2" class="headerlink" title="Level 1&rarr; 2"></a>Level 1&rarr; 2</h2><h3 id="目标-2"><a href="#目标-2" class="headerlink" title="目标"></a>目标</h3><p>下一关的密码保存在用户目录下的”-“文件中。</p>
+<h3 id="可能会用到的命令-2"><a href="#可能会用到的命令-2" class="headerlink" title="可能会用到的命令"></a>可能会用到的命令</h3><p>ls, cd, cat, file, du, find</p>
+<hr>
+<p>使用 <strong>ls</strong> 查看目录并使用 <strong>cat</strong> 查看文件内容。然而在使用 <strong>cat</strong> 命令时会出现一直空等的情况。因为文件名”-“是一个特殊字符，它会告诉 Shell 用户想从标准输入输入数据，所以 Shell 就会空等。解决办法就是带上文件路径。</p>
+<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat ~/-</span><br><span class="line">cat ./-</span><br><span class="line">CV1DtqXWVFXTvM2F0k09SHz0YwRINYA9</span><br></pre></td></tr></table></figure>
+<h2 id="Level-2-rarr-3"><a href="#Level-2-rarr-3" class="headerlink" title="Level 2&rarr;3"></a>Level 2&rarr;3</h2><h3 id="目标-3"><a href="#目标-3" class="headerlink" title="目标"></a>目标</h3><p>下一关的密码保存在用户目录下的 <strong>space in this filename</strong>文件中。</p>
+<h3 id="可能会用到的命令-3"><a href="#可能会用到的命令-3" class="headerlink" title="可能会用到的命令"></a>可能会用到的命令</h3><p>ls, cd, cat, file, du, find</p>
+<hr>
+<p>这一关考察的是转义符的应用。如果直接在 Shell 中打出文件命令的话，Shell 会将输入理解为多个参数，而不是一个文件名，因此需要用转义符’\‘来对空格进行转义。</p>
+<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat <span class="hljs-string">"spaces in this filename"</span></span><br><span class="line">cat spaces\ <span class="hljs-keyword">in</span>\ this\ filename</span><br><span class="line">UmHadQclWmgdLOKQ3YNgjWxGoRMb5luK</span><br></pre></td></tr></table></figure>
+<h2 id="Level-3-rarr-4"><a href="#Level-3-rarr-4" class="headerlink" title="Level 3&rarr;4"></a>Level 3&rarr;4</h2><h3 id="目标-4"><a href="#目标-4" class="headerlink" title="目标"></a>目标</h3><p>下一关的密码保存在 <strong>inhere</strong> 文件夹下的隐藏文件中。</p>
+<h3 id="可能会用到的命令-4"><a href="#可能会用到的命令-4" class="headerlink" title="可能会用到的命令"></a>可能会用到的命令</h3><p>ls, cd, cat, file, du, find</p>
+<hr>
+<p>主要熟悉 <strong>ls</strong> 命令，加上 -a 参数后就可以看到当前文件夹下包括隐藏文件在内的所有文件。</p>
+<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">cd</span> inhere</span><br><span class="line">ls -a</span><br><span class="line">cat .hidden</span><br><span class="line">pIwrPrtPN36QITSp3EQaw936yaFoFgAB</span><br></pre></td></tr></table></figure>
+<h2 id="Level-4-rarr-5"><a href="#Level-4-rarr-5" class="headerlink" title="Level 4&rarr; 5"></a>Level 4&rarr; 5</h2><h3 id="目标-5"><a href="#目标-5" class="headerlink" title="目标"></a>目标</h3><p>下一关的密码保存在 <strong>inhere </strong> 文件夹下唯一可读的文件中。</p>
+<h3 id="可能会用到的命令-5"><a href="#可能会用到的命令-5" class="headerlink" title="可能会用到的命令"></a>可能会用到的命令</h3><p>ls, cd, cat, file, du, find</p>
+<hr>
+<p>在 <strong>inhere</strong> 有很多文件，但只有一个是可读的。使用 <strong>file</strong>  命令可以查看所有文件的文件类型，发现只有一个文件是 ASCII 格式的，那就是我们需要的！</p>
+<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">cd</span> inhere</span><br><span class="line">file ./-*</span><br><span class="line">cat ./-file07</span><br><span class="line">koReBOKuIDDepwhWk7jZC0RTdopnAYKh</span><br></pre></td></tr></table></figure>
+<h2 id="level-5-rarr-6"><a href="#level-5-rarr-6" class="headerlink" title="level 5&rarr;6"></a>level 5&rarr;6</h2><h3 id="目标-6"><a href="#目标-6" class="headerlink" title="目标"></a>目标</h3><p>下一关的密码保存在 <strong>inhere</strong> 文件夹的某个文件中，它有下列特征：可读的；1033字节；不可执行。</p>
+<h3 id="可能会用到的命令-6"><a href="#可能会用到的命令-6" class="headerlink" title="可能会用到的命令"></a>可能会用到的命令</h3><p>ls, cd, cat, file, du, find</p>
+<hr>
+<p>这一关用到 <strong>find</strong> 命令。参数 <strong>-size</strong> 可以用来指定文件的大小，在数字后加 ‘c’用字节表示，加’k’用 kb 表示，加’M’用 MB 表示。参数 -type 用来指定文件的类型，’f’表示普通文件，’I’表示链接文件，’d’表示目录。</p>
+<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">cd</span> inhere</span><br><span class="line">find ./ -<span class="hljs-built_in">type</span> f -size 1033c</span><br><span class="line">find ./ -size 1033c</span><br><span class="line">cat ./maybehere07/.file2</span><br><span class="line">DXjZPULLxYr17uwoI01bNLQbtFemEgo7</span><br></pre></td></tr></table></figure>
+<h2 id="Level-6-rarr-7"><a href="#Level-6-rarr-7" class="headerlink" title="Level 6&rarr;7"></a>Level 6&rarr;7</h2><h3 id="目标-7"><a href="#目标-7" class="headerlink" title="目标"></a>目标</h3><p>和上一关类似，这一关的文件在服务器中，没有告诉我们具体位置。这一关的文件有以下特征：属于用户 bandit7；属于组 bandit6；33字节。</p>
+<h3 id="可能会用到的命令-7"><a href="#可能会用到的命令-7" class="headerlink" title="可能会用到的命令"></a>可能会用到的命令</h3><p>ls, cd, cat, file, du, find, grep</p>
+<hr>
+<p>这一关还是要用到 <strong>find</strong>命令。我们已经知道了使用 -size 33c来寻找长33字节的文件。参数 -group bandit6 将会寻找属于组 bandit6 的文件。参数 -user bandit7 将会寻找属于用户 bandit7 的文件。因为该文件在服务器的某处，所以我们要从根目录开始找。执行命令后将会产生许多拒绝访问的报错信息。为了过滤掉这些没用的信息，我们使用 （2&gt;/dev/null）。</p>
+<blockquote>
+<p>小贴士：</p>
+<p>‘&gt;’操作符重定向输出到文件或设备。也可以使用’&gt;&gt;’来附加（’&gt;’会覆盖源文件，如果有的话）。</p>
+<p>> file : 重定向标准输出到文件</p>
+<p>1&gt;file : 重定向标准输出到文件</p>
+<p>2&gt;file : 重定向标准错误到文件</p>
+<p>&amp;&gt;file : 重定向标准输出和错误到文件</p>
+<p>/dev/null 是空设备，任何定向到它的数据都会被删除，可以用来压缩任何输出。</p>
+</blockquote>
+<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">find / -size 33c -user bandit7 -group bandit6 2&gt;/dev/null</span><br><span class="line">cat /var/lib/dpkg/info/bandit7.password</span><br><span class="line">HKBPTKQnIay4Fw76bEy8PVxKEDQRKTzs</span><br></pre></td></tr></table></figure>
+<h2 id="Level-7-rarr-8"><a href="#Level-7-rarr-8" class="headerlink" title="Level 7&rarr;8"></a>Level 7&rarr;8</h2><h3 id="目标-8"><a href="#目标-8" class="headerlink" title="目标"></a>目标</h3><p>下一关的密码保存在 <strong>data.txt</strong> 文件中的单词 <strong>millionth</strong> 后面。</p>
+<h3 id="可能会用到的命令-8"><a href="#可能会用到的命令-8" class="headerlink" title="可能会用到的命令"></a>可能会用到的命令</h3><p>grep, sort, uniq, strings, base64, tr, tar, gzip, bzip2, xxd</p>
+<hr>
+<p>这一关很简单，直接用 <strong>grep</strong> 就好。</p>
+<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="hljs-string">"millionth"</span> data.txt</span><br><span class="line">millionth cvX2JJa4CFALtqS87jk27qwqGhBM9plV</span><br></pre></td></tr></table></figure>
+<h2 id="Level-8-rarr-9"><a href="#Level-8-rarr-9" class="headerlink" title="Level 8&rarr;9"></a>Level 8&rarr;9</h2><h2 id="目标-9"><a href="#目标-9" class="headerlink" title="目标"></a>目标</h2><p>下</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/shell-wargames/">shell wargames</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/01/08/详解XSS（译）/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">详解XSS（译）</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/23/我理解的docker/">
+                <span class="level-item">我理解的docker</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">Comments</h3>
+        <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en/sdk.js#xfbml=1&version=v2.8";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<div class="fb-comments" data-width="100%" data-href="http://yoursite.com/2019/01/08/wargame-Bandit/" data-num-posts="5"></div>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    <img class="image is-128x128 has-mb-6" src="/images/wangye.jpeg" alt="彭一峰">
+                    
+                    <p class="is-size-4 is-block">
+                        彭一峰
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        曾在新浪微博、中科院自动化所实习。
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>BeiJing, China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Posts
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        9
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Categories
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        4
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Tags
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        6
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/MountainOne">
+                Follow</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="https://github.com/MountainOne">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Facebook" href="http://facebook.com">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Twitter" href="http://twitter.com">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Dribbble" href="http://dribbble.com">
+                
+                <i class="fab fa-dribbble"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Links
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://hexo.io" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Hexo</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">https://hexo.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/MountainOne" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Github</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">https://github.com/MountainOne</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Categories
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/CTF/">
+            <span class="level-start">
+                <span class="level-item">CTF</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Deep-Learning/">
+            <span class="level-start">
+                <span class="level-item">Deep Learning</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/操作系统/">
+            <span class="level-start">
+                <span class="level-item">操作系统</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/数据挖掘/">
+            <span class="level-start">
+                <span class="level-item">数据挖掘</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Tag Cloud
+        </h3>
+        <a href="/tags/Kaggle/" style="font-size: 10px;">Kaggle</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Web-XSS/" style="font-size: 10px;">Web XSS</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/image-segmentation/" style="font-size: 10px;">image segmentation</a> <a href="/tags/shell-wargames/" style="font-size: 10px;">shell wargames</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T08:49:15.000Z">2019-01-08</time></div>
+                    <a href="/2019/01/08/详解XSS（译）/" class="has-link-black-ter is-size-6">详解XSS（译）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-07T16:27:46.000Z">2019-01-07</time></div>
+                    <a href="/2019/01/08/wargame-Bandit/" class="has-link-black-ter is-size-6">wargame--Bandit</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-23T14:52:38.000Z">2018-12-23</time></div>
+                    <a href="/2018/12/23/我理解的docker/" class="has-link-black-ter is-size-6">我理解的docker</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time></div>
+                    <a href="/2018/12/19/为Linux添加一个系统调用/" class="has-link-black-ter is-size-6">为Linux添加一个系统调用</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T13:34:53.000Z">2018-12-19</time></div>
+                    <a href="/2018/12/19/自己动手写Shell——Python实现/" class="has-link-black-ter is-size-6">自己动手写Shell(二)——Python实现</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Archives
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">January 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">December 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Tags
+            </h3>
+            <ul class="menu-list">
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/Kaggle/">
+                        <span class="level-start">
+                            <span class="level-item">Kaggle</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/Linux/">
+                        <span class="level-start">
+                            <span class="level-item">Linux</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">4</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/Web-XSS/">
+                        <span class="level-start">
+                            <span class="level-item">Web XSS</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/docker/">
+                        <span class="level-start">
+                            <span class="level-item">docker</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/image-segmentation/">
+                        <span class="level-start">
+                            <span class="level-item">image segmentation</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/shell-wargames/">
+                        <span class="level-start">
+                            <span class="level-item">shell wargames</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T08:49:15.000Z">2019-01-08</time></div>
+                    <a href="/2019/01/08/详解XSS（译）/" class="has-link-black-ter is-size-6">详解XSS（译）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-07T16:27:46.000Z">2019-01-07</time></div>
+                    <a href="/2019/01/08/wargame-Bandit/" class="has-link-black-ter is-size-6">wargame--Bandit</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-23T14:52:38.000Z">2018-12-23</time></div>
+                    <a href="/2018/12/23/我理解的docker/" class="has-link-black-ter is-size-6">我理解的docker</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time></div>
+                    <a href="/2018/12/19/为Linux添加一个系统调用/" class="has-link-black-ter is-size-6">为Linux添加一个系统调用</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T13:34:53.000Z">2018-12-19</time></div>
+                    <a href="/2018/12/19/自己动手写Shell——Python实现/" class="has-link-black-ter is-size-6">自己动手写Shell(二)——Python实现</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Archives
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">January 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">December 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Tags
+            </h3>
+            <ul class="menu-list">
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/Kaggle/">
+                        <span class="level-start">
+                            <span class="level-item">Kaggle</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/Linux/">
+                        <span class="level-start">
+                            <span class="level-item">Linux</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">4</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/Web-XSS/">
+                        <span class="level-start">
+                            <span class="level-item">Web XSS</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/docker/">
+                        <span class="level-start">
+                            <span class="level-item">docker</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/image-segmentation/">
+                        <span class="level-start">
+                            <span class="level-item">image segmentation</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/shell-wargames/">
+                        <span class="level-start">
+                            <span class="level-item">shell wargames</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/wangye.jpeg" alt="wargame--Bandit" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 MountainOne&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus">Icarus</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/MountainOne">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("en");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

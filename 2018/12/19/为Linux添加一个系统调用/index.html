@@ -15,7 +15,7 @@
 <meta property="og:site_name" content="MountainOne&#39;s technology space">
 <meta property="og:description" content="在之前的博客中，我使用 C 和 Python 分别实现了一个简单的 Shell，这是一个很有意思的小程序，可以让你了解你每天都在使用的工具。而在简单的 Shell 之下则是一系列的系统调用，例如：read, fork, exec, wait, write等等。现在让我们继续这段旅程，开始学习这些系统调用是如何在 Linux 中实现的。">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-12-23T06:29:51.676Z">
+<meta property="og:updated_time" content="2018-12-24T12:22:07.639Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="为Linux添加一个系统调用">
 <meta name="twitter:description" content="在之前的博客中，我使用 C 和 Python 分别实现了一个简单的 Shell，这是一个很有意思的小程序，可以让你了解你每天都在使用的工具。而在简单的 Shell 之下则是一系列的系统调用，例如：read, fork, exec, wait, write等等。现在让我们继续这段旅程，开始学习这些系统调用是如何在 Linux 中实现的。">
@@ -137,6 +137,10 @@
             <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time>
                 
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
+                </div>
+                
                 
             </div>
         </div>
@@ -157,14 +161,14 @@
 <p>虽然你可以手动地配置一台虚拟机，但更节省时间的方式是下载一台已经配置好的。你可以通过<a href="https://www.osboxes.org/arch-linux/" target="_blank" rel="noopener">这个链接</a> 下载一台已经配置好的虚拟机。在这篇文章中，我会使用201608CLI 版本的 VirtualBox 虚拟机。下载并解压它。在 VirtualBox 中创建一台新的虚拟机，选择下载解压好的 vdi 文件作为硬盘文件。创建并允许你的虚拟机，你就能看到你的命令行登录界面了。根用户的密码可以在下载页面查看到（我的是：osboxes.org）。</p>
 <p>注意：如果你有一台多核的机器，编辑你的虚拟机设置让它使用多核将会是一个很好的主意。这将会显著地提升编译效率，只要你再接下来的命令中使用 make -jN 替换 make，其中 N 是你机器的 CPU 核数。</p>
 <p>需要做的第一步是安装 bc，一个没有包含进虚拟机的编译期 Linux 依赖。不幸的是，这需要你首先更新虚拟机。注意我在这篇博客中给出的每一条命令都需要在 root 下运行。</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> pacman -Syu</span><br><span class="line"><span class="hljs-meta">$</span> pacman -S bc</span><br><span class="line"><span class="hljs-meta">$</span> reboot</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> pacman -Syu</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> pacman -S bc</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> reboot</span></span><br></pre></td></tr></table></figure>
 <p>你需要重启虚拟机，因为内核将被更新。我们必须确保我们运行的内核是更新过的以开始后续的操作。</p>
 <h2 id="获取源码"><a href="#获取源码" class="headerlink" title="获取源码"></a>获取源码</h2><p>在你配置好虚拟机后，下一步是下载内核源码。尽管大部分开发者本能地想到用 Git 来获取他们需要的代码，但这一次可能并不需要。Linux 的 Git 仓库太大了，所以复制它是很不值得的。然而可以你可以下载内核版本相关的源码压缩文件。你可以通过 <code>uname -r</code> 来查看内核版本。然后在 <a href="https://cdn.kernel.org/pub/linux/kernel/v4.x/" target="_blank" rel="noopener">kernel.org</a> 上下载最接近的版本。在你的虚拟机中，使用 <code>curl</code> 命令来下载源码：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#</span> -O -J will set the output filename based on the URL</span><br><span class="line"><span class="hljs-meta">$</span> curl -O -J https://www.kernel.org/pub/linux/kernel/v4.x/linux-VERSION.tar.xz</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#</span><span class="hljs-bash"> -O -J will <span class="hljs-built_in">set</span> the output filename based on the URL</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> curl -O -J https://www.kernel.org/pub/linux/kernel/v4.x/linux-VERSION.tar.xz</span></span><br></pre></td></tr></table></figure>
 <p>之后解压 tarball 文件：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> tar xvf linux-VERSION.tar.xz</span><br><span class="line"><span class="hljs-meta">$</span> cd linux-VERSION</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> tar xvf linux-VERSION.tar.xz</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> <span class="hljs-built_in">cd</span> linux-VERSION</span></span><br></pre></td></tr></table></figure>
 <h2 id="配置你的内核"><a href="#配置你的内核" class="headerlink" title="配置你的内核"></a>配置你的内核</h2><p>Linux 内核是非常方便配置的。你可以启用或废弃它的大部分功能。如果你要手动地配置每一个选项，你将会做一整天。幸运地使，你可以通过复制你的内核已有的配置文件来跳过这一步，它保存在<code>/proc/config.gz</code> 。通过这条命令来将配置应用在你的新内核中：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> zcat /proc/config.gz &gt; .config</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zcat /proc/config.gz &gt; .config</span></span><br></pre></td></tr></table></figure>
 <p>为了确保配置文件中的所有变量都被赋值，运行 <code>make oldconfig</code>。如果没有问题，命令行将不会询问你任何配置问题。</p>
 <p>你唯一需要修改的配置项是你的内核名，确保它不会和你当前已经安装的发生冲突。在 Arch Linux 中，内核在构建时就带有后缀 <code>-ARCH</code>。你应该改变这个后缀，通过文本编辑器打开<code>.confit</code>，然后直接修改它的行。你将会发现它就在”General setup”头下面，距文件底不远。</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CONFIG_LOCALVERSION="-ARCH"</span><br></pre></td></tr></table></figure>
@@ -188,14 +192,14 @@
 <h2 id="编译和启动内核"><a href="#编译和启动内核" class="headerlink" title="编译和启动内核"></a>编译和启动内核</h2><p>注意：这些步骤会有一些复杂。看这部分的时候，你不需要一步一步输入命令，在最后我会给你一个完成这些工作的脚本。</p>
 <p>我们的第一步是编译内核和它的模块。内核的主镜像通过<code>make</code> 编译。你可以在下面的文件中看到编译结果：<code>arch/x86_64/boot/bzImage</code> 。在运行<code>make modules_install</code> 后， 这个版本的内核模块将被编译并复制到 <code>/lib/modules/KERNEL_VERSION</code> 。例如，按照我所给出的配置，这些模块将被编译并放置在<code>/lib/modules/linux-4.7.1-yifeng/</code> 。</p>
 <p>在你已经编译好内核及其模块后，你将需要做一些事情来启动它。首先，你将要复制你已经编译好的内核镜像到你的<code>/boot</code> 目录：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> cp arch/x86_64/boot/bzImage /boot/vmlinuz-linux-yifeng</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> cp arch/x86_64/boot/bzImage /boot/vmlinuz-linux-yifeng</span></span><br></pre></td></tr></table></figure>
 <p>接下来需要创建一个“initramfs”。</p>
 <p>通过两步来实现它。首先基于你之前的文件创建一个 preset:</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> sed s/linux/linux-yifeng/g &lt;/etc/mknitcpio.d/linux.preset &gt;/etc/mkinitcpio.d/linux-yifeng.preset</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> sed s/linux/linux-yifeng/g &lt;/etc/mknitcpio.d/linux.preset &gt;/etc/mkinitcpio.d/linux-yifeng.preset</span></span><br></pre></td></tr></table></figure>
 <p>之后生成一个镜像：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> mkinitcpio -p linux-yifeng</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> mkinitcpio -p linux-yifeng</span></span><br></pre></td></tr></table></figure>
 <p>最后你需要指导你的 bootloader (这里是指我们的虚拟机，GRUB)来启动我们的新内核。因为 GRUB 可以自动找到 <code>/boot</code> 目录下的内核镜像，所有我们需要做的是再生成 GRUB 配置：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> grub-mkconfig -o /boot/grub/grub.cfg</span></span><br></pre></td></tr></table></figure>
 <p>所以上面的操作可以总在一个脚本中：</p>
 <figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#!/usr/bin/bash</span></span><br><span class="line"><span class="hljs-comment"># Compile and "deploy" a new custom kernel from source on Arch Linux</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Change this if you'd like. It has no relation</span></span><br><span class="line"><span class="hljs-comment"># to the suffix set in the kernel config.</span></span><br><span class="line">SUFFIX=<span class="hljs-string">"-yifeng"</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># This causes the script to exit if an error occurs</span></span><br><span class="line"><span class="hljs-built_in">set</span> -e</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Compile the kernel</span></span><br><span class="line">make</span><br><span class="line"><span class="hljs-comment"># Compile and install modules</span></span><br><span class="line">make modules_install</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Install kernel image</span></span><br><span class="line">cp arch/x86_64/boot/bzImage /boot/vmlinuz-linux<span class="hljs-variable">$SUFFIX</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Create preset and build initramfs</span></span><br><span class="line">sed s/linux/linux<span class="hljs-variable">$SUFFIX</span>/g \</span><br><span class="line">    &lt;/etc/mkinitcpio.d/linux.preset \</span><br><span class="line">    &gt;/etc/mkinitcpio.d/linux<span class="hljs-variable">$SUFFIX</span>.preset</span><br><span class="line">mkinitcpio -p linux<span class="hljs-variable">$SUFFIX</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Update bootloader entries with new kernels.</span></span><br><span class="line">grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
 <p>将 <code>deploy.sh</code> 保存在你内核源码的主目录下，执行<code>chmod u+x deploy.sh</code> 来设置执行权限。现在你就可以通过运行这个脚本来构建和部署内核了。编译将会需要一些时间。</p>
@@ -236,6 +240,13 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/12/23/我理解的docker/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">我理解的docker</span>
+            </a>
+        </div>
+        
         
         <div class="level-end">
             <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/19/自己动手写Shell——Python实现/">
@@ -251,7 +262,7 @@
 
 <div class="card">
     <div class="card-content">
-        <h3 class="title is-5 has-text-weight-normal">Comentarios</h3>
+        <h3 class="title is-5 has-text-weight-normal">Comments</h3>
         <script>(function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
@@ -301,37 +312,37 @@
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Entradas
+                        Posts
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        9
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Categories
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        4
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Tags
                     </p>
                     <p class="title has-text-weight-normal">
                         6
                     </p>
                 </div>
             </div>
-            <div class="level-item has-text-centered is-marginless">
-                <div>
-                    <p class="heading">
-                        Categorias
-                    </p>
-                    <p class="title has-text-weight-normal">
-                        2
-                    </p>
-                </div>
-            </div>
-            <div class="level-item has-text-centered is-marginless">
-                <div>
-                    <p class="heading">
-                        Etiquetas
-                    </p>
-                    <p class="title has-text-weight-normal">
-                        3
-                    </p>
-                </div>
-            </div>
         </nav>
         <div class="level">
             <a class="level-item button is-link is-rounded" href="https://github.com/MountainOne">
-                SEGUIR</a>
+                Follow</a>
         </div>
         
         
@@ -418,16 +429,32 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Categorias
+                Categories
             </h3>
             <ul class="menu-list">
             <li>
+        <a class="level is-marginless" href="/categories/CTF/">
+            <span class="level-start">
+                <span class="level-item">CTF</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/Deep-Learning/">
             <span class="level-start">
                 <span class="level-item">Deep Learning</span>
             </span>
             <span class="level-end">
                 <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/操作系统/">
+            <span class="level-start">
+                <span class="level-item">操作系统</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/数据挖掘/">
@@ -447,9 +474,9 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Nube de etiquetas
+            Tag Cloud
         </h3>
-        <a href="/tags/Kaggle/" style="font-size: 10px;">Kaggle</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/image-segmentation/" style="font-size: 10px;">image segmentation</a>
+        <a href="/tags/Kaggle/" style="font-size: 10px;">Kaggle</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Web-XSS/" style="font-size: 10px;">Web XSS</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/image-segmentation/" style="font-size: 10px;">image segmentation</a> <a href="/tags/shell-wargames/" style="font-size: 10px;">shell wargames</a>
     </div>
 </div>
 
@@ -461,8 +488,47 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Recientes
+            Recent
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T08:49:15.000Z">2019-01-08</time></div>
+                    <a href="/2019/01/08/详解XSS（译）/" class="has-link-black-ter is-size-6">详解XSS（译）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-07T16:27:46.000Z">2019-01-07</time></div>
+                    <a href="/2019/01/08/wargame-Bandit/" class="has-link-black-ter is-size-6">wargame--Bandit</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-23T14:52:38.000Z">2018-12-23</time></div>
+                    <a href="/2018/12/23/我理解的docker/" class="has-link-black-ter is-size-6">我理解的docker</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -471,7 +537,7 @@
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time></div>
                     <a href="/2018/12/19/为Linux添加一个系统调用/" class="has-link-black-ter is-size-6">为Linux添加一个系统调用</a>
                     <p class="is-size-7 is-uppercase">
-                        
+                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
                     </p>
                 </div>
             </div>
@@ -484,46 +550,7 @@
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T13:34:53.000Z">2018-12-19</time></div>
                     <a href="/2018/12/19/自己动手写Shell——Python实现/" class="has-link-black-ter is-size-6">自己动手写Shell(二)——Python实现</a>
                     <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-14T10:55:01.000Z">2018-12-14</time></div>
-                    <a href="/2018/12/14/基于深度学习的图像语义分割综述（译）/" class="has-link-black-ter is-size-6">基于深度学习的图像语义分割综述（译）</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Deep-Learning/">Deep Learning</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-10T14:47:26.000Z">2018-12-10</time></div>
-                    <a href="/2018/12/10/自己动手写Shell——C实现/" class="has-link-black-ter is-size-6">自己动手写Shell(一）——C实现</a>
-                    <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-06T20:41:32.000Z">2018-12-06</time></div>
-                    <a href="/2018/12/07/Kaggle之房价预测/" class="has-link-black-ter is-size-6">Kaggle之房价预测</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/数据挖掘/">数据挖掘</a>
+                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
                     </p>
                 </div>
             </div>
@@ -537,9 +564,20 @@
     <div class="card-content">
         <div class="menu">
         <h3 class="menu-label">
-            Archivos
+            Archives
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">January 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2018/12/">
@@ -547,7 +585,7 @@
                     <span class="level-item">December 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -561,7 +599,7 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Etiquetas
+                Tags
             </h3>
             <ul class="menu-list">
                 
@@ -588,9 +626,42 @@
                 </li>
                 
                 <li>
+                    <a class="level is-marginless" href="/tags/Web-XSS/">
+                        <span class="level-start">
+                            <span class="level-item">Web XSS</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/docker/">
+                        <span class="level-start">
+                            <span class="level-item">docker</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
                     <a class="level is-marginless" href="/tags/image-segmentation/">
                         <span class="level-start">
                             <span class="level-item">image segmentation</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/shell-wargames/">
+                        <span class="level-start">
+                            <span class="level-item">shell wargames</span>
                         </span>
                         <span class="level-end">
                             <span class="level-item tag">1</span>
@@ -618,8 +689,47 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Recientes
+            Recent
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T08:49:15.000Z">2019-01-08</time></div>
+                    <a href="/2019/01/08/详解XSS（译）/" class="has-link-black-ter is-size-6">详解XSS（译）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-07T16:27:46.000Z">2019-01-07</time></div>
+                    <a href="/2019/01/08/wargame-Bandit/" class="has-link-black-ter is-size-6">wargame--Bandit</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-23T14:52:38.000Z">2018-12-23</time></div>
+                    <a href="/2018/12/23/我理解的docker/" class="has-link-black-ter is-size-6">我理解的docker</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -628,7 +738,7 @@
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time></div>
                     <a href="/2018/12/19/为Linux添加一个系统调用/" class="has-link-black-ter is-size-6">为Linux添加一个系统调用</a>
                     <p class="is-size-7 is-uppercase">
-                        
+                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
                     </p>
                 </div>
             </div>
@@ -641,46 +751,7 @@
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T13:34:53.000Z">2018-12-19</time></div>
                     <a href="/2018/12/19/自己动手写Shell——Python实现/" class="has-link-black-ter is-size-6">自己动手写Shell(二)——Python实现</a>
                     <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-14T10:55:01.000Z">2018-12-14</time></div>
-                    <a href="/2018/12/14/基于深度学习的图像语义分割综述（译）/" class="has-link-black-ter is-size-6">基于深度学习的图像语义分割综述（译）</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Deep-Learning/">Deep Learning</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-10T14:47:26.000Z">2018-12-10</time></div>
-                    <a href="/2018/12/10/自己动手写Shell——C实现/" class="has-link-black-ter is-size-6">自己动手写Shell(一）——C实现</a>
-                    <p class="is-size-7 is-uppercase">
-                        
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-06T20:41:32.000Z">2018-12-06</time></div>
-                    <a href="/2018/12/07/Kaggle之房价预测/" class="has-link-black-ter is-size-6">Kaggle之房价预测</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/数据挖掘/">数据挖掘</a>
+                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
                     </p>
                 </div>
             </div>
@@ -694,9 +765,20 @@
     <div class="card-content">
         <div class="menu">
         <h3 class="menu-label">
-            Archivos
+            Archives
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">January 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2018/12/">
@@ -704,7 +786,7 @@
                     <span class="level-item">December 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -718,7 +800,7 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Etiquetas
+                Tags
             </h3>
             <ul class="menu-list">
                 
@@ -745,9 +827,42 @@
                 </li>
                 
                 <li>
+                    <a class="level is-marginless" href="/tags/Web-XSS/">
+                        <span class="level-start">
+                            <span class="level-item">Web XSS</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/docker/">
+                        <span class="level-start">
+                            <span class="level-item">docker</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
                     <a class="level is-marginless" href="/tags/image-segmentation/">
                         <span class="level-start">
                             <span class="level-item">image segmentation</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/shell-wargames/">
+                        <span class="level-start">
+                            <span class="level-item">shell wargames</span>
                         </span>
                         <span class="level-end">
                             <span class="level-item tag">1</span>
@@ -776,7 +891,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2018 MountainOne&nbsp;
+                &copy; 2019 MountainOne&nbsp;
                 Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus">Icarus</a>
                 </p>
             </div>
@@ -892,10 +1007,10 @@ document.addEventListener('DOMContentLoaded', function () {
     (function (window) {
         var INSIGHT_CONFIG = {
             TRANSLATION: {
-                POSTS: 'Entradas',
+                POSTS: 'Posts',
                 PAGES: 'Pages',
-                CATEGORIES: 'Categorias',
-                TAGS: 'Etiquetas',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
                 UNTITLED: '(Untitled)',
             },
             CONTENT_URL: '/content.json',
