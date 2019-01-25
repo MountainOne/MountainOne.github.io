@@ -445,7 +445,7 @@
 <p>Bandit 是<a href="http://overthewire.org/wargames/" target="_blank" rel="noopener">wargame</a> 系列挑战中的第一个系列，也是最基础的一个，可以用来巩固一些命令行基础知识，所有的挑战都通过终端直接 ssh 连接远程主机即可。我在两周前打完了 Bandit,所以写下这篇博客来做一个总结。</p>
 </blockquote>
 <h2 id="Level-0"><a href="#Level-0" class="headerlink" title="Level 0"></a>Level 0</h2><h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>使用 ssh 连接到目标主机  <strong>bandit.labs.overthewire.org</strong> 。用户名为<strong>bandit0</strong>，密码为<strong>bandit0</strong>。</p>
-<h3 id="可能会用到的命令"><a href="#可能会用到的命令" class="headerlink" title="可能会用到的命令"></a>可能会用到的命令</h3><p>ssh</p>
+<h3 id="可能会用到的命令"><a href="#可能会用到的命令" class="headerlink" title="可能会用到的命令"></a>可能会用到的命令</h3><p>ssh </p>
 <hr>
 <p>非常简单，直接连进去可以得到下一关的密码。</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sshpass -p `natas0` ssh natas0@bandit.labs.overthewire.org -p 2220</span><br></pre></td></tr></table></figure>
@@ -501,7 +501,135 @@
 <hr>
 <p>这一关很简单，直接用 <strong>grep</strong> 就好。</p>
 <figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="hljs-string">"millionth"</span> data.txt</span><br><span class="line">millionth cvX2JJa4CFALtqS87jk27qwqGhBM9plV</span><br></pre></td></tr></table></figure>
-<h2 id="Level-8-rarr-9"><a href="#Level-8-rarr-9" class="headerlink" title="Level 8&rarr;9"></a>Level 8&rarr;9</h2><h2 id="目标-9"><a href="#目标-9" class="headerlink" title="目标"></a>目标</h2><p>下</p>
+<h2 id="Level-8-rarr-9"><a href="#Level-8-rarr-9" class="headerlink" title="Level 8&rarr;9"></a>Level 8&rarr;9</h2><h3 id="目标-9"><a href="#目标-9" class="headerlink" title="目标"></a>目标</h3><p>下一关的密码保存在文件 <strong>data.txt</strong>中并且仅有一行只出现一次。</p>
+<h3 id="可能会用到的命令-9"><a href="#可能会用到的命令-9" class="headerlink" title="可能会用到的命令"></a>可能会用到的命令</h3><p>grep, sort, uniq, strings, base64, tr, tar, gzip, bzip2, xxd</p>
+<hr>
+<p>因为下一关的密码是唯一的一行，我们需要使用<code>uniq -u</code>命令来从 <strong>data.txt</strong>中获取。然而，<code>uniq</code> 只能从输入中过滤相邻匹配的行，所以我们需要在使用<code>uniq</code>前排序。因此，我们需要<code>sort</code>  <strong>data.txt</strong> 并使用管道传递给<code>uniq -u</code>。</p>
+<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sort data.txt | uniq -u</span><br><span class="line">UsvVyFSfZZWbi6wgC7dAFyFuR6jQQUhR</span><br></pre></td></tr></table></figure>
+<h2 id="Level-9-rarr-10"><a href="#Level-9-rarr-10" class="headerlink" title="Level 9&rarr;10"></a>Level 9&rarr;10</h2><p>###目标</p>
+<p>下一关的密码保存在 <strong>data.txt</strong> 文件中，只有少部分以’=’ 开头的字符串是可读的。</p>
+<h3 id="可能用到的命令"><a href="#可能用到的命令" class="headerlink" title="可能用到的命令"></a>可能用到的命令</h3><p>grep, sort, uniq, strings, base64, tr, tar, gzip, bzip2, xxd</p>
+<hr>
+<p>使用 <strong>strings</strong>命令打印出文件中所有可打印的字符，然后用管道将其传递给 <strong>grep =</strong> 来查找所有的’=’。  输出的所有行将会包含’=’，其中之一会有密码。如果使用’==’来替代’=’，你会发现仅有4行结果。</p>
+<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">strings data.txt | grep ==</span><br><span class="line">========== the</span><br><span class="line">,========== passwordc</span><br><span class="line">========== is</span><br><span class="line">========== truKLdjsbJ5g7yyJ2X2R0o3a5HQJFuLk</span><br></pre></td></tr></table></figure>
+<h2 id="Level-10-rarr-11"><a href="#Level-10-rarr-11" class="headerlink" title="Level 10&rarr;11"></a>Level 10&rarr;11</h2><p>###目标</p>
+<p>下一关的密码保存在 <strong>data.txt</strong>文件中，它包含 base64 编码的数据。</p>
+<h3 id="可能用到的命令-1"><a href="#可能用到的命令-1" class="headerlink" title="可能用到的命令"></a>可能用到的命令</h3><p>grep, sort, uniq, strings, base64, tr, tar, gzip, bzip2, xxd</p>
+<hr>
+<p>提示在于 base64 编码的数据。我们需要将 base64 编码的数据解码来获取下一关的密码。</p>
+<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">base64 -d data.txt</span><br><span class="line">The password is IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR</span><br></pre></td></tr></table></figure>
+<h2 id="Level-11-rarr-12"><a href="#Level-11-rarr-12" class="headerlink" title="Level 11&rarr;12"></a>Level 11&rarr;12</h2><h3 id="目标-10"><a href="#目标-10" class="headerlink" title="目标"></a>目标</h3><p>下一关的密码保存在 <strong>data.txt</strong> 中，所有的小写（a-z）和大写（A-Z）字母都经过了13位翻转。</p>
+<h3 id="可能用到的命令-2"><a href="#可能用到的命令-2" class="headerlink" title="可能用到的命令"></a>可能用到的命令</h3><p>grep, sort, uniq, strings, base64, tr, tar, gzip, bzip2, xxd</p>
+<hr>
+<p>从命令列表中发现，<strong>tr</strong> 命令用于变换或删除字符。使用方式：tr [OPTION] … SET1 [SET2]。SETs可以被表示为 CHAR1-CHAR2，其中所有的字符是以升序从 CHAR1 到 CHAR2。ROT13是翻转 a 到 n，b 到 o, c 到 p … z 到 m，大写字母类似。我们可以写出完整的列表或者简化版本。首先，我们需要通过管道将 data.txt 作为输入传给 <strong>tr</strong>。</p>
+<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat data.txt | tr abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM</span><br><span class="line">cat data.txt | tr a-zA-Z n-za-mN-ZA-M</span><br><span class="line">The password is 5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu</span><br></pre></td></tr></table></figure>
+<h2 id="Level-12-rarr-13"><a href="#Level-12-rarr-13" class="headerlink" title="Level 12&rarr;13"></a>Level 12&rarr;13</h2><p>###目标</p>
+<p>下一关的密码保存在文件 <strong>data.txt</strong> 中，它是一个被重复压缩的 <strong>hexdump</strong> 文件。在这一关中，使用 <code>mkdir</code> 命令在 <strong>/tmp</strong> 目录下创建一个可以工作的目录是非常有用的。例如：<code>mkdir /tmp/myname123</code>。之后用 <code>cp</code> 复制 <strong>data.txt</strong> 文件并用 <code>mv</code>重命名。</p>
+<h3 id="可能用到的命令-3"><a href="#可能用到的命令-3" class="headerlink" title="可能用到的命令"></a>可能用到的命令</h3><p>grep, sort, uniq, strings, base64, tr, tar, gzip, bzip2, xxd, mkdir, cp, mv</p>
+<hr>
+<p>从列出的命令来看，<code>xxd</code> 用来生成 <strong>hexdump</strong> 或者进行逆向。应该是会用到的。另外，这个文件被重复压缩了，所以我们也会需要<code>gzip</code> 和<code>bzip2</code>。就像目标中提及的，这需要进行几次迭代和一个临时的工作目录。</p>
+<p>首先，我们将 <strong>hexdump</strong>文件逆向成二进制文件。使用 <code>file</code> 命令，我们可以查看文件的压缩格式。使用<code>man gzip</code>命令，我们可以查到解压的参数是<code>-d</code> 。如果我们现在使用<code>gzip -d data2</code>，这将会报未知后缀的错误。因此，我们需要在解压前重命名文件为<strong>.gz</strong> 后缀</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">xxd -r data.txt data2</span><br><span class="line">file data2</span><br><span class="line">data2: gzip compressed data, was "data2.bin", from Unix, last modified: Thu Jun 6 13:59:44 2013, max compression</span><br><span class="line">mv data2 data.gz</span><br><span class="line">gzip -d data.gz</span><br></pre></td></tr></table></figure>
+<p>现在一个新的文件 <strong>data</strong> 已经在目录中了。再次使用 <strong>file</strong> 来查看文件的类型。<strong>data</strong> 是一个 <code>bzip2</code> 压缩文件。使用 <code>bzip2 -d data</code> 来解压。它会抱怨源文件名并添加一个 <strong>.out</strong> 后缀。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">file data</span><br><span class="line">data: bzip2 compressed data, block size = 900k</span><br><span class="line">bzip2 -d data</span><br><span class="line">bzip2: Can't guess original name for data -- using data.out</span><br></pre></td></tr></table></figure>
+<p>重复类似的操作，可以得到下一关的密码。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">file data.out</span><br><span class="line">data.out: gzip compressed data, was "data4.bin", from Unix, last modified: Thu Jun 6 13:59:43 2013, max compression</span><br><span class="line">zcat data.out &gt; data3</span><br><span class="line">file data3</span><br><span class="line">data3: POSIX tar archive (GNU)</span><br><span class="line">tar -xvf data3</span><br><span class="line">data5.bin</span><br><span class="line">file data5.bin</span><br><span class="line">data5.bin: POSIX tar archive (GNU)</span><br><span class="line">tar -xvf data5.bin</span><br><span class="line">data6.bin</span><br><span class="line">file data6.bin</span><br><span class="line">bzip2 -d data6.bin</span><br><span class="line">bzip2: Can't guess original name for data6.bin -- using data6.bin.out</span><br><span class="line">file data6.bin.out</span><br><span class="line">data6.bin.out: POSIX tar archive (GNU)</span><br><span class="line">tar -xvf data6.bin.out</span><br><span class="line">data8.bin</span><br><span class="line">file data8.bin</span><br><span class="line">data8.bin: gzip compressed data, was "data9.bin", from Unix, last modified: Thu Jun  6 13:59:43 2013, max compression</span><br><span class="line">zcat data8.bin &gt; data9.bin</span><br><span class="line">file data9.bin</span><br><span class="line">data9.bin: ASCII text</span><br><span class="line">cat data9.bin</span><br><span class="line">8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL</span><br></pre></td></tr></table></figure>
+<h2 id="Level-13-rarr-14"><a href="#Level-13-rarr-14" class="headerlink" title="Level 13&rarr;14"></a>Level 13&rarr;14</h2><h3 id="目标-11"><a href="#目标-11" class="headerlink" title="目标"></a>目标</h3><p>下一关的密码保存在 <strong>/etc/bandit_pass/bandit14</strong> 中，并且只能被用户 <strong>bandit14</strong> 读。在这一关中，你无法获得下一关的密码，但是你可以获得用于登录下一关的 SSH 私钥。注意：<strong>localhost</strong> 是你正在工作的机器的主机名。</p>
+<h3 id="可能用到的命令-4"><a href="#可能用到的命令-4" class="headerlink" title="可能用到的命令"></a>可能用到的命令</h3><p>ssh, telnet, nc, openssl, s_client, nmap</p>
+<hr>
+<p>线索来自目标。首先一个 SSH 私钥已经在 <strong>bandit13</strong> 的用户目录下了。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sshkey.private</span><br></pre></td></tr></table></figure>
+<p>我们必须以 <strong>bandit14</strong> 的身份使用私钥进行登录。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -i sshkey.private bandit14@localhost</span><br></pre></td></tr></table></figure>
+<p>在我们以 <strong>bandit14</strong> 的身份登录后，我们需要做的就是拿到下一关的密码。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/bandit_pass/bandit14</span><br><span class="line">4wcYUJFw0k0XLShlDzztnTBHiqxU3b3e</span><br></pre></td></tr></table></figure>
+<h2 id="Level-14-rarr-15"><a href="#Level-14-rarr-15" class="headerlink" title="Level 14&rarr;15"></a>Level 14&rarr;15</h2><h3 id="目标-12"><a href="#目标-12" class="headerlink" title="目标"></a>目标</h3><p>可以通过提交本关的密码到 <strong>localhost</strong> 上的 30000 端口来获取下一关的密码。</p>
+<h3 id="可能用到的命令-5"><a href="#可能用到的命令-5" class="headerlink" title="可能用到的命令"></a>可能用到的命令</h3><p>ssh, telnet, nc, openssl, s_client, nmap</p>
+<hr>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nc localhost 30000 &lt; /etc/bandit_pass/bandit14</span><br><span class="line">Correct!</span><br><span class="line">BfMYroe26WYalil77FoDi9qh59eK5xNr</span><br></pre></td></tr></table></figure>
+<h2 id="Level-15-rarr-16"><a href="#Level-15-rarr-16" class="headerlink" title="Level 15&rarr;16"></a>Level 15&rarr;16</h2><p>###目标</p>
+<p>可以使用 SSL 加密提交本关的密码到 Localhost 上的端口 30001来获取下一关的密码。</p>
+<h3 id="可能用到的命令-6"><a href="#可能用到的命令-6" class="headerlink" title="可能用到的命令"></a>可能用到的命令</h3><p>ssh, telnet, nc, openssl, s_client, nmap</p>
+<hr>
+<p>在 <code>openssl</code> 的帮助页面上，<code>s_client</code> 命令实现了一个通用的 SSL/TLS客户端。用它来完成本关的挑战。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openssl s_client -connect localhost:30001 -quiet &lt; /etc/bandit_pass/bandit15</span><br><span class="line">Correct!</span><br><span class="line">cluFn7wTiGryunymYOu4RcffSxQluehd</span><br></pre></td></tr></table></figure>
+<h2 id="Level-16-rarr-17"><a href="#Level-16-rarr-17" class="headerlink" title="Level 16&rarr;17"></a>Level 16&rarr;17</h2><h3 id="目标-13"><a href="#目标-13" class="headerlink" title="目标"></a>目标</h3><p>提交当前关的密码到 <strong>localhost</strong> 上范围31000-32000的一个端口上来获取下一关的密码。首先找到哪些端口正被服务器监听。之后找到哪些支持SSL，哪些不支持。仅有一个端口会返回下一关的密码，其它的则是返回你发送的数据。</p>
+<h3 id="可能用到的命令-7"><a href="#可能用到的命令-7" class="headerlink" title="可能用到的命令"></a>可能用到的命令</h3><p>ssh, telnet, nc, openssl, s_client, nmap</p>
+<hr>
+<p>查看一下提供的命令，<code>nmap</code> 看起来是我们需要的。参数 <code>-p</code> 可用来指定扫描端口的范围。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">nmap -p 31000-32000 localhost</span><br><span class="line"></span><br><span class="line">Starting Nmap 5.21 ( http://nmap.org ) at 2014-11-02 07:06 UTC</span><br><span class="line">Nmap scan report for localhost (127.0.0.1)</span><br><span class="line">Host is up (0.00087s latency).</span><br><span class="line">Not shown: 996 closed ports</span><br><span class="line">PORT      STATE SERVICE</span><br><span class="line">31046/tcp open  unknown</span><br><span class="line">31518/tcp open  unknown</span><br><span class="line">31691/tcp open  unknown</span><br><span class="line">31790/tcp open  unknown</span><br><span class="line">31960/tcp open  unknown</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 0.08 seconds</span><br></pre></td></tr></table></figure>
+<p>有5个在扫描范围内开放的端口。我们可以检查每一个端口，发现 31790 是我们想要的。另外，我们可以写一个脚本，创建一个 /tmp/key 文件夹并将密钥保存在这。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/bandit_pass/bandit16 | openssl s_client -connect localhost:31790 -quiet &gt; /tmp/key/b16pkey</span><br></pre></td></tr></table></figure>
+<p>如果你这样使用密钥，是非常不安全的，因为每个人都可以看到它。原因在于该文件的读写权限对所有人都是开放的。我们需要改变它的读写权限让它仅对拥有者开放。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 600 /tmp/key/b16pkey</span><br></pre></td></tr></table></figure>
+<p>之后我们就可以用它登录了。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -i /tmp/key/b16pkey bandit17@localhost</span><br></pre></td></tr></table></figure>
+<p>下一关的密码在同样的位置。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/bandit_pass/bandit17</span><br><span class="line">xLYVMN9WE5zQ5vHacb0sZEVqbrp7nBTn</span><br></pre></td></tr></table></figure>
+<h2 id="Level-17-rarr-18"><a href="#Level-17-rarr-18" class="headerlink" title="Level 17&rarr;18"></a>Level 17&rarr;18</h2><h3 id="目标-14"><a href="#目标-14" class="headerlink" title="目标"></a>目标</h3><p>用户目录下有两个文件：<strong>passwords.old</strong> 和 <strong>passwords.new</strong> 。下一关的密码在 <strong>password.new</strong> 中，并且在新密码和旧密码中仅有一行不同。</p>
+<h3 id="可能用到的命令-8"><a href="#可能用到的命令-8" class="headerlink" title="可能用到的命令"></a>可能用到的命令</h3><p>cat, grep, ls</p>
+<hr>
+<p><code>diff</code> 命令会输出两个文件中所有不同的行。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">diff passwords.new passwords.old</span><br><span class="line">42c42</span><br><span class="line">&lt; kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd</span><br><span class="line">---</span><br><span class="line"><span class="hljs-meta">&gt;</span><span class="hljs-bash"> PRjrhDcANrVM6em57fPnFp4Tcq8gvwzK</span></span><br></pre></td></tr></table></figure>
+<h2 id="Level-18-rarr-19"><a href="#Level-18-rarr-19" class="headerlink" title="Level 18&rarr;19"></a>Level 18&rarr;19</h2><p>###目标</p>
+<p>下一关的密码保存在用户目录下的 <strong>readme</strong> 文件夹下。不幸的是，在你使用 SSH 登录的时候，某个人已经修改了 <strong>.bashrc</strong> 文件来将你登出。</p>
+<h3 id="可能用到的命令-9"><a href="#可能用到的命令-9" class="headerlink" title="可能用到的命令"></a>可能用到的命令</h3><p>ssh, ls, cat</p>
+<hr>
+<p>从 ssh 的帮助文档中，我们可以在登录之后执行一个命令。因为我们已经知道密码保存在哪，我们可以在被登出前查看它。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ssh bandit18@bandit.labs.overthewire.org cat readme</span><br><span class="line">IueksS7Ubh8G3DCwVzrTd8rAVOwq3M5x</span><br></pre></td></tr></table></figure>
+<h2 id="Level-19-rarr-20"><a href="#Level-19-rarr-20" class="headerlink" title="Level 19&rarr;20"></a>Level 19&rarr;20</h2><h3 id="目标-15"><a href="#目标-15" class="headerlink" title="目标"></a>目标</h3><p>为了进入下一关，你应该使用用户目录下的 <strong>setuid</strong> 二进制文件。在没有参数的情况下执行它来探索如何使用。在你正确使用了它后，下一关的密码可以在(/etc/bandit_pass)中找到。</p>
+<hr>
+<p>查看用户目录，我们可以看到由bandit20创建的 <strong>bandit20-do</strong>文件，可以被bandit19访问。该文件的权限设置是 rws。<strong>s</strong> 权限意味着当该文件被执行时，它会在所有者的权限下运行。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-rwsr-x--- 1 bandit20 bandit19 7237 Jun 6 2013 bandit20-do</span><br></pre></td></tr></table></figure>
+<p>因为所有者是 bandit20,我们可以尝试运行它，并使用提升的权限来查看下一关的密码。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./bandit20-do</span><br><span class="line">Run a command as another user.</span><br><span class="line"> Example: ./bandit20-do id</span><br></pre></td></tr></table></figure>
+<p>让我们查看密码文件并获取下一关的密码。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./bandit20-do cat /etc/bandit_pass/bandit20</span><br><span class="line">GbKksEFF4yrVs6il55v6gwY5aVje5f0j</span><br></pre></td></tr></table></figure>
+<h2 id="Level-20-rarr-21"><a href="#Level-20-rarr-21" class="headerlink" title="Level 20&rarr;21"></a>Level 20&rarr;21</h2><h3 id="目标-16"><a href="#目标-16" class="headerlink" title="目标"></a>目标</h3><p>用户目录下有一个 <strong>setuid</strong> 二进制文件，它做下列事情：建立一个到 localhost 某一端口的连接，该连接可由你通过命令行参数指定。它之后会从连接处读入一行文本并和上一关（bandit20）的密码比较。如果密码是正确的，它将传回下一关的密码（bandit21）。</p>
+<p>注意：为了通过这关，你需要登录两次：一次运行 <strong>setuid</strong> 命令，一次启动 <strong>setuid</strong> 将会连接的网络服务。</p>
+<p>注意 2：尝试连接你自己的网络服务来查看是否如你想象的那样工作。</p>
+<hr>
+<p>可以看到 <strong>suconnect</strong> 需要执行，让我们看看执行的结果。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">./suconnect</span><br><span class="line">Usage: ./suconnect &lt;portnumber&gt;</span><br><span class="line">This program will connect to the given port on localhost using TCP. </span><br><span class="line">If it receives the correct password from the other side, the next </span><br><span class="line">password is transmitted back.</span><br></pre></td></tr></table></figure>
+<p>就像注意中所提示的，我们需要两个实例，一个用来监听端口，另一个读入和返回下一关的密码。我们使用 <code>nc</code>来监听我们选择的端口并发送这关的密码到该端口。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nc -l 32123 &lt; /etc/bandit_pass/bandit20</span><br></pre></td></tr></table></figure>
+<p>在另一个 ssh 会话中，我们在同一个端口启动 <strong>suconnect</strong> ，马上得到了回应。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./suconnect 32123</span><br><span class="line">Read: GbKksEFF4yrVs6il55v6gwY5aVje5f0j</span><br><span class="line">Password matches, sending next password</span><br></pre></td></tr></table></figure>
+<p>此时查看第一个会话，发现下一关的密码就在其中。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gE269g2h3mw3pwgrj0Ha9Uoqen1c9DGr</span><br></pre></td></tr></table></figure>
+<h2 id="Level-21-rarr-22"><a href="#Level-21-rarr-22" class="headerlink" title="Level 21&rarr;22"></a>Level 21&rarr;22</h2><h3 id="目标-17"><a href="#目标-17" class="headerlink" title="目标"></a>目标</h3><p>一个程序通过 <strong>cron</strong> 在规律的中断下自动运行，基于时间的作业调度。查看 <strong>/etc/cron.d</strong> 的配置来查看什么命令被执行了。</p>
+<h3 id="可能用到的命令-10"><a href="#可能用到的命令-10" class="headerlink" title="可能用到的命令"></a>可能用到的命令</h3><p>cron, crontab, crontab(5) (use “man 5 crontab” to access this)</p>
+<hr>
+<p>从目标来看，我们可以访问 <strong>/etc/cron.d</strong> 并查找一些文件。名为 <strong>cronjob_bandit22</strong> 的文件看起来是我们感兴趣的。它展示了 <strong>cron_job_bandit22.sh</strong> 脚本的位置。我们来看看这个脚本。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cat cronjob_bandit22</span><br><span class="line">* * * * * bandit22 /usr/bin/cronjob_bandit22.sh &amp;&gt; /dev/null</span><br><span class="line"></span><br><span class="line">cat /usr/bin/cronjob_bandit22.sh</span><br><span class="line"><span class="hljs-meta">#</span><span class="hljs-bash">!/bin/bash</span></span><br><span class="line">chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv</span><br><span class="line">cat /etc/bandit_pass/bandit22 &gt; /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv</span><br></pre></td></tr></table></figure>
+<p>某人将 <strong>bandit22</strong> 的密码放入了临时文件中。我们再一次查看临时文件，找到下一关的密码。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv</span><br><span class="line">Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI</span><br></pre></td></tr></table></figure>
+<h2 id="Level-22-rarr-23"><a href="#Level-22-rarr-23" class="headerlink" title="Level 22&rarr;23"></a>Level 22&rarr;23</h2><h3 id="目标-18"><a href="#目标-18" class="headerlink" title="目标"></a>目标</h3><p>一个程序通过 <strong>cron</strong> 在规律的中断下自动运行，基于时间的作业调度。查看 <strong>/etc/cron.d</strong> 的配置来查看什么命令被执行了。</p>
+<h3 id="可能用到的命令-11"><a href="#可能用到的命令-11" class="headerlink" title="可能用到的命令"></a>可能用到的命令</h3><p>cron, crontab, crontab(5) (use “man 5 crontab” to access this)</p>
+<hr>
+<p>和上一关做一样的事情，我们发现了下面这个脚本</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cat cronjob_bandit23</span><br><span class="line">* * * * * bandit23 /usr/bin/cronjob_bandit23.sh &amp;&gt; /dev/null</span><br><span class="line"></span><br><span class="line">cat /usr/bin/cronjob_bandit23.sh</span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">#</span><span class="hljs-bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">myname=$(whoami)</span><br><span class="line">mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)</span><br><span class="line"></span><br><span class="line">echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"</span><br><span class="line"></span><br><span class="line">cat /etc/bandit_pass/$myname &gt; /tmp/$mytarget</span><br></pre></td></tr></table></figure>
+<p>我们注意到 <code>whoami</code> 返回当前用户，也就是 bandit22。所以我们应该改变它，先运行一下这个脚本看看会发生什么。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/cronjob_bandit23.sh</span><br><span class="line">Copying passwordfile /etc/bandit_pass/bandit22 to /tmp/8169b67bd894ddbb4412f91573b38db3</span><br></pre></td></tr></table></figure>
+<p>所以我们将 bandit22 换成 bandit23，我们将会获得一个包含下一关密码的文件。长文件名是 <code>mytarget</code> 的 mds hash。我们得到这个长字符串并查看该文件的内容，即为我们下一关的密码。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">echo I am user bandit23 | md5sum | cut -d ' ' -f 1</span><br><span class="line">8ca319486bfbbc3663ea0fbe81326349</span><br><span class="line"></span><br><span class="line">cat /tmp/8ca319486bfbbc3663ea0fbe81326349</span><br><span class="line">jc1udXuA1tiHqjIsL8yaapX5XIAI6i0n</span><br></pre></td></tr></table></figure>
+<h2 id="Level-23-rarr-24"><a href="#Level-23-rarr-24" class="headerlink" title="Level 23&rarr;24"></a>Level 23&rarr;24</h2><h3 id="目标："><a href="#目标：" class="headerlink" title="目标："></a>目标：</h3><p>一个程序通过 <strong>cron</strong> 在规律的中断下自动运行，基于时间的作业调度。查看 <strong>/etc/cron.d</strong> 的配置来查看什么命令被执行了。</p>
+<p>注意：这一关需要你自己创建自己的第一个 shell 脚本。这是一个非常大的进步。</p>
+<hr>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cat cronjob_bandit24</span><br><span class="line">* * * * * bandit24 /usr/bin/cronjob_bandit24.sh &amp;&gt; /dev/null</span><br><span class="line"></span><br><span class="line">cat /usr/bin/cronjob_bandit24.sh</span><br><span class="line"><span class="hljs-meta">#</span><span class="hljs-bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">myname=$(whoami)</span><br><span class="line"></span><br><span class="line">cd /var/spool/$myname</span><br><span class="line">echo "Executing and deleting all scripts in /var/spool/$myname:"</span><br><span class="line">for i in *;</span><br><span class="line">do</span><br><span class="line">    echo "Handling $i"</span><br><span class="line">    ./$i</span><br><span class="line">    rm -f $i</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>从脚本的描述来看，它将执行 <code>$myname</code> 文件夹下的所有脚本。我们在 <strong>/var/spool</strong> 目录下发现了 bandit24 文件夹。因此，让我们写一个脚本复制密码到临时文件夹中。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir /tmp/b23abc</span><br><span class="line">vim /tmp/b23abc/getpass.sh</span><br><span class="line">cat /tmp/b23abc/getpass.sh</span><br><span class="line"><span class="hljs-meta">#</span><span class="hljs-bash">!/bin/bash</span></span><br><span class="line">cat /etc/bandit_pass/bandit24 &gt; tmp/b23abc/pass.txt</span><br></pre></td></tr></table></figure>
+<p>我们能复制文件到 /var/spool/bandit24 ，但是记住执行前必须设置权限。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 /tmp/b23abc/getpass.sh</span><br><span class="line">cp /tmp/b23abc/getpass.sh /var/spool/bandit24/</span><br></pre></td></tr></table></figure>
+<p>然而，在几分钟后，我们并没有在文件夹中获得 <strong>pass.txt</strong> 。我们忘记设置文件夹的权限，使得文件能被写入。完成后，我们就可以得到下一关的密码。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 /tmp/b23ac/</span><br><span class="line">cat /tmp/b23abc/pass.txt</span><br><span class="line">UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ</span><br></pre></td></tr></table></figure>
+<h2 id="Level-24-rarr-25"><a href="#Level-24-rarr-25" class="headerlink" title="Level 24&rarr;25"></a>Level 24&rarr;25</h2><h3 id="目标-19"><a href="#目标-19" class="headerlink" title="目标"></a>目标</h3><p>一个服务正在监听 30002 端口，如果将本关的密码和一个4位的 pincode 给它，它就会给你下一关的密码，我们没有办法获取这个 Pincode ，只能遍历 10000种组合，也就是暴力破解。</p>
+<hr>
+<p>再一次，我在 <strong>/tmp</strong> 中创建一个文件夹，确保所有新创建的文件夹和所有和本关相关联的文件都有合适的权限。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#</span><span class="hljs-bash">!/bin/bash</span></span><br><span class="line">passwd="UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ"</span><br><span class="line"></span><br><span class="line">for a in &#123;0..9&#125;&#123;0..9&#125;&#123;0..9&#125;&#123;0..9&#125;</span><br><span class="line">do</span><br><span class="line">    echo $passwd' '$a | nc localhost 30002 &gt;&gt; result &amp;</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>我选择使用 netcat(nc) 命令。pincode 通过一个 for 循环遍历生成。 ‘&gt;&gt;’将输出补充到 <strong>result</strong> 文件中。’&amp;’让命令在后台进行，让它可以开始下一次迭代。</p>
+<p>使用同样的策略来从文件中找到唯一的行，我们就可以看到下一关的密码了。</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> sort result | uniq -u</span></span><br><span class="line">Correct!</span><br><span class="line">The password of user bandit25 is uNG9O58gUE7snukf3bvZ0rxhtnjzSGzG</span><br></pre></td></tr></table></figure>
 
         </div>
         
@@ -555,7 +683,7 @@
                         Posts
                     </p>
                     <p class="title has-text-weight-normal">
-                        9
+                        11
                     </p>
                 </div>
             </div>
@@ -565,7 +693,7 @@
                         Categories
                     </p>
                     <p class="title has-text-weight-normal">
-                        4
+                        5
                     </p>
                 </div>
             </div>
@@ -575,7 +703,7 @@
                         Tags
                     </p>
                     <p class="title has-text-weight-normal">
-                        6
+                        7
                     </p>
                 </div>
             </div>
@@ -673,6 +801,14 @@
             </h3>
             <ul class="menu-list">
             <li>
+        <a class="level is-marginless" href="/categories/Algorithms/">
+            <span class="level-start">
+                <span class="level-item">Algorithms</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/CTF/">
             <span class="level-start">
                 <span class="level-item">CTF</span>
@@ -716,7 +852,7 @@
         <h3 class="menu-label">
             Tag Cloud
         </h3>
-        <a href="/tags/Kaggle/" style="font-size: 10px;">Kaggle</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Web-XSS/" style="font-size: 10px;">Web XSS</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/image-segmentation/" style="font-size: 10px;">image segmentation</a> <a href="/tags/shell-wargames/" style="font-size: 10px;">shell wargames</a>
+        <a href="/tags/Kaggle/" style="font-size: 10px;">Kaggle</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Web-XSS/" style="font-size: 10px;">Web XSS</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/image-segmentation/" style="font-size: 10px;">image segmentation</a> <a href="/tags/shell-wargames/" style="font-size: 10px;">shell wargames</a>
     </div>
 </div>
 
@@ -730,6 +866,32 @@
         <h3 class="menu-label">
             Recent
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-25T21:12:17.000Z">2019-01-25</time></div>
+                    <a href="/2019/01/26/LeetCode题解——两个有序数组的中值/" class="has-link-black-ter is-size-6">LeetCode题解——两个有序数组的中值</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Algorithms/">Algorithms</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-19T17:38:34.000Z">2019-01-19</time></div>
+                    <a href="/2019/01/20/wargame-Natas/" class="has-link-black-ter is-size-6">wargame--Natas</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -770,32 +932,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time></div>
-                    <a href="/2018/12/19/为Linux添加一个系统调用/" class="has-link-black-ter is-size-6">为Linux添加一个系统调用</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T13:34:53.000Z">2018-12-19</time></div>
-                    <a href="/2018/12/19/自己动手写Shell——Python实现/" class="has-link-black-ter is-size-6">自己动手写Shell(二)——Python实现</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -814,7 +950,7 @@
                     <span class="level-item">January 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -847,6 +983,17 @@
                     <a class="level is-marginless" href="/tags/Kaggle/">
                         <span class="level-start">
                             <span class="level-item">Kaggle</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/LeetCode/">
+                        <span class="level-start">
+                            <span class="level-item">LeetCode</span>
                         </span>
                         <span class="level-end">
                             <span class="level-item tag">1</span>
@@ -936,6 +1083,32 @@
             
             <div class="media-content">
                 <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-25T21:12:17.000Z">2019-01-25</time></div>
+                    <a href="/2019/01/26/LeetCode题解——两个有序数组的中值/" class="has-link-black-ter is-size-6">LeetCode题解——两个有序数组的中值</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Algorithms/">Algorithms</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-19T17:38:34.000Z">2019-01-19</time></div>
+                    <a href="/2019/01/20/wargame-Natas/" class="has-link-black-ter is-size-6">wargame--Natas</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T08:49:15.000Z">2019-01-08</time></div>
                     <a href="/2019/01/08/详解XSS（译）/" class="has-link-black-ter is-size-6">详解XSS（译）</a>
                     <p class="is-size-7 is-uppercase">
@@ -971,32 +1144,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T15:51:37.000Z">2018-12-19</time></div>
-                    <a href="/2018/12/19/为Linux添加一个系统调用/" class="has-link-black-ter is-size-6">为Linux添加一个系统调用</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-19T13:34:53.000Z">2018-12-19</time></div>
-                    <a href="/2018/12/19/自己动手写Shell——Python实现/" class="has-link-black-ter is-size-6">自己动手写Shell(二)——Python实现</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1015,7 +1162,7 @@
                     <span class="level-item">January 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1048,6 +1195,17 @@
                     <a class="level is-marginless" href="/tags/Kaggle/">
                         <span class="level-start">
                             <span class="level-item">Kaggle</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/LeetCode/">
+                        <span class="level-start">
+                            <span class="level-item">LeetCode</span>
                         </span>
                         <span class="level-end">
                             <span class="level-item tag">1</span>
