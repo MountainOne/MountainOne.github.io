@@ -131,6 +131,274 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-02-18T22:02:24.000Z">2019-02-18</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/前端/">前端</a>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/02/19/React初学者，你需要知道这些/">React初学者，你需要知道这些</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="一、React-技术栈"><a href="#一、React-技术栈" class="headerlink" title="一、React 技术栈"></a>一、React 技术栈</h1><p>所有的软件都构建在一系列的技术栈上，你需要足够理解构建你 app 的技术栈。React 的技术栈看起来很庞大的原因在于它总是被按照错误的顺序解释了。<br>你应该按下列的顺序来学习，不要跳过或者同时学习它们：</p>
+<ul>
+<li>React 基础</li>
+<li>npm</li>
+<li>JavaScript “bundlers”(webpack)</li>
+<li>ES6</li>
+<li>Routing</li>
+<li>Flux</li>
+</ul>
+<p>你不需要一次性学完它们。仅仅在遇到需要解决的问题时进行下一步的学习。<br>额外地，有一些经常在 React 社区中被提及的前沿技术，它们非常有趣，但很难理解。和上面的主题比起来没有那么受欢迎并且在大部分 app 开发中也用不上。</p>
+<ul>
+<li>Inline styles</li>
+<li>Server rendering</li>
+<li>Immutable.js</li>
+<li>Relay, Falcor, etc</li>
+</ul>
+<h1 id="二、React-只是一个视图库"><a href="#二、React-只是一个视图库" class="headerlink" title="二、React 只是一个视图库"></a>二、React 只是一个视图库</h1><p>React 不是 MVC 框架，也不同于其他任何框架。它只是一个用来渲染你视图的库。如果你来自 MVC 的世界，你需要意识到 React 只是’V’，且是部分等于。你需要在其他地方找到你的 ‘M’ 和 ‘C’。不然你终将会在令人生厌的 React 代码前止步。</p>
+<h1 id="三、让组件尽可能的小"><a href="#三、让组件尽可能的小" class="headerlink" title="三、让组件尽可能的小"></a>三、让组件尽可能的小</h1><p>这点是显而易见的，但也值得讨论。每一个优秀的开发者都知道小的类或模块更容易理解，测试和维护。对于 React 组件来说也是一样。在开始使用 React 时会有一个疑问，那就是我的组件到底该要多小？显然，确定的尺寸取决于很多因素（包括你和你的团队成员的偏好），但通常我的建议是让你的组件比你认为的还要小很多。比如下面这个用于展示我最近博客推送的组件：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> LatestPostsComponent = <span class="hljs-function"><span class="hljs-params">props</span> =&gt;</span> (</span><br><span class="line">  &lt;section&gt;</span><br><span class="line">    &lt;div&gt;&lt;h1&gt;Latest posts&lt;/h1&gt;&lt;/div&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &#123; props.posts.map(<span class="hljs-function"><span class="hljs-params">post</span> =&gt;</span> &lt;PostPreview key=&#123;post.slug&#125; post=&#123;post&#125;/&gt;) &#125;</span><br><span class="line">    &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">  &lt;/</span>section&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>这个组件本身是一个 <code>&lt;section&gt;</code>，仅有2个<code>&lt;div&gt;</code>在里面。第一个是标题，第二个映射了一些数据，为每一个元素渲染了 <code>&lt;PostPreview&gt;</code>。我认为这是一个组件适合的尺寸。</p>
+<h1 id="四、写函数组件"><a href="#四、写函数组件" class="headerlink" title="四、写函数组件"></a>四、写函数组件</h1><p>之前有定义 React 组件有两种选择，第一种是 <code>React.createClass()</code>:<br><figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> MyComponent = React.createClass(&#123;</span><br><span class="line">  render: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> &lt;div className=&#123;this.props.className&#125;/&gt;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>另一种是 ES6 的类：<br><figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyComponent</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> &lt;div className=&#123;this.props.className&#125;/&gt;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>React 0.14 引入了寻得定义组件的语法：<br><figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> MyComponent = <span class="hljs-function"><span class="hljs-params">props</span> =&gt;</span> (</span><br><span class="line">  &lt;div className=&#123;props.className&#125;/&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
+<p>这是至今我最喜欢的定义 React 组件的方法。除了更加简洁的语法，这种方法对组件需要被分离时很有帮助。让我们看一个例子，假设我们没有进行组件分离：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LatestPostsComponent</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> postPreviews = renderPostPreviews();</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">return</span> (</span><br><span class="line">      &lt;section&gt;</span><br><span class="line">        &lt;div&gt;&lt;h1&gt;Latest posts&lt;/h1&gt;&lt;/div&gt;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">          &#123; postPreviews &#125;</span><br><span class="line">        &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;/</span>section&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  renderPostPreviews() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.props.posts.map(<span class="hljs-function"><span class="hljs-params">post</span> =&gt;</span> <span class="hljs-keyword">this</span>.renderPostPreview(post));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  renderPostPreview(post) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (</span><br><span class="line">      &lt;article&gt;</span><br><span class="line">        &lt;h3&gt;&lt;a href=&#123;`/post/$&#123;post.slug&#125;`&#125;&gt;&#123;post.title&#125;&lt;/a&gt;&lt;/h3&gt;</span><br><span class="line">        &lt;time pubdate&gt;&lt;em&gt;&#123;post.posted&#125;&lt;/em&gt;&lt;/time&gt;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">          &lt;span&gt;&#123;post.blurb&#125;&lt;<span class="hljs-regexp">/span&gt;</span></span><br><span class="line"><span class="hljs-regexp">          &lt;a href=&#123;`/</span>post/$&#123;post.slug&#125;<span class="hljs-string">`&#125;&gt;Read more...&lt;/a&gt;</span></span><br><span class="line"><span class="hljs-string">        &lt;/div&gt;</span></span><br><span class="line"><span class="hljs-string">      &lt;/article&gt;</span></span><br><span class="line"><span class="hljs-string">    );</span></span><br><span class="line"><span class="hljs-string">  &#125;</span></span><br><span class="line"><span class="hljs-string">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这种写法并不是很糟糕。我们已经从 <code>render()</code> 方法中抽取了大量方法，并保证每一块代码都尽可能小并很好地命名。我们已经将 <code>renderPostPreviews()</code>方法封装地足够好了。让我们使用函数语法重写这段代码：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> LatestPostsComponent = <span class="hljs-function"><span class="hljs-params">props</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> postPreviews = renderPostPreviews(props.posts);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;section&gt;</span><br><span class="line">      &lt;div&gt;&lt;h1&gt;Latest posts&lt;/h1&gt;&lt;/div&gt;</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &#123; postPreviews &#125;</span><br><span class="line">      &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">    &lt;/</span>section&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> renderPostPreviews = <span class="hljs-function"><span class="hljs-params">posts</span> =&gt;</span> (</span><br><span class="line">  posts.map(<span class="hljs-function"><span class="hljs-params">post</span> =&gt;</span> <span class="hljs-keyword">this</span>.renderPostPreview(post))</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> renderPostPreview = <span class="hljs-function"><span class="hljs-params">post</span> =&gt;</span> (</span><br><span class="line">  &lt;article&gt;</span><br><span class="line">    &lt;h3&gt;&lt;a href=&#123;`/post/$&#123;post.slug&#125;`&#125;&gt;&#123;post.title&#125;&lt;/a&gt;&lt;/h3&gt;</span><br><span class="line">    &lt;time pubdate&gt;&lt;em&gt;&#123;post.posted&#125;&lt;/em&gt;&lt;/time&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;span&gt;&#123;post.blurb&#125;&lt;<span class="hljs-regexp">/span&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;a href=&#123;`/</span>post/$&#123;post.slug&#125;<span class="hljs-string">`&#125;&gt;Read more...&lt;/a&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;/div&gt;</span></span><br><span class="line"><span class="hljs-string">  &lt;/article&gt;</span></span><br><span class="line"><span class="hljs-string">);</span></span><br></pre></td></tr></table></figure>
+<p>两段段代码几乎一致，只是后面的没有了类的声明。然而对我来说这是很大的区别。在基于类的例子中，我会看到 <code>class LatestPostsComponent {</code> ，并自然地向下扫直到大花括号，也就是类定义结束的地方，也是组件定义结束的地方。而当我看函数组件时，，我看到<code>const LatestPostsComponent = props =&gt; {</code> ，仅仅扫到函数定义结束的地方。“函数定义在这里结束了，所以组件定义也结束了”。我这样想着，“但是等等，其他在组件外且在同一模块下的代码呢？哦！！这是其它用于获取数据和渲染视图的函数，我可以将它们全部提取到一个组件中。”<br>这是一种让人非常舒服的，让人遵守“让组件尽可能小”的方式。<br>在未来会有对 React 的进一步优化，这会让函数组件比基于类的组件更加高效。<br>值得注意的是函数组件有一些’限制’，我认为这让它变得更强大。第一点是函数组件无法赋予 <code>ref</code> 属性。<code>ref</code>是组件查询子节点并与之通讯的便捷的方式，而我却觉得这是写 React 代码的一种错误方式。<code>ref</code>鼓励一种非常命令式地，类似于 jquery 的方式来写组件，把我们带离了最初选择 React 的函数式的，单向数据流的哲学。<br>另一点是函数组件没有与之相关联的 <strong>state</strong>，这也是一个非常大的优点。</p>
+<h1 id="五、写无状态组件"><a href="#五、写无状态组件" class="headerlink" title="五、写无状态组件"></a>五、写无状态组件</h1><p>可以这么说，至今为止我写 React 代码的几乎所有痛苦都来自于组件有太多的状态。<br><strong>状态让组件很难测试</strong><br>实践表明，没有什么比测试纯粹的、data-in data-out 函数更容易的了，所以我们不要为组件定义那么多状态。当测试有状态的组件时，我们需要让组件进入“合适”的状态以测试它们的行为。我们同样需要考虑所有状态（组件可以在任何时候被修改）和属性（组件无法控制）的组合，并决定测试哪一个。当组件只是输入属性的函数时，测试会变得简单许多。<br><strong>状态使得在组件中添加业务代码变得很容易</strong><br>让组件来决定程序的行为是我们在任何情况下都不应该考虑的。记住，React 只是一个视图库，在组件中写渲染逻辑是没问题的，但不能写业务逻辑（业务逻辑意味着大量代码）。但是当你的组件中有大量应用程序的状态并且可以轻易地通过 <code>this.state</code>访问时，你就会不自觉地将计算或者验证类的代码写入组件。这会让测试的工作变得非常困难。<br><strong>状态使得在 app 的其他部分共享信息变得困难</strong><br>当一个组件有一些状态时，它很容易在组件间传递状态，但向其它方向传递会变得很棘手。</p>
+<h1 id="六、使用-Redux-js"><a href="#六、使用-Redux-js" class="headerlink" title="六、使用 Redux.js"></a>六、使用 Redux.js</h1><p>React 是一个视图库，那么问题来了：“我在哪里放我的状态和逻辑呢？”<br>没错， Redux.js 可以替你做这些。下面是 React 的工作流程：<br>1.<strong>组件</strong>被给予了用做回调函数的属性，在 UI 事件触发时调用。<br>2.这些回调函数根据事件来<strong>创建并分发动作(action)</strong>。<br>3.<strong>reducer</strong>执行动作，并计算新的<strong>状态</strong>。<br>4.整个应用得新的状态将会保存在 <strong>single store</strong>。<br>5.组件接受新的状态并在它们必要时重新渲染。<br>Redux 的几点好处：</p>
+<ul>
+<li>reducer 是纯函数，简单地执行 <code>oldState + action = newState</code>。每一个 reducer 计算一部分状态并将它们组合到一起生成整个应用。这使得你的业务逻辑和状态变换很容易测试。</li>
+<li>API 很小，很简单并且很好文档化。我可以迅速地进行查找并很容易学习全部的原理，之后就能更容易理解我的工程的动作和信息流。</li>
+<li>如果你按推荐的方式使用它，仅仅只有很少的一部分组件需要依赖 Redux。其他组件只需要接受属性。这使得组件很简单。<br>还有一些用于补充 Redux 的库如下：</li>
+<li>Immutable.js - 用于 JavaScript 的不可变数据结构。将你的状态保存在这里，使得状态在它不应该被改变的时候不改变，并确保 reducer 的纯净。</li>
+<li>redux-thunk - 用于你的动作不改变状态的时候。例如：调用一个 REST API 或者设置路由，或者分发其他动作。</li>
+</ul>
+<h1 id="七、总是使用-propTypes"><a href="#七、总是使用-propTypes" class="headerlink" title="七、总是使用 propTypes"></a>七、总是使用 propTypes</h1><p>propTypes 为我们提供了一种非常容易的方式来为组件更安全地添加类型。<br><figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> ListOfNumbers = <span class="hljs-function"><span class="hljs-params">props</span> =&gt;</span> (</span><br><span class="line">  &lt;ol className=&#123;props.className&#125;&gt;</span><br><span class="line">    &#123;</span><br><span class="line">      props.numbers.map(<span class="hljs-function"><span class="hljs-params">number</span> =&gt;</span> (</span><br><span class="line">        &lt;li&gt;&#123;number&#125;&lt;<span class="hljs-regexp">/li&gt;)</span></span><br><span class="line"><span class="hljs-regexp">      )</span></span><br><span class="line"><span class="hljs-regexp">    &#125;</span></span><br><span class="line"><span class="hljs-regexp">  &lt;/</span>ol&gt;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">ListOfNumbers.propTypes = &#123;</span><br><span class="line">  className: React.PropTypes.string.isRequired,</span><br><span class="line">  numbers: React.PropTypes.arrayOf(React.PropTypes.number)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>它有一下几点好处：</p>
+<ul>
+<li>更容易捕获 bugs，以避免愚蠢的错误。</li>
+<li>如果你使用 <code>isRequired</code>，你就不必总是检查 <code>undefined</code> 和<code>null</code>。</li>
+<li>它类似于文档，其他开发者就不必看完整个组件来看属性是否必须了。</li>
+</ul>
+<h1 id="八、使用-React-和-Redux-dev-tools"><a href="#八、使用-React-和-Redux-dev-tools" class="headerlink" title="八、使用 React 和 Redux dev tools"></a>八、使用 React 和 Redux dev tools</h1><p>React 和 Redux dev tools 都是非常棒的工具。React dev tool 是你能够查阅已经渲染的 React 元素树，这对于查看浏览器中的视图很有帮助。Redux dev tool 更加出色，使你能查看发生的每一个动作，以及动作造成的状态改变，甚至给你能够回溯的能力。<br>你也可以设置热模块来替代 webpack,使你的页面在你的代码改变时就更新-不需要浏览器主动刷新。这使得反馈循环更加地高效。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-01-26T10:17:48.000Z">2019-01-26</time>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/01/26/JavaScript摘要/">JavaScript摘要</a>
+            
+        </h1>
+        <div class="content">
+            <h1 id="JavaScript摘要"><a href="#JavaScript摘要" class="headerlink" title="JavaScript摘要"></a>JavaScript摘要</h1><h2 id="1-基本数据类型"><a href="#1-基本数据类型" class="headerlink" title="1.基本数据类型"></a>1.基本数据类型</h2><p>JavaScript的基本构建块包括：对象(object)、原语(primitive)和字面量(literal)。</p>
+<p>literal 表示特定类型的一个值，例如：String, Number, or Boolean。</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;this is a string&quot;</span><br><span class="line">1.45</span><br><span class="line">true</span><br></pre></td></tr></table></figure>
+<p>Primitive 是一个特定数据类型的实例，包括五种：String, Number, Boolean, null, undefined。</p>
+<p>JavaScript 的世界中，一切皆对象（object）。</p>
+<h2 id="2-基本语法"><a href="#2-基本语法" class="headerlink" title="2.基本语法"></a>2.基本语法</h2><p>函数声明:</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">distance</span>(<span class="hljs-params">x1, y1, x2, y2</span>) </span>&#123;</span><br><span class="line">	<span class="hljs-keyword">var</span> dx = x2 - x1;</span><br><span class="line">	<span class="hljs-keyword">var</span> dy = y2 - y1;</span><br><span class="line">	<span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.sqrt(dx*dx + dy*dy);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>条件语句：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> (x &lt;= <span class="hljs-number">1</span>)&#123; </span><br><span class="line">	<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; </span><br><span class="line">&#125;<span class="hljs-keyword">else</span>&#123; </span><br><span class="line">	<span class="hljs-keyword">return</span> x*fact(x<span class="hljs-number">-1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.length == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;</span><br></pre></td></tr></table></figure>
+<p>循环语句：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">for</span>(i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">10</span>;i++)&#123;</span><br><span class="line">	tst+=i; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> obj) &#123;</span><br><span class="line">    result += obj_name + <span class="hljs-string">"."</span> + i + <span class="hljs-string">" = "</span> + obj[i] + <span class="hljs-string">"&lt;br&gt;"</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">while</span>((matchArray = pattern.exec(searchString)) != <span class="hljs-literal">null</span>) &#123;</span><br><span class="line">str+=<span class="hljs-string">"at "</span> + matchArray.index + <span class="hljs-string">" we found "</span> + matchArray[<span class="hljs-number">0</span>] + <span class="hljs-string">"\n"</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-数组"><a href="#3-数组" class="headerlink" title="3.数组"></a>3.数组</h2><p>创建数组：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(element0, element1, ..., elementN);</span><br><span class="line"><span class="hljs-keyword">var</span> arr = <span class="hljs-built_in">Array</span>(element0, element1, ..., elementN);</span><br><span class="line"><span class="hljs-keyword">var</span> arr = [element0, element1, ..., elementN];</span><br></pre></td></tr></table></figure>
+<p>填充数组：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> emp = [];</span><br><span class="line">emp[<span class="hljs-number">0</span>] = <span class="hljs-string">"Casey Jones"</span>;</span><br><span class="line">emp[<span class="hljs-number">1</span>] = <span class="hljs-string">"Phil Lesh"</span>;</span><br><span class="line">emp[<span class="hljs-number">2</span>] = <span class="hljs-string">"August West"</span>;</span><br><span class="line"><span class="hljs-keyword">var</span> arr = [];</span><br><span class="line">arr[<span class="hljs-number">3.4</span>] = <span class="hljs-string">"Oranges"</span>;</span><br><span class="line"><span class="hljs-built_in">console</span>.log(arr.length);                <span class="hljs-comment">// 0</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(arr.hasOwnProperty(<span class="hljs-number">3.4</span>));   <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果你在以上代码中给数组操作符的是一个非整形数值，那么将作为一个代表数组的对象的属性(property)创建，而非作为数组的元素。</p>
+</blockquote>
+<p>引用数组元素：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">"one"</span>, <span class="hljs-string">"two"</span>, <span class="hljs-string">"three"</span>];</span><br><span class="line">arr[<span class="hljs-number">2</span>];  <span class="hljs-comment">// three</span></span><br><span class="line">arr[<span class="hljs-string">"length"</span>];  <span class="hljs-comment">// 3</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>数组操作符（方括号 [ ]）也可以用来访问数组的属性(在 JavaScript 中，数组也是对象)。</p>
+</blockquote>
+<p>遍历数组：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> colors = [<span class="hljs-string">'red'</span>, <span class="hljs-string">'green'</span>, <span class="hljs-string">'blue'</span>];</span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; colors.length; i++) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(colors[i]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> colors = [<span class="hljs-string">'red'</span>, <span class="hljs-string">'green'</span>, <span class="hljs-string">'blue'</span>];</span><br><span class="line">colors.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">color</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(color);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>数组对象的方法：</p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/concat" target="_blank" rel="noopener"><code>concat()</code></a> 连接两个数组并返回一个新的数组。</p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/join" target="_blank" rel="noopener"><code>join(deliminator = &#39;,&#39;)</code></a> 将数组的所有元素连接成一个字符串。</p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/push" target="_blank" rel="noopener"><code>push()</code></a> 在数组末尾添加一个或多个元素，并返回数组操作后的长度。</p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/pop" target="_blank" rel="noopener"><code>pop()</code></a> 从数组移出最后一个元素，并返回该元素。</p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/shift" target="_blank" rel="noopener"><code>shift()</code></a> 从数组移出第一个元素，并返回该元素。</p>
+<h2 id="4-集合类"><a href="#4-集合类" class="headerlink" title="4.集合类"></a>4.集合类</h2><p>Map</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> sayings = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>();</span><br><span class="line">sayings.set(<span class="hljs-string">'dog'</span>, <span class="hljs-string">'woof'</span>);</span><br><span class="line">sayings.set(<span class="hljs-string">'cat'</span>, <span class="hljs-string">'meow'</span>);</span><br><span class="line">sayings.set(<span class="hljs-string">'elephant'</span>, <span class="hljs-string">'toot'</span>);</span><br><span class="line">sayings.size; <span class="hljs-comment">// 3</span></span><br><span class="line">sayings.get(<span class="hljs-string">'fox'</span>); <span class="hljs-comment">// undefined</span></span><br><span class="line">sayings.has(<span class="hljs-string">'bird'</span>); <span class="hljs-comment">// false</span></span><br><span class="line">sayings.delete(<span class="hljs-string">'dog'</span>);</span><br><span class="line">sayings.has(<span class="hljs-string">'dog'</span>); <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> [key, value] <span class="hljs-keyword">of</span> sayings) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(key + <span class="hljs-string">' goes '</span> + value);</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">// "cat goes meow"</span></span><br><span class="line"><span class="hljs-comment">// "elephant goes toot"</span></span><br><span class="line"></span><br><span class="line">sayings.clear();</span><br><span class="line">sayings.size; <span class="hljs-comment">// 0</span></span><br></pre></td></tr></table></figure>
+<p>Map和Object的比较：</p>
+<p>一般地，<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank" rel="noopener">objects</a>会被用于将字符串类型映射到数值。<code>Object</code>允许设置键值对、根据键获取值、删除键、检测某个键是否存在。而<code>Map</code>具有更多的优势。</p>
+<ul>
+<li><code>Object</code>的键均为<code>Strings</code>类型，在<code>Map</code>里键可以是任意类型。</li>
+<li>必须手动计算<code>Object</code>的尺寸，但是可以很容易地获取使用<code>Map</code>的尺寸。</li>
+<li><code>Map</code>的遍历遵循元素的插入顺序。</li>
+<li><code>Object</code>有原型，所以映射中有一些缺省的键。（可以理解为<code>map = Object.create(null)</code>）。</li>
+</ul>
+<p>Set</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> mySet = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>();</span><br><span class="line">mySet.add(<span class="hljs-number">1</span>);</span><br><span class="line">mySet.add(<span class="hljs-string">"some text"</span>);</span><br><span class="line">mySet.add(<span class="hljs-string">"foo"</span>);</span><br><span class="line"></span><br><span class="line">mySet.has(<span class="hljs-number">1</span>); <span class="hljs-comment">// true</span></span><br><span class="line">mySet.delete(<span class="hljs-string">"foo"</span>);</span><br><span class="line">mySet.size; <span class="hljs-comment">// 2</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> item <span class="hljs-keyword">of</span> mySet) <span class="hljs-built_in">console</span>.log(item);</span><br><span class="line"><span class="hljs-comment">// 1</span></span><br><span class="line"><span class="hljs-comment">// "some text"</span></span><br><span class="line"># Array 和 Set的转换</span><br><span class="line"><span class="hljs-built_in">Array</span>.from(mySet);</span><br><span class="line">[...mySet2];</span><br><span class="line"></span><br><span class="line">mySet2 = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>]);</span><br></pre></td></tr></table></figure>
+<p>Array和Set的对比：</p>
+<p>一般情况下，在JavaScript中使用数组来存储一组元素，而新的集合对象有这些优势：</p>
+<ul>
+<li>数组中用于判断元素是否存在的<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf" target="_blank" rel="noopener"><code>indexOf</code></a> 函数效率低下。</li>
+<li><code>Set</code>对象允许根据值删除元素，而数组中必须使用基于下标的 splice 方法。</li>
+<li>数组的<code>indexOf</code>方法无法找到<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/NaN" target="_blank" rel="noopener"><code>NaN</code></a>值。</li>
+<li><code>Set</code>对象存储不重复的值，所以不需要手动处理包含重复值的情况。</li>
+</ul>
+<h2 id="5-字符串"><a href="#5-字符串" class="headerlink" title="5.字符串"></a>5.字符串</h2><p>String 字面量</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-string">'foo'</span></span><br><span class="line"><span class="hljs-string">"bar"</span></span><br></pre></td></tr></table></figure>
+<p>String对象</p>
+<p>String对象是对 String 类型的封装。</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> s = <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>(<span class="hljs-string">"foo"</span>); <span class="hljs-comment">// Creates a String object</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(s); <span class="hljs-comment">// Displays: &#123; '0': 'f', '1': 'o', '2': 'o'&#125;</span></span><br><span class="line"><span class="hljs-keyword">typeof</span> s; <span class="hljs-comment">// Returns 'object'</span></span><br></pre></td></tr></table></figure>
+<p>模板字符串</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">5</span>;</span><br><span class="line"><span class="hljs-keyword">var</span> b = <span class="hljs-number">10</span>;</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Fifteen is <span class="hljs-subst">$&#123;a + b&#125;</span> and\nnot <span class="hljs-subst">$&#123;<span class="hljs-number">2</span> * a + b&#125;</span>.`</span>);</span><br><span class="line"><span class="hljs-comment">// "Fifteen is 15 and</span></span><br><span class="line"><span class="hljs-comment">// not 20."</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/charAt" target="_blank" rel="noopener"><code>charAt</code></a>, <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt" target="_blank" rel="noopener"><code>charCodeAt</code></a>, <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/codePointAt" target="_blank" rel="noopener"><code>codePointAt</code></a></td>
+<td>返回字符串指定位置的字符或者字符编码。</td>
+</tr>
+<tr>
+<td><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/indexOf" target="_blank" rel="noopener"><code>indexOf</code></a>, <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/lastIndexOf" target="_blank" rel="noopener"><code>lastIndexOf</code></a></td>
+<td>分别返回字符串中指定子串的位置或最后位置。</td>
+</tr>
+<tr>
+<td><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith" target="_blank" rel="noopener"><code>startsWith</code></a>, <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith" target="_blank" rel="noopener"><code>endsWith</code></a>, <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/includes" target="_blank" rel="noopener"><code>includes</code></a></td>
+<td>返回字符串是否以指定字符串开始、结束或包含指定字符串。</td>
+</tr>
+<tr>
+<td><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/concat" target="_blank" rel="noopener"><code>concat</code></a></td>
+<td>连接两个字符串并返回新的字符串。</td>
+</tr>
+<tr>
+<td><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/fromCharCode" target="_blank" rel="noopener"><code>fromCharCode</code></a>, <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/fromCodePoint" target="_blank" rel="noopener"><code>fromCodePoint</code></a></td>
+<td>从指定的Unicode值序列构造一个字符串。这是一个String类方法，不是实例方法。</td>
+</tr>
+<tr>
+<td><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/split" target="_blank" rel="noopener"><code>split</code></a></td>
+<td>通过将字符串分离成一个个子串来把一个String对象分裂到一个字符串数组中。</td>
+</tr>
+<tr>
+<td><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/slice" target="_blank" rel="noopener"><code>slice</code></a></td>
+<td>从一个字符串提取片段并作为新字符串返回。</td>
+</tr>
+<tr>
+<td><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/substring" target="_blank" rel="noopener"><code>substring</code></a>, <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/substr" target="_blank" rel="noopener"><code>substr</code></a></td>
+<td>分别通过指定起始和结束位置，起始位置和长度来返回字符串的指定子集。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-面向对象"><a href="#6-面向对象" class="headerlink" title="6.面向对象"></a>6.面向对象</h2><p>基于类VS基于原型的语言</p>
+<p>基于类的面向对象语言，比如 Java 和 C++，是构建在两个不同实体的概念之上的：即类和实例。</p>
+<ul>
+<li>类可以定义属性，这些属性可使特定的对象集合特征化（可以将 Java 中的方法和变量以及 C++ 中的成员都视作属性）。类是抽象的，而不是其所描述的对象集合中的任何特定的个体。例如 <code>Employee</code> 类可以用来表示所有雇员的集合。</li>
+<li>另一方面，一个实例是一个类的实例化；也就是其中一名成员。例如， <code>Victoria</code> 可以是 <code>Employee</code> 类的一个实例，表示一个特定的雇员个体。实例具有和其父类完全一致的属性。</li>
+</ul>
+<p>基于原型的语言（如 JavaScript）并不存在这种区别：它只有对象。基于原型的语言具有所谓原型对象的概念。原型对象可以作为一个模板，新对象可以从中获得原始的属性。任何对象都可以指定其自身的属性，既可以是创建时也可以在运行时创建。而且，任何对象都可以作为另一个对象的原型，从而允许后者共享前者的属性。</p>
+<p>差异总结</p>
+<table>
+<thead>
+<tr>
+<th>基于类的（Java）</th>
+<th>基于原型的（JavaScript）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>类和实例是不同的事物。</td>
+<td>所有对象均为实例。</td>
+</tr>
+<tr>
+<td>通过类定义来定义类；通过构造器方法来实例化类。</td>
+<td>通过构造器函数来定义和创建一组对象。</td>
+</tr>
+<tr>
+<td>通过 <code>new</code> 操作符创建单个对象。</td>
+<td>相同。</td>
+</tr>
+<tr>
+<td>通过类定义来定义现存类的子类，从而构建对象的层级结构。</td>
+<td>指定一个对象作为原型并且与构造函数一起构建对象的层级结构</td>
+</tr>
+<tr>
+<td>遵循类链继承属性。</td>
+<td>遵循原型链继承属性。</td>
+</tr>
+<tr>
+<td>类定义指定类的所有实例的<strong>所有</strong>属性。无法在运行时动态添加属性。</td>
+<td>构造器函数或原型指定初始的属性集。允许动态地向单个的对象或者整个对象集中添加或移除属性。</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>首先了解该语言的基本数据类型，基本语法和主要语言构造，主要数学运算符和print函数的使用，达到能够写谭浩强程序设计书课后数学习题的程度；</li>
+<li>其次掌握数组和其他集合类的使用，有基础的话可以理解一下泛型，如果理解不了也问题不大，后面可以补；</li>
+<li>简单字符串处理。所谓简单，就是Regex和Parser以下的内容，什么查找替换，截断去字串之类的。不过这个阶段有一个难点，就是字符编码问题。如果理解不了，可以先跳过，否则的话最好在这时候把这个问题搞定，免留后患；</li>
+<li>基本面向对象或者函数式编程的特征，无非是什么继承、多态、Lambda函数之类的，如果有经验的话很快就明白了；</li>
+<li>异常、错误处理、断言、日志和调试支持，对单元测试的支持。你不一定要用TDD，但是在这个时候应该掌握在这个语言里做TDD的基本技能；</li>
+<li>程序代码和可执行代码的组织机制，运行时模块加载、符号查找机制，这是初学时的一个难点，因为大部分书都不太注意介绍这个极为重要的内容；</li>
+<li>基本输入输出和文件处理，输入输出流类的组织，这通常是比较繁琐的一部分，可以提纲挈领学一下，搞清楚概念，用到的时候查就是了。到这个阶段可以写大部分控制台应用了；</li>
+<li>该语言如何进行callback方法调用，如何支持事件驱动编程模型。在现代编程环境下，这个问题是涉及开发思想的一个核心问题，几乎每种语言在这里都会用足功夫，.NET的delegate，Java的anonymous inner class，Java 7的closure，C++OX的 tr1::function/bind，五花八门。如果能彻底理解这个问题，不但程序就不至于写得太走样，而且对该语言的设计思路也能有比较好的认识；</li>
+<li>如果有必要，可在这时研究regex和XML处理问题，如无必要可跳过；</li>
+<li>序列化和反序列化，掌握一下缺省的机制就可以了；</li>
+<li>如果必要，可了解一下线程、并发和异步调用机制，主要是为了读懂别人的代码，如果自己要写这类代码，必须专门花时间严肃认真系统地学习，严禁半桶水上阵；</li>
+<li>动态编程，反射和元数据编程，数据和程序之间的相互转化机制，运行时编译和执行的机制，有抱负的开发者在这块可以多下些功夫，能够使你对语言的认识高出一个层面；</li>
+<li>如果有必要，可研究一下该语言对于泛型的支持，不必花太多时间，只要能使用现成的泛型集合和泛型函数就可以了，可在以后闲暇时抽时间系统学习。需要注意的是，泛型技术跟多线程技术一样，用不好就成为万恶之源，必须系统学习，谨慎使用，否则不如不学不用；</li>
+<li>如果还有时间，最好咨询一下有经验的人，看看这个语言较常用的特色features是什么，如果之前没学过，应当补一下。比如Ruby的block interator, Java的dynamic proxy，C# 3的LINQ和extension method。没时间的话，我认为也可以边做边学，没有大问题。</li>
+<li>有必要的话，在工作的闲暇时间，可以着重考察两个问题，第一，这个语言有哪些惯用法和模式，第二，这个语言的编译/解释执行机制。</li>
+</ol>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2019-01-25T21:12:17.000Z">2019-01-25</time>
                 
                 <div class="level-item">
@@ -1010,101 +1278,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-12-10T14:47:26.000Z">2018-12-10</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
-                </div>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/12/10/自己动手写Shell——C实现/">自己动手写Shell(一）——C实现</a>
-            
-        </h1>
-        <div class="content">
-            <blockquote>
-<p>本文参考自<a href="https://brennan.io/2015/01/16/write-a-shell-in-c/" target="_blank" rel="noopener">Write a Shell in C</a> </p>
-</blockquote>
-<h2 id="Shell的基本生命周期"><a href="#Shell的基本生命周期" class="headerlink" title="Shell的基本生命周期"></a>Shell的基本生命周期</h2><p>  让我们自顶向下的思考一下 Shell。一个 Shell 在它的生命周期里主要做了三件事。</p>
-<ul>
-<li><p>初始化：Shell 会在初始化时读入和执行配置文件。这会改变 Shell 接下来各方面的行为。</p>
-</li>
-<li><p>解释：Shell 在解释阶段（也就是等待用户输入的阶段）读入标准输入的命令并解释执行。</p>
-</li>
-<li><p>终结：在用户输入 shutdown 命令后，Shell 会释放掉占用的内存并终结自己。</p></li></ul>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/12/10/自己动手写Shell——C实现/#more">Read More</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-12-06T20:41:32.000Z">2018-12-06</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/数据挖掘/">数据挖掘</a>
-                </div>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2018/12/07/Kaggle之房价预测/">Kaggle之房价预测</a>
-            
-        </h1>
-        <div class="content">
-            <h1 id="Kaggle入门赛之房价预测"><a href="#Kaggle入门赛之房价预测" class="headerlink" title="Kaggle入门赛之房价预测"></a>Kaggle入门赛之房价预测</h1><blockquote>
-<p>前言：最近实验室有一个数据挖掘的任务需要完成，是一个和国家电网相关的回归任务。因此我在 Kaggle 上找一些回归任务的比赛来练练手，房价预测这个比赛的难度比较适合我这种新手，因此选择了这个题目。本篇博客的大部分内容来自该比赛的一个高分 <a href="https://www.kaggle.com/serigne/stacked-regressions-top-4-on-leaderboard" target="_blank" rel="noopener">kernel</a>, 感兴趣的同学可以直接跳转查看原博。</p>
-</blockquote>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2018/12/07/Kaggle之房价预测/#more">Read More</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -1165,7 +1338,7 @@
                         Posts
                     </p>
                     <p class="title has-text-weight-normal">
-                        11
+                        13
                     </p>
                 </div>
             </div>
@@ -1175,7 +1348,7 @@
                         Categories
                     </p>
                     <p class="title has-text-weight-normal">
-                        5
+                        6
                     </p>
                 </div>
             </div>
@@ -1185,7 +1358,7 @@
                         Tags
                     </p>
                     <p class="title has-text-weight-normal">
-                        7
+                        9
                     </p>
                 </div>
             </div>
@@ -1307,6 +1480,14 @@
                 <span class="level-item tag">1</span>
             </span>
         </a></li><li>
+        <a class="level is-marginless" href="/categories/前端/">
+            <span class="level-start">
+                <span class="level-item">前端</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/操作系统/">
             <span class="level-start">
                 <span class="level-item">操作系统</span>
@@ -1334,7 +1515,7 @@
         <h3 class="menu-label">
             Tag Cloud
         </h3>
-        <a href="/tags/Kaggle/" style="font-size: 10px;">Kaggle</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Web-XSS/" style="font-size: 10px;">Web XSS</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/image-segmentation/" style="font-size: 10px;">image segmentation</a> <a href="/tags/shell-wargames/" style="font-size: 10px;">shell wargames</a>
+        <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Kaggle/" style="font-size: 10px;">Kaggle</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/React/" style="font-size: 10px;">React</a> <a href="/tags/Web-XSS/" style="font-size: 10px;">Web XSS</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/image-segmentation/" style="font-size: 10px;">image segmentation</a> <a href="/tags/shell-wargames/" style="font-size: 10px;">shell wargames</a>
     </div>
 </div>
 
@@ -1348,6 +1529,32 @@
         <h3 class="menu-label">
             Recent
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-02-18T22:02:24.000Z">2019-02-18</time></div>
+                    <a href="/2019/02/19/React初学者，你需要知道这些/" class="has-link-black-ter is-size-6">React初学者，你需要知道这些</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/前端/">前端</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-26T10:17:48.000Z">2019-01-26</time></div>
+                    <a href="/2019/01/26/JavaScript摘要/" class="has-link-black-ter is-size-6">JavaScript摘要</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -1388,32 +1595,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-07T16:27:46.000Z">2019-01-07</time></div>
-                    <a href="/2019/01/08/wargame-Bandit/" class="has-link-black-ter is-size-6">wargame--Bandit</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-23T14:52:38.000Z">2018-12-23</time></div>
-                    <a href="/2018/12/23/我理解的docker/" class="has-link-black-ter is-size-6">我理解的docker</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1427,12 +1608,23 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2019/02/">
+                <span class="level-start">
+                    <span class="level-item">February 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2019/01/">
                 <span class="level-start">
                     <span class="level-item">January 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1460,6 +1652,17 @@
                 Tags
             </h3>
             <ul class="menu-list">
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/JavaScript/">
+                        <span class="level-start">
+                            <span class="level-item">JavaScript</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
                 
                 <li>
                     <a class="level is-marginless" href="/tags/Kaggle/">
@@ -1490,6 +1693,17 @@
                         </span>
                         <span class="level-end">
                             <span class="level-item tag">4</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/React/">
+                        <span class="level-start">
+                            <span class="level-item">React</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
                         </span>
                     </a>
                 </li>
@@ -1565,6 +1779,32 @@
             
             <div class="media-content">
                 <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-02-18T22:02:24.000Z">2019-02-18</time></div>
+                    <a href="/2019/02/19/React初学者，你需要知道这些/" class="has-link-black-ter is-size-6">React初学者，你需要知道这些</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/前端/">前端</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-26T10:17:48.000Z">2019-01-26</time></div>
+                    <a href="/2019/01/26/JavaScript摘要/" class="has-link-black-ter is-size-6">JavaScript摘要</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-25T21:12:17.000Z">2019-01-25</time></div>
                     <a href="/2019/01/26/LeetCode题解——两个有序数组的中值/" class="has-link-black-ter is-size-6">LeetCode题解——两个有序数组的中值</a>
                     <p class="is-size-7 is-uppercase">
@@ -1600,32 +1840,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-07T16:27:46.000Z">2019-01-07</time></div>
-                    <a href="/2019/01/08/wargame-Bandit/" class="has-link-black-ter is-size-6">wargame--Bandit</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-23T14:52:38.000Z">2018-12-23</time></div>
-                    <a href="/2018/12/23/我理解的docker/" class="has-link-black-ter is-size-6">我理解的docker</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1639,12 +1853,23 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2019/02/">
+                <span class="level-start">
+                    <span class="level-item">February 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2019/01/">
                 <span class="level-start">
                     <span class="level-item">January 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1672,6 +1897,17 @@
                 Tags
             </h3>
             <ul class="menu-list">
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/JavaScript/">
+                        <span class="level-start">
+                            <span class="level-item">JavaScript</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
                 
                 <li>
                     <a class="level is-marginless" href="/tags/Kaggle/">
@@ -1702,6 +1938,17 @@
                         </span>
                         <span class="level-end">
                             <span class="level-item tag">4</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/React/">
+                        <span class="level-start">
+                            <span class="level-item">React</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
                         </span>
                     </a>
                 </li>
