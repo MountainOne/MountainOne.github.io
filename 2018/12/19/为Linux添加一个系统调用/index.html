@@ -161,14 +161,14 @@
 <p>虽然你可以手动地配置一台虚拟机，但更节省时间的方式是下载一台已经配置好的。你可以通过<a href="https://www.osboxes.org/arch-linux/" target="_blank" rel="noopener">这个链接</a> 下载一台已经配置好的虚拟机。在这篇文章中，我会使用201608CLI 版本的 VirtualBox 虚拟机。下载并解压它。在 VirtualBox 中创建一台新的虚拟机，选择下载解压好的 vdi 文件作为硬盘文件。创建并允许你的虚拟机，你就能看到你的命令行登录界面了。根用户的密码可以在下载页面查看到（我的是：osboxes.org）。</p>
 <p>注意：如果你有一台多核的机器，编辑你的虚拟机设置让它使用多核将会是一个很好的主意。这将会显著地提升编译效率，只要你再接下来的命令中使用 make -jN 替换 make，其中 N 是你机器的 CPU 核数。</p>
 <p>需要做的第一步是安装 bc，一个没有包含进虚拟机的编译期 Linux 依赖。不幸的是，这需要你首先更新虚拟机。注意我在这篇博客中给出的每一条命令都需要在 root 下运行。</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> pacman -Syu</span><br><span class="line"><span class="hljs-meta">$</span> pacman -S bc</span><br><span class="line"><span class="hljs-meta">$</span> reboot</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> pacman -Syu</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> pacman -S bc</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> reboot</span></span><br></pre></td></tr></table></figure>
 <p>你需要重启虚拟机，因为内核将被更新。我们必须确保我们运行的内核是更新过的以开始后续的操作。</p>
 <h2 id="获取源码"><a href="#获取源码" class="headerlink" title="获取源码"></a>获取源码</h2><p>在你配置好虚拟机后，下一步是下载内核源码。尽管大部分开发者本能地想到用 Git 来获取他们需要的代码，但这一次可能并不需要。Linux 的 Git 仓库太大了，所以复制它是很不值得的。然而可以你可以下载内核版本相关的源码压缩文件。你可以通过 <code>uname -r</code> 来查看内核版本。然后在 <a href="https://cdn.kernel.org/pub/linux/kernel/v4.x/" target="_blank" rel="noopener">kernel.org</a> 上下载最接近的版本。在你的虚拟机中，使用 <code>curl</code> 命令来下载源码：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#</span> -O -J will set the output filename based on the URL</span><br><span class="line"><span class="hljs-meta">$</span> curl -O -J https://www.kernel.org/pub/linux/kernel/v4.x/linux-VERSION.tar.xz</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#</span><span class="hljs-bash"> -O -J will <span class="hljs-built_in">set</span> the output filename based on the URL</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> curl -O -J https://www.kernel.org/pub/linux/kernel/v4.x/linux-VERSION.tar.xz</span></span><br></pre></td></tr></table></figure>
 <p>之后解压 tarball 文件：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> tar xvf linux-VERSION.tar.xz</span><br><span class="line"><span class="hljs-meta">$</span> cd linux-VERSION</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> tar xvf linux-VERSION.tar.xz</span></span><br><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> <span class="hljs-built_in">cd</span> linux-VERSION</span></span><br></pre></td></tr></table></figure>
 <h2 id="配置你的内核"><a href="#配置你的内核" class="headerlink" title="配置你的内核"></a>配置你的内核</h2><p>Linux 内核是非常方便配置的。你可以启用或废弃它的大部分功能。如果你要手动地配置每一个选项，你将会做一整天。幸运地使，你可以通过复制你的内核已有的配置文件来跳过这一步，它保存在<code>/proc/config.gz</code> 。通过这条命令来将配置应用在你的新内核中：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> zcat /proc/config.gz &gt; .config</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> zcat /proc/config.gz &gt; .config</span></span><br></pre></td></tr></table></figure>
 <p>为了确保配置文件中的所有变量都被赋值，运行 <code>make oldconfig</code>。如果没有问题，命令行将不会询问你任何配置问题。</p>
 <p>你唯一需要修改的配置项是你的内核名，确保它不会和你当前已经安装的发生冲突。在 Arch Linux 中，内核在构建时就带有后缀 <code>-ARCH</code>。你应该改变这个后缀，通过文本编辑器打开<code>.confit</code>，然后直接修改它的行。你将会发现它就在”General setup”头下面，距文件底不远。</p>
 <figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CONFIG_LOCALVERSION="-ARCH"</span><br></pre></td></tr></table></figure>
@@ -192,14 +192,14 @@
 <h2 id="编译和启动内核"><a href="#编译和启动内核" class="headerlink" title="编译和启动内核"></a>编译和启动内核</h2><p>注意：这些步骤会有一些复杂。看这部分的时候，你不需要一步一步输入命令，在最后我会给你一个完成这些工作的脚本。</p>
 <p>我们的第一步是编译内核和它的模块。内核的主镜像通过<code>make</code> 编译。你可以在下面的文件中看到编译结果：<code>arch/x86_64/boot/bzImage</code> 。在运行<code>make modules_install</code> 后， 这个版本的内核模块将被编译并复制到 <code>/lib/modules/KERNEL_VERSION</code> 。例如，按照我所给出的配置，这些模块将被编译并放置在<code>/lib/modules/linux-4.7.1-yifeng/</code> 。</p>
 <p>在你已经编译好内核及其模块后，你将需要做一些事情来启动它。首先，你将要复制你已经编译好的内核镜像到你的<code>/boot</code> 目录：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> cp arch/x86_64/boot/bzImage /boot/vmlinuz-linux-yifeng</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> cp arch/x86_64/boot/bzImage /boot/vmlinuz-linux-yifeng</span></span><br></pre></td></tr></table></figure>
 <p>接下来需要创建一个“initramfs”。</p>
 <p>通过两步来实现它。首先基于你之前的文件创建一个 preset:</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> sed s/linux/linux-yifeng/g &lt;/etc/mknitcpio.d/linux.preset &gt;/etc/mkinitcpio.d/linux-yifeng.preset</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> sed s/linux/linux-yifeng/g &lt;/etc/mknitcpio.d/linux.preset &gt;/etc/mkinitcpio.d/linux-yifeng.preset</span></span><br></pre></td></tr></table></figure>
 <p>之后生成一个镜像：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> mkinitcpio -p linux-yifeng</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> mkinitcpio -p linux-yifeng</span></span><br></pre></td></tr></table></figure>
 <p>最后你需要指导你的 bootloader (这里是指我们的虚拟机，GRUB)来启动我们的新内核。因为 GRUB 可以自动找到 <code>/boot</code> 目录下的内核镜像，所有我们需要做的是再生成 GRUB 配置：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> grub-mkconfig -o /boot/grub/grub.cfg</span></span><br></pre></td></tr></table></figure>
 <p>所以上面的操作可以总在一个脚本中：</p>
 <figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#!/usr/bin/bash</span></span><br><span class="line"><span class="hljs-comment"># Compile and "deploy" a new custom kernel from source on Arch Linux</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Change this if you'd like. It has no relation</span></span><br><span class="line"><span class="hljs-comment"># to the suffix set in the kernel config.</span></span><br><span class="line">SUFFIX=<span class="hljs-string">"-yifeng"</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># This causes the script to exit if an error occurs</span></span><br><span class="line"><span class="hljs-built_in">set</span> -e</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Compile the kernel</span></span><br><span class="line">make</span><br><span class="line"><span class="hljs-comment"># Compile and install modules</span></span><br><span class="line">make modules_install</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Install kernel image</span></span><br><span class="line">cp arch/x86_64/boot/bzImage /boot/vmlinuz-linux<span class="hljs-variable">$SUFFIX</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Create preset and build initramfs</span></span><br><span class="line">sed s/linux/linux<span class="hljs-variable">$SUFFIX</span>/g \</span><br><span class="line">    &lt;/etc/mkinitcpio.d/linux.preset \</span><br><span class="line">    &gt;/etc/mkinitcpio.d/linux<span class="hljs-variable">$SUFFIX</span>.preset</span><br><span class="line">mkinitcpio -p linux<span class="hljs-variable">$SUFFIX</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># Update bootloader entries with new kernels.</span></span><br><span class="line">grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
 <p>将 <code>deploy.sh</code> 保存在你内核源码的主目录下，执行<code>chmod u+x deploy.sh</code> 来设置执行权限。现在你就可以通过运行这个脚本来构建和部署内核了。编译将会需要一些时间。</p>
@@ -315,7 +315,7 @@
                         Posts
                     </p>
                     <p class="title has-text-weight-normal">
-                        13
+                        14
                     </p>
                 </div>
             </div>
@@ -335,7 +335,7 @@
                         Tags
                     </p>
                     <p class="title has-text-weight-normal">
-                        9
+                        10
                     </p>
                 </div>
             </div>
@@ -462,7 +462,7 @@
                 <span class="level-item">前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">3</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/操作系统/">
@@ -492,7 +492,7 @@
         <h3 class="menu-label">
             Tag Cloud
         </h3>
-        <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Kaggle/" style="font-size: 10px;">Kaggle</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/React/" style="font-size: 10px;">React</a> <a href="/tags/Web-XSS/" style="font-size: 10px;">Web XSS</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/image-segmentation/" style="font-size: 10px;">image segmentation</a> <a href="/tags/shell-wargames/" style="font-size: 10px;">shell wargames</a>
+        <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Kaggle/" style="font-size: 10px;">Kaggle</a> <a href="/tags/LeetCode/" style="font-size: 10px;">LeetCode</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/React/" style="font-size: 10px;">React</a> <a href="/tags/React-Redux/" style="font-size: 10px;">React Redux</a> <a href="/tags/Web-XSS/" style="font-size: 10px;">Web XSS</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/image-segmentation/" style="font-size: 10px;">image segmentation</a> <a href="/tags/shell-wargames/" style="font-size: 10px;">shell wargames</a>
     </div>
 </div>
 
@@ -506,6 +506,19 @@
         <h3 class="menu-label">
             Recent
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-04T21:11:53.000Z">2019-03-04</time></div>
+                    <a href="/2019/03/05/展示组件和容器组件/" class="has-link-black-ter is-size-6">展示组件和容器组件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/前端/">前端</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -527,7 +540,7 @@
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-26T10:17:48.000Z">2019-01-26</time></div>
                     <a href="/2019/01/26/JavaScript摘要/" class="has-link-black-ter is-size-6">JavaScript摘要</a>
                     <p class="is-size-7 is-uppercase">
-                        
+                        <a class="has-link-grey -link" href="/categories/前端/">前端</a>
                     </p>
                 </div>
             </div>
@@ -559,19 +572,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T08:49:15.000Z">2019-01-08</time></div>
-                    <a href="/2019/01/08/详解XSS（译）/" class="has-link-black-ter is-size-6">详解XSS（译）</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -583,6 +583,17 @@
             Archives
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2019/02/">
@@ -678,6 +689,17 @@
                     <a class="level is-marginless" href="/tags/React/">
                         <span class="level-start">
                             <span class="level-item">React</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/React-Redux/">
+                        <span class="level-start">
+                            <span class="level-item">React Redux</span>
                         </span>
                         <span class="level-end">
                             <span class="level-item tag">1</span>
@@ -756,6 +778,19 @@
             
             <div class="media-content">
                 <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-04T21:11:53.000Z">2019-03-04</time></div>
+                    <a href="/2019/03/05/展示组件和容器组件/" class="has-link-black-ter is-size-6">展示组件和容器组件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/前端/">前端</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-02-18T22:02:24.000Z">2019-02-18</time></div>
                     <a href="/2019/02/19/React初学者，你需要知道这些/" class="has-link-black-ter is-size-6">React初学者，你需要知道这些</a>
                     <p class="is-size-7 is-uppercase">
@@ -772,7 +807,7 @@
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-26T10:17:48.000Z">2019-01-26</time></div>
                     <a href="/2019/01/26/JavaScript摘要/" class="has-link-black-ter is-size-6">JavaScript摘要</a>
                     <p class="is-size-7 is-uppercase">
-                        
+                        <a class="has-link-grey -link" href="/categories/前端/">前端</a>
                     </p>
                 </div>
             </div>
@@ -804,19 +839,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-08T08:49:15.000Z">2019-01-08</time></div>
-                    <a href="/2019/01/08/详解XSS（译）/" class="has-link-black-ter is-size-6">详解XSS（译）</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CTF/">CTF</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -828,6 +850,17 @@
             Archives
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2019/02/">
@@ -923,6 +956,17 @@
                     <a class="level is-marginless" href="/tags/React/">
                         <span class="level-start">
                             <span class="level-item">React</span>
+                        </span>
+                        <span class="level-end">
+                            <span class="level-item tag">1</span>
+                        </span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a class="level is-marginless" href="/tags/React-Redux/">
+                        <span class="level-start">
+                            <span class="level-item">React Redux</span>
                         </span>
                         <span class="level-end">
                             <span class="level-item tag">1</span>

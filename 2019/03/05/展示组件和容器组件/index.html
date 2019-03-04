@@ -2,57 +2,23 @@
 <html>
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>我理解的docker - MountainOne&#39;s technology space</title>
+<title>展示组件和容器组件 - MountainOne&#39;s technology space</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="想写一篇汇总的 docker 文章，目的在于当我以后想要复习 docker 相关的知识时，只要翻这篇文章就好。顺便把在微博实习的时候做的关于 docker 的技术分享进行整合，物尽其用吧。">
-<meta name="keywords" content="docker">
+    <meta name="description" content="react-redux绑定库是基于容器组件和展示组件分离的开发思想，是react开发中非常重要的一个思想。 详细介绍可以查看本文  #展示组件和容器组件对比     展示组件 容器组件     作用 描述如何展现（骨架、样式） 描述如何运行（数据获取、状态更新）   直接使用 Redux 否 是   数据来源 props 监听 Redux state   数据修改 从 props 调用回调函数">
+<meta name="keywords" content="React Redux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="我理解的docker">
-<meta property="og:url" content="http://yoursite.com/2018/12/23/我理解的docker/index.html">
+<meta property="og:title" content="展示组件和容器组件">
+<meta property="og:url" content="http://yoursite.com/2019/03/05/展示组件和容器组件/index.html">
 <meta property="og:site_name" content="MountainOne&#39;s technology space">
-<meta property="og:description" content="想写一篇汇总的 docker 文章，目的在于当我以后想要复习 docker 相关的知识时，只要翻这篇文章就好。顺便把在微博实习的时候做的关于 docker 的技术分享进行整合，物尽其用吧。">
+<meta property="og:description" content="react-redux绑定库是基于容器组件和展示组件分离的开发思想，是react开发中非常重要的一个思想。 详细介绍可以查看本文  #展示组件和容器组件对比     展示组件 容器组件     作用 描述如何展现（骨架、样式） 描述如何运行（数据获取、状态更新）   直接使用 Redux 否 是   数据来源 props 监听 Redux state   数据修改 从 props 调用回调函数">
 <meta property="og:locale" content="default">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/11.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/10.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/7.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/3.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/16.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/14.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/2.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/21.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/5.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/18.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/27.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/9.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/31.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/17.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/13.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/32.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/4.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/25.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/12.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/8.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/19.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/28.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/22.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/23.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/20.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/29.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/30.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/15.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/24.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/1.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/26.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/6.png">
-<meta property="og:image" content="http://yoursite.com/我理解的docker/0.png">
-<meta property="og:updated_time" content="2018-12-24T14:15:35.509Z">
+<meta property="og:updated_time" content="2019-03-04T13:12:49.186Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="我理解的docker">
-<meta name="twitter:description" content="想写一篇汇总的 docker 文章，目的在于当我以后想要复习 docker 相关的知识时，只要翻这篇文章就好。顺便把在微博实习的时候做的关于 docker 的技术分享进行整合，物尽其用吧。">
-<meta name="twitter:image" content="http://yoursite.com/我理解的docker/11.png">
+<meta name="twitter:title" content="展示组件和容器组件">
+<meta name="twitter:description" content="react-redux绑定库是基于容器组件和展示组件分离的开发思想，是react开发中非常重要的一个思想。 详细介绍可以查看本文  #展示组件和容器组件对比     展示组件 容器组件     作用 描述如何展现（骨架、样式） 描述如何运行（数据获取、状态更新）   直接使用 Redux 否 是   数据来源 props 监听 Redux state   数据修改 从 props 调用回调函数">
 
 
 
@@ -118,7 +84,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/wangye.jpeg" alt="我理解的docker" height="28">
+                <img src="/images/wangye.jpeg" alt="展示组件和容器组件" height="28">
             
             </a>
         </div>
@@ -169,10 +135,10 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2018-12-23T14:52:38.000Z">2018-12-23</time>
+                <time class="level-item has-text-grey" datetime="2019-03-04T21:11:53.000Z">2019-03-04</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/操作系统/">操作系统</a>
+                <a class="has-link-grey -link" href="/categories/前端/">前端</a>
                 </div>
                 
                 
@@ -181,109 +147,58 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                我理解的docker
+                展示组件和容器组件
             
         </h1>
         <div class="content">
             <blockquote>
-<p>想写一篇汇总的 docker 文章，目的在于当我以后想要复习 docker 相关的知识时，只要翻这篇文章就好。顺便把在微博实习的时候做的关于 docker 的技术分享进行整合，物尽其用吧。</p>
+<p>react-redux绑定库是基于容器组件和展示组件分离的开发思想，是react开发中非常重要的一个思想。</p>
+<p>详细介绍可以查看<a href="https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0" target="_blank" rel="noopener">本文</a></p>
 </blockquote>
-<a id="more"></a>
-<h1 id="Docker-简介"><a href="#Docker-简介" class="headerlink" title="Docker 简介"></a>Docker 简介</h1><p>Docker 是 Docker 公司开源的一个基于轻量级虚拟化技术的容器引擎项目, 整个项目基于 Go 语言开发，并遵从 Apache 2.0 协议。目前，Docker 可以在容器内部快速自动化部署应用，并可以通过内核虚拟化技术（namespaces 及 cgroups 等）来提供容器的资源隔离与安全保障等。由于 Docker 通过操作系统层的虚拟化实现隔离，所以 Docker 容器在运行时，不需要类似虚拟机（VM）额外的操作系统开销，提高资源利用率，并且提升诸如 IO 等方面的性能。</p>
-<h1 id="Docker-容器和镜像"><a href="#Docker-容器和镜像" class="headerlink" title="Docker 容器和镜像"></a>Docker 容器和镜像</h1><h2 id="镜像定义"><a href="#镜像定义" class="headerlink" title="镜像定义"></a>镜像定义</h2><p>镜像（Image）就是一堆只读层（read-only layer）的统一视角，也许这个定义有些难以理解，下面的这张图能够帮助读者理解镜像的定义。</p>
-<p><img src="/我理解的docker/11.png" alt=""></p>
-<p><img src="/我理解的docker/10.png" alt=""></p>
-<p>从左边我们看到了多个只读层，它们重叠在一起。除了最下面一层，其它层都会有一个指针指向下一层。这些层是Docker内部的实现细节，并且能够在主机（译者注：运行Docker的机器）的文件系统上访问到。统一文件系统（union file system）技术能够将不同的层整合成一个文件系统，为这些层提供了一个统一的视角，这样就隐藏了多层的存在，在用户的角度看来，只存在一个文件系统。我们可以在图片的右边看到这个视角的形式。  你可以在你的主机文件系统上找到有关这些层的文件。需要注意的是，在一个运行中的容器内部，这些层是不可见的。在我的主机上，我发现它们存在于/var/lib/docker/aufs目录下。</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sudo tree -L 1 /var/lib/docker/</span><br><span class="line">/var/lib/docker/</span><br><span class="line">├── aufs</span><br><span class="line">├── containers</span><br><span class="line">├── graph</span><br><span class="line">├── init</span><br><span class="line">├── linkgraph.db</span><br><span class="line">├── repositories-aufs</span><br><span class="line">├── tmp</span><br><span class="line">├── trust</span><br><span class="line">└── volumes</span><br><span class="line">7 directories, 2 files</span><br></pre></td></tr></table></figure>
-<h2 id="容器定义"><a href="#容器定义" class="headerlink" title="容器定义"></a>容器定义</h2><p>容器（container）的定义和镜像（image）几乎一模一样，也是一堆层的统一视角，唯一区别在于容器的最上面那一层是可读可写的。</p>
-<p><img src="/我理解的docker/7.png" alt=""></p>
-<p>细心的读者可能会发现，容器的定义并没有提及容器是否在运行，没错，这是故意的。正是这个发现帮助我理解了很多困惑。  要点：容器 = 镜像 + 读写层。并且容器的定义并没有提及是否要运行容器。  接下来，我们将会讨论运行态容器。</p>
-<h2 id="运行态容器定义"><a href="#运行态容器定义" class="headerlink" title="运行态容器定义"></a>运行态容器定义</h2><p>一个运行态容器（running container）被定义为一个可读写的统一文件系统加上隔离的进程空间和包含其中的进程。下面这张图片展示了一个运行中的容器。</p>
-<p><img src="/我理解的docker/3.png" alt=""></p>
-<p>正是文件系统隔离技术使得Docker成为了一个前途无量的技术。一个容器中的进程可能会对文件进行修改、删除、创建，这些改变都将作用于可读写层（read-write layer）。下面这张图展示了这个行为。</p>
-<p><img src="/我理解的docker/16.png" alt=""></p>
-<p>我们可以通过运行以下命令来验证我们上面所说的：</p>
-<figure class="highlight dockerfile hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="hljs-keyword">run</span> ubuntu touch happiness.txt</span><br></pre></td></tr></table></figure>
-<p>即便是这个ubuntu容器不再运行，我们依旧能够在主机的文件系统上找到这个新文件。 </p>
-<figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find / -name happiness.txt</span><br><span class="line">/var/lib/docker/aufs/diff/860a7b...889/happiness.txt</span><br></pre></td></tr></table></figure>
-<h2 id="镜像层定义"><a href="#镜像层定义" class="headerlink" title="镜像层定义"></a>镜像层定义</h2><p>为了将零星的数据整合起来，我们提出了镜像层（image layer）这个概念。下面的这张图描述了一个镜像层，通过图片我们能够发现一个层并不仅仅包含文件系统的改变，它还能包含了其他重要信息。   </p>
-<p><img src="/我理解的docker/14.png" alt=""></p>
-<p>元数据（metadata）就是关于这个层的额外信息，它不仅能够让Docker获取运行和构建时的信息，还包括父层的层次信息。需要注意，只读层和读写层都包含元数据。 </p>
-<p><img src="/我理解的docker/2.png" alt=""></p>
-<p>除此之外，每一层都包括了一个指向父层的指针。如果一个层没有这个指针，说明它处于最底层。   </p>
-<p><img src="/我理解的docker/21.png" alt=""></p>
-<p><strong>Metadata Location:</strong> </p>
-<p>我发现在我自己的主机上，镜像层（image layer）的元数据被保存在名为”json”的文件中，比如说：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/var/lib/docker/graph/e809f156dc985.../json</span><br></pre></td></tr></table></figure>
-<p>e809f156dc985…就是这层的id  一个容器的元数据好像是被分成了很多文件，但或多或少能够在/var/lib/docker/containers/<id>目录下找到，<id>就是一个可读层的id。这个目录下的文件大多是运行时的数据，比如说网络，日志等等。</id></id></p>
-<h2 id="全局理解"><a href="#全局理解" class="headerlink" title="全局理解"></a>全局理解</h2><p>现在，让我们结合上面提到的实现细节来理解Docker的命令。</p>
-<h4 id="docker-create"><a href="#docker-create" class="headerlink" title="docker create "></a>docker create <image-id></image-id></h4><p><img src="/我理解的docker/5.png" alt=""></p>
-<p>docker create 命令为指定的镜像（image）添加了一个可读写层，构成了一个新的容器。注意，这个容器并没有运行。</p>
-<p><img src="/我理解的docker/18.png" alt=""></p>
-<h4 id="docker-start"><a href="#docker-start" class="headerlink" title="docker start "></a>docker start <container-id></container-id></h4><p><img src="/我理解的docker/27.png" alt=""></p>
-<p>Docker start命令为容器文件系统创建了一个进程隔离空间。注意，每一个容器只能够有一个进程隔离空间。</p>
-<h4 id="docker-run"><a href="#docker-run" class="headerlink" title="docker run "></a>docker run <image-id></image-id></h4><p><img src="/我理解的docker/9.png" alt=""></p>
-<p>看到这个命令，读者通常会有一个疑问：docker start 和 docker run命令有什么区别。</p>
-<p><img src="/我理解的docker/31.png" alt=""></p>
-<p>从图片可以看出，docker run 命令先是利用镜像创建了一个容器，然后运行这个容器。这个命令非常的方便，并且隐藏了两个命令的细节，但从另一方面来看，这容易让用户产生误解。  我认为docker run命令类似于git pull命令。git pull命令就是git fetch 和 git merge两个命令的组合，同样的，docker run就是docker create和docker start两个命令的组合。</p>
-<h4 id="docker-ps"><a href="#docker-ps" class="headerlink" title="docker ps"></a>docker ps</h4><p><img src="/我理解的docker/17.png" alt=""></p>
-<p>docker ps 命令会列出所有运行中的容器。这隐藏了非运行态容器的存在，如果想要找出这些容器，我们需要使用下面这个命令。</p>
-<h4 id="docker-ps-–a"><a href="#docker-ps-–a" class="headerlink" title="docker ps –a"></a>docker ps –a</h4><p><img src="/我理解的docker/13.png" alt=""></p>
-<p>docker ps –a命令会列出所有的容器，不管是运行的，还是停止的。</p>
-<h4 id="docker-images"><a href="#docker-images" class="headerlink" title="docker images"></a>docker images</h4><p><img src="/我理解的docker/32.png" alt=""> </p>
-<p>docker images命令会列出了所有顶层（top-level）镜像。实际上，在这里我们没有办法区分一个镜像和一个只读层，所以我们提出了top-level镜像。只有创建容器时使用的镜像或者是直接pull下来的镜像能被称为顶层（top-level）镜像，并且每一个顶层镜像下面都隐藏了多个镜像层。</p>
-<h4 id="docker-images-–a"><a href="#docker-images-–a" class="headerlink" title="docker images –a"></a>docker images –a</h4><p><img src="/我理解的docker/4.png" alt=""></p>
-<p>docker images –a命令列出了所有的镜像，也可以说是列出了所有的可读层。如果你想要查看某一个image-id下的所有层，可以使用docker history来查看。</p>
-<h4 id="docker-stop"><a href="#docker-stop" class="headerlink" title="docker stop "></a>docker stop <container-id></container-id></h4><p><img src="/我理解的docker/25.png" alt=""></p>
-<p>docker stop命令会向运行中的容器发送一个SIGTERM的信号，然后停止所有的进程。</p>
-<h4 id="docker-kill"><a href="#docker-kill" class="headerlink" title="docker kill "></a>docker kill <container-id></container-id></h4><p><img src="/我理解的docker/12.png" alt=""></p>
-<p>docker kill 命令向所有运行在容器中的进程发送了一个不友好的SIGKILL信号。</p>
-<h4 id="docker-pause"><a href="#docker-pause" class="headerlink" title="docker pause "></a>docker pause <container-id></container-id></h4><p><img src="/我理解的docker/8.png" alt=""></p>
-<p>docker stop和docker kill命令会发送UNIX的信号给运行中的进程，docker pause命令则不一样，它利用了cgroups的特性将运行中的进程空间暂停。具体的内部原理你可以在这里找到：<a href="https://www.kernel.org/doc/Documentation/cgroups/freezer-subsystem.txt" target="_blank" rel="noopener">https://www.kernel.org/doc/Doc … m.txt</a>，但是这种方式的不足之处在于发送一个SIGTSTP信号对于进程来说不够简单易懂，以至于不能够让所有进程暂停。</p>
-<h4 id="docker-rm"><a href="#docker-rm" class="headerlink" title="docker rm "></a>docker rm <container-id></container-id></h4><p><img src="/我理解的docker/19.png" alt=""></p>
-<p>docker rm命令会移除构成容器的可读写层。注意，这个命令只能对非运行态容器执行。</p>
-<h4 id="docker-rmi"><a href="#docker-rmi" class="headerlink" title="docker rmi "></a>docker rmi <image-id></image-id></h4><p><img src="/我理解的docker/28.png" alt=""></p>
-<p>docker rmi 命令会移除构成镜像的一个只读层。你只能够使用docker rmi来移除最顶层（top level layer）（也可以说是镜像），你也可以使用-f参数来强制删除中间的只读层。  </p>
-<h4 id="docker-commit"><a href="#docker-commit" class="headerlink" title="docker commit "></a>docker commit <container-id></container-id></h4><p><img src="/我理解的docker/22.png" alt=""></p>
-<p>docker commit命令将容器的可读写层转换为一个只读层，这样就把一个容器转换成了不可变的镜像。</p>
-<p><img src="/我理解的docker/23.png" alt=""></p>
-<h4 id="docker-build"><a href="#docker-build" class="headerlink" title="docker build"></a>docker build</h4><p><img src="/我理解的docker/20.png" alt=""></p>
-<p>docker build命令非常有趣，它会反复的执行多个命令。</p>
-<p><img src="/我理解的docker/29.png" alt=""></p>
-<p>我们从上图可以看到，build命令根据Dockerfile文件中的FROM指令获取到镜像，然后重复地1）run（create和start）、2）修改、3）commit。在循环中的每一步都会生成一个新的层，因此许多新的层会被创建。</p>
-<h4 id="docker-exec"><a href="#docker-exec" class="headerlink" title="docker exec "></a>docker exec <running-container-id></running-container-id></h4><p><img src="/我理解的docker/30.png" alt=""></p>
-<p>docker exec 命令会在运行中的容器执行一个新进程。 </p>
-<h4 id="docker-inspect-or"><a href="#docker-inspect-or" class="headerlink" title="docker inspect  or "></a>docker inspect <container-id> or <image-id></image-id></container-id></h4><p><img src="/我理解的docker/15.png" alt=""></p>
-<p>docker inspect命令会提取出容器或者镜像最顶层的元数据。</p>
-<h4 id="docker-save"><a href="#docker-save" class="headerlink" title="docker save "></a>docker save <image-id></image-id></h4><p><img src="/我理解的docker/24.png" alt=""></p>
-<p>docker save命令会创建一个镜像的压缩文件，这个文件能够在另外一个主机的Docker上使用。和export命令不同，这个命令为每一个层都保存了它们的元数据。这个命令只能对镜像生效。</p>
-<h4 id="docker-export"><a href="#docker-export" class="headerlink" title="docker export "></a>docker export <container-id></container-id></h4><p><img src="/我理解的docker/1.png" alt=""></p>
-<p>docker export命令创建一个tar文件，并且移除了元数据和不必要的层，将多个层整合成了一个层，只保存了当前统一视角看到的内容（译者注：expoxt后的容器再import到Docker中，通过docker images –tree命令只能看到一个镜像；而save后的镜像则不同，它能够看到这个镜像的历史镜像）。</p>
-<h4 id="docker-history"><a href="#docker-history" class="headerlink" title="docker history "></a>docker history <image-id></image-id></h4><p><img src="/我理解的docker/26.png" alt=""></p>
-<p>docker history命令递归地输出指定镜像的历史镜像。 </p>
-<h1 id="Docker与虚拟机的区别"><a href="#Docker与虚拟机的区别" class="headerlink" title="Docker与虚拟机的区别"></a>Docker与虚拟机的区别</h1><p>Docker 容器并非虚拟机</p>
-<h2 id="理解虚拟机"><a href="#理解虚拟机" class="headerlink" title="理解虚拟机"></a>理解虚拟机</h2><p>使用<strong>虚拟机</strong>运行多个相互隔离的应用时，如下图:</p>
-<p><img src="/我理解的docker/6.png" alt=""></p>
-<h4 id="从下到上理解上图"><a href="#从下到上理解上图" class="headerlink" title="从下到上理解上图:"></a>从下到上理解上图:</h4><ul>
-<li><strong>基础设施(Infrastructure)</strong>。它可以是你的<strong>个人电脑</strong>，数据中心的<strong>服务器</strong>，或者是<strong>云主机</strong>。</li>
-<li><strong>主操作系统(Host Operating System)</strong>。你的个人电脑之上，运行的可能是<strong>MacOS</strong>，<strong>Windows</strong>或者某个<strong>Linux</strong>发行版。</li>
-<li><strong>虚拟机管理系统(Hypervisor)</strong>。利用Hypervisor，可以在<strong>主操作系统</strong>之上运行多个不同的<strong>从操作系统</strong>。类型1的Hypervisor有支持MacOS的<strong>HyperKit</strong>，支持Windows的<strong>Hyper-V</strong>以及支持Linux的<strong>KVM</strong>。类型2的Hypervisor有VirtualBox和VMWare。</li>
-<li><strong>从操作系统(Guest Operating System)</strong>。假设你需要运行3个相互隔离的应用，则需要使用Hypervisor启动3个<strong>从操作系统</strong>，也就是3个<strong>虚拟机</strong>。这些虚拟机都非常大，也许有700MB，这就意味着它们将占用2.1GB的磁盘空间。更糟糕的是，它们还会消耗很多CPU和内存。</li>
-<li><strong>各种依赖</strong>。每一个<strong>从操作系统</strong>都需要安装许多依赖。如果你的的应用需要连接PostgreSQL的话，则需要安装<strong>libpq-dev</strong>；如果你使用Ruby的话，应该需要安装gems；如果使用其他编程语言，比如Python或者Node.js，都会需要安装对应的依赖库。</li>
-<li><strong>应用</strong>。安装依赖之后，就可以在各个<strong>从操作系统</strong>分别运行应用了，这样各个应用就是相互隔离的。</li>
-</ul>
-<h2 id="理解Docker容器"><a href="#理解Docker容器" class="headerlink" title="理解Docker容器"></a>理解Docker容器</h2><p>使用<strong>Docker容器</strong>运行多个相互隔离的应用时，如下图:</p>
-<p><img src="/我理解的docker/0.png" alt=""></p>
-<p>不难发现，相比于<strong>虚拟机</strong>，<strong>Docker</strong>要简洁很多。因为我们不需要运行一个臃肿的<strong>从操作系统</strong>了。</p>
-<h4 id="从下到上理解上图-1"><a href="#从下到上理解上图-1" class="headerlink" title="从下到上理解上图:"></a>从下到上理解上图:</h4><ul>
-<li><strong>基础设施(Infrastructure)</strong>。</li>
-<li><strong>主操作系统(Host Operating System)</strong>。所有主流的Linux发行版都可以运行Docker。对于MacOS和Windows，也有一些办法”运行”Docker。</li>
-<li><strong>Docker守护进程(Docker Daemon)</strong>。Docker守护进程取代了Hypervisor，它是运行在操作系统之上的后台进程，负责管理Docker容器。</li>
-<li><strong>各种依赖</strong>。对于Docker，应用的所有依赖都打包在<strong>Docker镜像</strong>中，<strong>Docker容器</strong>是基于<strong>Docker镜像</strong>创建的。</li>
-<li><strong>应用</strong>。应用的源代码与它的依赖都打包在<strong>Docker镜像</strong>中，不同的应用需要不同的<strong>Docker镜像</strong>。不同的应用运行在不同的<strong>Docker容器</strong>中，它们是相互隔离的。</li>
-</ul>
-<h2 id="对比虚拟机与Docker"><a href="#对比虚拟机与Docker" class="headerlink" title="对比虚拟机与Docker"></a>对比虚拟机与Docker</h2><p><strong>Docker守护进程</strong>可以直接与<strong>主操作系统</strong>进行通信，为各个<strong>Docker容器</strong>分配资源；它还可以将容器与<strong>主操作系统</strong>隔离，并将各个容器互相隔离。<strong>虚拟机</strong>启动需要数分钟，而<strong>Docker容器</strong>可以在数毫秒内启动。由于没有臃肿的<strong>从操作系统</strong>，Docker可以节省大量的磁盘空间以及其他系统资源。</p>
-<p>说了这么多Docker的优势，大家也没有必要完全否定<strong>虚拟机</strong>技术，因为两者有不同的使用场景。<strong>虚拟机</strong>更擅长于彻底隔离整个运行环境。例如，云服务提供商通常采用虚拟机技术隔离不同的用户。而<strong>Docker</strong>通常用于隔离不同的应用，例如<strong>前端</strong>，<strong>后端</strong>以及<strong>数据库</strong>。</p>
+<p>#展示组件和容器组件对比</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>展示组件</th>
+<th>容器组件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>作用</td>
+<td>描述如何展现（骨架、样式）</td>
+<td>描述如何运行（数据获取、状态更新）</td>
+</tr>
+<tr>
+<td>直接使用 Redux</td>
+<td>否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>数据来源</td>
+<td>props</td>
+<td>监听 Redux state</td>
+</tr>
+<tr>
+<td>数据修改</td>
+<td>从 props 调用回调函数</td>
+<td>想 Redux 派发actions</td>
+</tr>
+<tr>
+<td>调用方式</td>
+<td>手动</td>
+<td>通常由 React Redux 生成</td>
+</tr>
+</tbody>
+</table>
+<h1 id="进行组件分离的好处"><a href="#进行组件分离的好处" class="headerlink" title="进行组件分离的好处"></a>进行组件分离的好处</h1><p>1.更好地分散注意力。通过这样写组件能更好地理解你的 app 和 UI。</p>
+<p>2.更好地重用。你可以使用同样的表式组件配合完全不同的状态源，并在未来重用这些分离的容器组件。</p>
+<p>3.展示组件对你 APP 的“调色”是很有必要的。你可以把它们放在单页里，并让设计师在不触碰逻辑的情况下自由地调整配色。</p>
+<p>4.这强迫你抽出类似于：Sidebar，Page，ContextMenu，这样的布局组件并使用 this.props.children 而不是重复在几个容器组件中同样的标记和布局。</p>
+<p>#什么时候该引入容器组件？</p>
+<p>我建议你一开始只使用展示组件来构建你的APP。最终你将意识到你传递了太多 props 给中间的组件。当你意识到有些组件并没有用到它们接收的 props，而只是将这些 props向下传递。在底层的组件需要更多数据时，你不得不重写所有这些中间组件，这时候就很适合引入容器组件了。通过这种方式，你可以将 props 传递给叶子节点而不增加和它无关的中层组件的负担。</p>
+<h1 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h1><p>不要把展示组件和容器组件的划分当做教条。有些时候甚至无关紧要。如果你不确定一个组件是该定义成展示组件还是容器组件，也许是区分得太早了，不用担心。</p>
 
         </div>
         
@@ -291,7 +206,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/docker/">docker</a>
+                    <a class="has-link-grey -link" href="/tags/React-Redux/">React Redux</a>
                 </div>
             </div>
         </div>
@@ -309,17 +224,10 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/01/08/wargame-Bandit/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">wargame--Bandit</span>
-            </a>
-        </div>
-        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2018/12/19/为Linux添加一个系统调用/">
-                <span class="level-item">为Linux添加一个系统调用</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/02/19/React初学者，你需要知道这些/">
+                <span class="level-item">React初学者，你需要知道这些</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -339,7 +247,7 @@
     js.src = "//connect.facebook.net/en/sdk.js#xfbml=1&version=v2.8";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
-<div class="fb-comments" data-width="100%" data-href="http://yoursite.com/2018/12/23/我理解的docker/" data-num-posts="5"></div>
+<div class="fb-comments" data-width="100%" data-href="http://yoursite.com/2019/03/05/展示组件和容器组件/" data-num-posts="5"></div>
 
     </div>
 </div>
@@ -1104,7 +1012,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/wangye.jpeg" alt="我理解的docker" height="28">
+                    <img src="/images/wangye.jpeg" alt="展示组件和容器组件" height="28">
                 
                 </a>
                 <p class="is-size-7">
