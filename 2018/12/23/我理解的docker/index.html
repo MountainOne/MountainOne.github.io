@@ -203,7 +203,7 @@
 <p>正是文件系统隔离技术使得Docker成为了一个前途无量的技术。一个容器中的进程可能会对文件进行修改、删除、创建，这些改变都将作用于可读写层（read-write layer）。下面这张图展示了这个行为。</p>
 <p><img src="/我理解的docker/16.png" alt=""></p>
 <p>我们可以通过运行以下命令来验证我们上面所说的：</p>
-<figure class="highlight dockerfile hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="hljs-keyword">run</span> ubuntu touch happiness.txt</span><br></pre></td></tr></table></figure>
+<figure class="highlight dockerfile hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="hljs-keyword">run</span><span class="hljs-bash"> ubuntu touch happiness.txt</span></span><br></pre></td></tr></table></figure>
 <p>即便是这个ubuntu容器不再运行，我们依旧能够在主机的文件系统上找到这个新文件。 </p>
 <figure class="highlight sh hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">find / -name happiness.txt</span><br><span class="line">/var/lib/docker/aufs/diff/860a7b...889/happiness.txt</span><br></pre></td></tr></table></figure>
 <h2 id="镜像层定义"><a href="#镜像层定义" class="headerlink" title="镜像层定义"></a>镜像层定义</h2><p>为了将零星的数据整合起来，我们提出了镜像层（image layer）这个概念。下面的这张图描述了一个镜像层，通过图片我们能够发现一个层并不仅仅包含文件系统的改变，它还能包含了其他重要信息。   </p>
